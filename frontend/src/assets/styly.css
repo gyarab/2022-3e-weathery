@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+}
+
+#map {
+    height: calc(100vh - var(--vyska-menu) - 1px);
+}
+
+:root {
+    --vyska-menu: 60px;
+    --velikost-pisma-menu: 20px;
+}
+
+body {
+    font-family: 'Roboto Mono', monospace;
+    height: 100%;
+}
+
+#menu {
+    background-color: rgb(237, 237, 237);
+    height: var(--vyska-menu);
+    border-bottom: 1px solid;
+}
+
+#menu a {
+    font-size: var(--velikost-pisma-menu);
+    display: block;
+    color: rgb(35, 35, 35);
+    text-align: center;
+    padding: calc((var(--vyska-menu) - var(--velikost-pisma-menu))/2) 16px;
+    text-decoration: none;
+    float: left;
+    line-height: var(--velikost-pisma-menu);
+}
+
+#obsah {
+}
+
+#mapa {
+    width: 100px;
+    height: 100px;
+}
