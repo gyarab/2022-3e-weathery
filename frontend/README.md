@@ -2,8 +2,8 @@
 
 spustíš to takhle chlape:
 
-´´´sh
+```sh
 cd frontend
 npm install
 npm run dev
-´´´
+```
