@@ -1,5 +1,5 @@
-from fastapi import FastAPI
-from models import *
+from fastapi import FastAPI, Request
+from models import Data
 
 app = FastAPI()
 
@@ -22,7 +22,13 @@ async def stats(gps: str):
     return {"message": ""}
 
 
-# TODO: (ZATIM NEDELAT) zaregistruje do databeze novou stanici s danymi GPS
+# TODO: z tokenu zjisti gps souradnice a prida do databaze aktualni prijate hodnoty ze stanice
+@app.post("/api/update")
+async def update(req: Request, data: Data):
+    return {"message": ""}
+
+
+# TODO: (ZATIM NEDELAT) vytvori token pro danou stanici a zaregistruje ji do databeze
 @app.post("/api/register_station")
 async def register_station():
     return {"message": ""}
