@@ -2,6 +2,15 @@
 
 ## GET"/api/stations"
 vrati GPS vsech registrovanych stanic
+format data:
+```
+{
+  "stations": [
+    {"gps": {gps}}
+    ...
+  ]
+}
+```
 
 ## GET"/api/now/{gps}"
 vrati aktualni pocasi stanice s temito GPS 
