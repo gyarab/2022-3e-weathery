@@ -1,4 +1,7 @@
 #include <ESP8266WiFi.h>
+#include <Wire.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BMP280.h>
 
 const char* nameWifi = "name";
 const char* passWifi = "password";
@@ -7,6 +10,7 @@ String data = "";
 WiFiClient client;
 
 void setup() {
+
   Serial.begin(9600);
   WiFi.begin(nameWifi, passWifi);
 

@@ -1,5 +1,9 @@
 from pydantic import BaseModel
 
+class RegisterData(BaseModel):
+    gps: str
+    secret_key: int
+
 class Data(BaseModel):
     temperature: int        # C
     humidity: int           # %

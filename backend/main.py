@@ -1,12 +1,12 @@
 from fastapi import FastAPI, Request
-from models import Data
+from models import Data, RegisterData
 
 app = FastAPI()
 
 
 # TODO: vrati GPS vsech stanic
-@app.get("/api/all_stations")
-async def all_stations():
+@app.get("/api/stations")
+async def stations():
     return {"message": ""}
 
 
@@ -28,7 +28,8 @@ async def update(req: Request, data: Data):
     return {"message": ""}
 
 
-# TODO: (ZATIM NEDELAT) vytvori token pro danou stanici a zaregistruje ji do databeze
-@app.post("/api/register_station")
-async def register_station():
+# TODO: (ZATIM NEDELAT) overi si podle secret_key (seriove cislo stanice), ze stanice je realna
+# a vytvori pro ni token, ktery ji posle a zaregistruje ji do databeze
+@app.post("/api/register")
+async def register(data: RegisterData):
     return {"message": ""}
