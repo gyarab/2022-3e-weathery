@@ -1,19 +1,30 @@
 # API docs
 
 ## GET"/api/stations"
-vrati GPS vsech registrovanych stanic
-format data:
+vrati GPS vsech registrovanych stanic \ 
+format dat:
 ```
 {
   "stations": [
-    {"gps": {gps}}
+    {"gps": {str}}
     ...
   ]
 }
 ```
 
 ## GET"/api/now/{gps}"
-vrati aktualni pocasi stanice s temito GPS 
+vrati aktualni pocasi stanice s temito GPS \
+format dat:
+```
+{
+  "temperature": {int}          # C
+  "humidity": {int}            # %
+  "preasure": {int}           # Pa
+  "wind_speed": {int}         # km/h
+  "wind_direction": {str}     # directions
+  "rain": {int}               # mm/h 
+}
+```
 
 ## GET"/api/stats/{gps}"
 vrati schena namerena data z dane stanice
