@@ -1,7 +1,27 @@
 from fastapi import FastAPI, Request
 from models import Data, RegisterData
+import jwt
+
+SECRET_KEY = "SECRET_KEY"
+ALGORITHM = "HS256"
+
 
 app = FastAPI()
+
+
+def get_token(req):
+    try:
+        token = req.headers["Authorization"].split()[1]
+        return token
+    except KeyError:
+        return None
+
+
+def authorize_token(token):
+    data = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
+    # if stations_exists(data['gps']):
+    #    return True
+    # return False
 
 
 # TODO: vrati GPS vsech stanic
