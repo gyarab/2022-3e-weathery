@@ -1,7 +1,7 @@
 # API docs
 
 ## GET"/api/stations"
-vrati GPS vsech registrovanych stanic \ 
+vrati GPS vsech registrovanych stanic <br/> 
 format dat:
 ```
 {
@@ -14,7 +14,7 @@ format dat:
 ```
 
 ## GET"/api/now/{gps}"
-vrati aktualni pocasi stanice s temito GPS \
+vrati aktualni pocasi stanice s temito GPS <br/> 
 format dat:
 ```
 {
