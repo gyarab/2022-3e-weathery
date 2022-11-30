@@ -6,7 +6,8 @@ format dat:
 ```
 {
   "stations": [
-    {"gps": {str}}
+    {"gps": str}
+    {"gps": str}
     ...
   ]
 }
@@ -17,12 +18,12 @@ vrati aktualni pocasi stanice s temito GPS \
 format dat:
 ```
 {
-  "temperature": {int}          # C
-  "humidity": {int}            # %
-  "preasure": {int}           # Pa
-  "wind_speed": {int}         # km/h
-  "wind_direction": {str}     # directions
-  "rain": {int}               # mm/h 
+  "temperature": int        # C
+  "humidity": int           # %
+  "preasure": int           # Pa
+  "wind_speed": int         # km/h
+  "wind_direction": str     # directions
+  "rain": int               # mm/h 
 }
 ```
 
