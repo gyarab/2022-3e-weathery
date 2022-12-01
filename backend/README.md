@@ -28,7 +28,7 @@ format dat:
 ```
 
 ## GET"/api/stats/{gps}"
-vrati schena namerena data z dane stanice
+vrati vchena namerena data z dane stanice
 
 ## POST"/api/update"
 server si pres token overi jaka stanice posila data a ulozi je do databaze pod prislusnou stanici
