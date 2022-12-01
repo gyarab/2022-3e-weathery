@@ -3,20 +3,20 @@ from fastapi.encoders import jsonable_encoder
 from models import Data, RegisterData
 import jwt
 import psycopg2
+import env
 
 SECRET_KEY = "SECRET_KEY"
 ALGORITHM = "HS256"
 
-with open('user') as f:
-    user = f.read()
-with open('pswd') as f:
-    pswd = f.read()
+USER = env.USER
+PASSWORD = env.PASSWORD
 
 app = FastAPI()
 
 
 def get_connection():
-    return psycopg2.connect(database="weatherydb", user=user, password=pswd, host="127.0.0.1", port=5432)
+    return psycopg2.connect(database="postgres", user=USER, password=PASSWORD, host="localhost", port=5432)
+
 
 conn = get_connection()
 
