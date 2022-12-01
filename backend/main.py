@@ -1,12 +1,24 @@
 from fastapi import FastAPI, Request
+from fastapi.encoders import jsonable_encoder
 from models import Data, RegisterData
 import jwt
+import psycopg2
 
 SECRET_KEY = "SECRET_KEY"
 ALGORITHM = "HS256"
 
+with open('user') as f:
+    user = f.read()
+with open('pswd') as f:
+    pswd = f.read()
 
 app = FastAPI()
+
+
+def get_connection():
+    return psycopg2.connect(database="weatherydb", user=user, password=pswd, host="127.0.0.1", port=5432)
+
+conn = get_connection()
 
 
 def get_token(req):
@@ -18,16 +30,23 @@ def get_token(req):
 
 
 def authorize_token(token):
-    data = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
+    data = jwt.decode(token, SECRET_KEY)
     # if stations_exists(data['gps']):
     #    return True
     # return False
 
 
+def create_token(gps, secret_key):
+    payload = {'gps': gps, "secret_key": secret_key}
+    encoded_jwt = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+
 # TODO: vrati GPS vsech stanic
 @app.get("/api/stations")
-async def stations():
-    return {"message": ""}
+async def stations(t):
+    data = jwt.decode(t, SECRET_KEY, algorithms=[ALGORITHM])
+    return {"message": data["gps"]}
 
 
 # TODO: vrati aktualni pocasi ze stanice s danymi GPS 
@@ -51,5 +70,6 @@ async def update(req: Request, data: Data):
 # TODO: (ZATIM NEDELAT) overi si podle secret_key (seriove cislo stanice), ze stanice je realna
 # a vytvori pro ni token, ktery ji posle a zaregistruje ji do databeze
 @app.post("/api/register")
-async def register(data: RegisterData):
-    return {"message": ""}
+async def register(d: RegisterData):
+    data = jsonable_encoder(d)
+    return {"token": create_token(data["gps"], data["secret_key"])}

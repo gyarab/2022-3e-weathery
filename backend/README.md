@@ -27,7 +27,7 @@ format dat:
 }
 ```
 
-## GET"/api/stats/{gps}"
+## GET"/api/stats/{gps}/{from}/{to}"
 vrati vchena namerena data z dane stanice
 
 ## POST"/api/update"
