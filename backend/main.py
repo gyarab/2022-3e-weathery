@@ -1,55 +1,50 @@
-from fastapi import FastAPI, Request
-from fastapi.encoders import jsonable_encoder
-from models import Data, RegisterData
+import env
+from time import time
 import jwt
 import psycopg2
-import env
+from fastapi import FastAPI, Request
+from fastapi.encoders import jsonable_encoder
+from manage_data import add_stations, get_all_stations, station_exists, update_weather, valid_input
+from models import Data, RegisterData
 
 SECRET_KEY = "SECRET_KEY"
 ALGORITHM = "HS256"
+
+WEEK = 604800
 
 USER = env.USER
 PASSWORD = env.PASSWORD
 
 app = FastAPI()
-
-
-def get_connection():
-    return psycopg2.connect(database="postgres", user=USER, password=PASSWORD, host="localhost", port=5432)
-
-
-conn = get_connection()
+con = psycopg2.connect(database="weatherydb", user=USER,
+                       password=PASSWORD, host="localhost", port=5432)
 
 
 def get_token(req):
     try:
         token = req.headers["Authorization"].split()[1]
-        return token
+        return jwt.decode(token, SECRET_KEY)
     except KeyError:
         return None
 
 
-def authorize_token(token):
-    data = jwt.decode(token, SECRET_KEY)
-    # if stations_exists(data['gps']):
-    #    return True
-    # return False
+def authorized_token(token) -> bool:
+    return station_exists(con, token["gps"], token["serial_number"])
 
 
-def create_token(gps, secret_key):
-    payload = {'gps': gps, "secret_key": secret_key}
+def create_token(gps, serial_number):
+    payload = {"gps": gps, "serial_number": serial_number}
     encoded_jwt = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
 
 # TODO: vrati GPS vsech stanic
 @app.get("/api/stations")
-async def stations(t):
-    data = jwt.decode(t, SECRET_KEY, algorithms=[ALGORITHM])
-    return {"message": data["gps"]}
+async def stations():
+    return get_all_stations(con)
 
 
-# TODO: vrati aktualni pocasi ze stanice s danymi GPS 
+# TODO: vrati aktualni pocasi ze stanice s danymi GPS
 @app.get("/api/now/{gps}")
 async def now(gps: str):
     return {"message": ""}
@@ -57,19 +52,31 @@ async def now(gps: str):
 
 # TODO: vrati vsechna namerena data ze stanice s danymi GPS
 @app.get("/api/stats/{gps}")
-async def stats(gps: str):
+async def stats(gps: str, date_from: int = int(time()-WEEK), data_to: int = int(time())):
     return {"message": ""}
 
 
 # TODO: z tokenu zjisti gps souradnice a prida do databaze aktualni prijate hodnoty ze stanice
 @app.post("/api/update")
 async def update(req: Request, data: Data):
-    return {"message": ""}
+    token = get_token(req)
+    if token is None:
+        return {"message": "no token found"}
+    if not authorized_token(token):
+        return {"message": "token is not valid"}
+    update_weather(con, token["gps"],
+                   token["serial_number"], int(time()), data)
+    return {"message": "weather updated successfulaly"}
 
 
-# TODO: (ZATIM NEDELAT) overi si podle secret_key (seriove cislo stanice), ze stanice je realna
+# TODO: (ZATIM NEDELAT) overi si podle serial_number (seriove cislo stanice), ze stanice je realna
 # a vytvori pro ni token, ktery ji posle a zaregistruje ji do databeze
 @app.post("/api/register")
 async def register(d: RegisterData):
     data = jsonable_encoder(d)
-    return {"token": create_token(data["gps"], data["secret_key"])}
+    if station_exists(con, data["gps"], data["serial_number"]):
+        return {"message": "staion already exists"}
+    if not valid_input(con, data["gps"], data["serial_number"]):
+        return {"message": "input data are not valid"}
+    add_stations(con, data["gps"], data["serial_number"])
+    return {"token": create_token(data["gps"], data["serial_number"])}

@@ -20,7 +20,7 @@ format dat:
 {
   "temperature": int        # C
   "humidity": int           # %
-  "preasure": int           # Pa
+  "pressure": int           # Pa
   "wind_speed": int         # km/h
   "wind_direction": str     # directions
   "rain": int               # mm/h 
