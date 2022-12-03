@@ -12,6 +12,7 @@
 :root {
     --vyska-menu: 60px;
     --velikost-pisma-menu: 20px;
+    --bila: rgb(245, 245, 245);
 }
 
 body {
@@ -20,7 +21,7 @@ body {
 }
 
 #menu {
-    background-color: rgb(237, 237, 237);
+    background-color: var(--bila);
     height: var(--vyska-menu);
     border-bottom: 1px solid;
 }
@@ -46,4 +47,8 @@ body {
 
 .about {
     padding: 10px;
+}
+
+.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+    background-color: var(--bila);
 }

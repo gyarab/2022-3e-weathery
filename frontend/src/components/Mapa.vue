@@ -8,17 +8,34 @@
 //}>()
 import L from 'leaflet'
 import '../assets/leaflet-providers.js'
+import {onBeforeUnmount, onDeactivated} from "vue";
+
+var icon = L.icon({
+    iconUrl: 'src/assets/target.png',
+    //shadowUrl: 'src/assets/map-pointer.png',
+
+    iconSize:     [20, 20], // size of the icon
+    //shadowSize:   [50, 64], // size of the shadow
+    iconAnchor:   [10, 10], // point of the icon which will correspond to marker's location
+    //shadowAnchor: [4, 62],  // the same for the shadow
+    popupAnchor:  [0, -15] // point from which the popup should open relative to the iconAnchor
+});
 
 // tady info: https://github.com/leaflet-extras/leaflet-providers
-var map = L.map('map').setView([50.0835494, 14.4341414], 11); //praha 50.0835494N, 14.4341414E
-/*L.tileLayer.provider('Jawg.Light', {
-    accessToken: 'nWDyoQqkjWUxatUXlNdKTqJymEWIFq0glO5O4kk5Ir3pUsmGb45lqJaHRyLz1OSo'
-}).addTo(map);*/
+var map = L.map('map').setView([50.0835494, 14.4341414], 11); // Praha
 L.tileLayer.provider('CartoDB.Voyager').addTo(map);
+
+L.marker([50.13378832240194, 14.378124229373308], {icon: icon}).addTo(map)
+    .bindPopup('Subemelaradio <br> muj house neraidovat pls')
+
+
+onBeforeUnmount(() => {
+   map.off();
+   map.remove();
+});
 
 </script>
 
 
 <template>
 </template>
-
