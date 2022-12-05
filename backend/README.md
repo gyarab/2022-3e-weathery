@@ -6,8 +6,8 @@ format dat:
 ```json
 {
   "stations": [
-    {"gps": str}
-    {"gps": str}
+    {"gps": "str"}
+    {"gps": "str"}
     ...
   ]
 }
@@ -18,12 +18,12 @@ vrati aktualni pocasi stanice s temito GPS <br/>
 format dat:
 ```json
 {
-  "temperature": int        // C
-  "humidity": int           // %
-  "pressure": int           // Pa
-  "wind_speed": int         // km/h
-  "wind_direction": str     // directions
-  "rain": int               // mm/h 
+  "temperature": "int"        // C
+  "humidity": "int"           // %
+  "pressure": "int"           // Pa
+  "wind_speed": "int"         // km/h
+  "wind_direction": "str"     // directions
+  "rain": "int"               // mm/h 
 }
 ```
 
@@ -33,22 +33,22 @@ vrati data v danem casomev intervalu <br/>
 {
   "data": [
     {
-      "time": str               // %D-%M-%Y %H:%M:%S
-      "temperature": int        // C
-      "humidity": int           // %
-      "pressure": int           // Pa
-      "wind_speed": int         // km/h
-      "wind_direction": str     // directions
-      "rain": int               // mm/h 
+      "time": "str",
+      "temperature": "int"        // C
+      "humidity": "int"           // %
+      "pressure": "int"           // Pa
+      "wind_speed": "int"         // km/h
+      "wind_direction": "str"     // directions
+      "rain": "int"               // mm/h 
     },
     {
-      "time": str               // %D-%M-%Y %H:%M:%S
-      "temperature": int        // C
-      "humidity": int           // %
-      "pressure": int           // Pa
-      "wind_speed": int         // km/h
-      "wind_direction": str     // directions
-      "rain": int               // mm/h 
+      "time": "str",
+      "temperature": "int"        // C
+      "humidity": "int"           // %
+      "pressure": "int"           // Pa
+      "wind_speed": "int"         // km/h
+      "wind_direction": "str"     // directions
+      "rain": "int"               // mm/h 
     },
     ...
   ]
