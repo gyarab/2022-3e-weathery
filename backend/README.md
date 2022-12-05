@@ -1,9 +1,9 @@
 # API docs
 
-## GET"/api/stations"
+## GET "/api/stations"
 vrati GPS vsech registrovanych stanic <br/> 
 format dat:
-```
+```json
 {
   "stations": [
     {"gps": str}
@@ -13,25 +13,50 @@ format dat:
 }
 ```
 
-## GET"/api/now/{gps}"
+## GET "/api/now/{gps}"
 vrati aktualni pocasi stanice s temito GPS <br/> 
 format dat:
-```
+```json
 {
-  "temperature": int        # C
-  "humidity": int           # %
-  "pressure": int           # Pa
-  "wind_speed": int         # km/h
-  "wind_direction": str     # directions
-  "rain": int               # mm/h 
+  "temperature": int        // C
+  "humidity": int           // %
+  "pressure": int           // Pa
+  "wind_speed": int         // km/h
+  "wind_direction": str     // directions
+  "rain": int               // mm/h 
 }
 ```
 
-## GET"/api/stats/{gps}/{from}/{to}"
-vrati vchena namerena data z dane stanice
+## GET "/api/stats/{gps}/{from}/{to}"
+vrati data v danem casomev intervalu <br/>
+```json
+{
+  "data": [
+    {
+      "time": str               // %D-%M-%Y %H:%M:%S
+      "temperature": int        // C
+      "humidity": int           // %
+      "pressure": int           // Pa
+      "wind_speed": int         // km/h
+      "wind_direction": str     // directions
+      "rain": int               // mm/h 
+    },
+    {
+      "time": str               // %D-%M-%Y %H:%M:%S
+      "temperature": int        // C
+      "humidity": int           // %
+      "pressure": int           // Pa
+      "wind_speed": int         // km/h
+      "wind_direction": str     // directions
+      "rain": int               // mm/h 
+    },
+    ...
+  ]
+}
+```
 
-## POST"/api/update"
+## POST "/api/update"
 server si pres token overi jaka stanice posila data a ulozi je do databaze pod prislusnou stanici
 
-## POST"/api/register"
+## POST "/api/register"
 server si podle secret_key overi ze stanice je realna a vytvori ji token s kterym se pozdeji stanice prokazuje a dale stanici zapise do databaze
