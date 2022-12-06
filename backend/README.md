@@ -55,8 +55,8 @@ vrati data v danem casomev intervalu <br/>
 }
 ```
 
-## POST "/api/update"
+## POST "/api/station/update"
 server si pres token overi jaka stanice posila data a ulozi je do databaze pod prislusnou stanici
 
-## POST "/api/register"
+## POST "/api/station/register"
 server si podle secret_key overi ze stanice je realna a vytvori ji token s kterym se pozdeji stanice prokazuje a dale stanici zapise do databaze

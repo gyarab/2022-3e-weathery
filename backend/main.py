@@ -75,7 +75,7 @@ async def stats(gps: str, date_from: str, date_to: str):
 
 
 # TODO: z tokenu zjisti gps souradnice a prida do databaze aktualni prijate hodnoty ze stanice
-@app.post("/api/update")
+@app.post("/api/staion/update")
 async def update(req: Request, data: Data):
     token = get_token(req)
     format = '%d-%m-%Y %H:%M:%S'
@@ -90,7 +90,7 @@ async def update(req: Request, data: Data):
 
 # TODO: (ZATIM NEDELAT) overi si podle serial_number (seriove cislo stanice), ze stanice je realna
 # a vytvori pro ni token, ktery ji posle a zaregistruje ji do databeze
-@app.post("/api/register")
+@app.post("/api/staion/register")
 async def register(d: RegisterData):
     data = jsonable_encoder(d)
     if station_exists(con, data["gps"]):
