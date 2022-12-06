@@ -39,7 +39,7 @@ vrati data v danem casomev intervalu <br/>
       "pressure": "int",           // Pa
       "wind_speed": "int",         // km/h
       "wind_direction": "str",     // directions
-      "rain": "int"               // mm/h 
+      "rain": "int"                // mm/h 
     },
     {
       "time": "str",
@@ -48,7 +48,7 @@ vrati data v danem casomev intervalu <br/>
       "pressure": "int",           // Pa
       "wind_speed": "int",         // km/h
       "wind_direction": "str",     // directions
-      "rain": "int"               // mm/h 
+      "rain": "int"                // mm/h 
     },
     ...
   ]
