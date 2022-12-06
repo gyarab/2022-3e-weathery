@@ -27,7 +27,7 @@ L.tileLayer.provider('CartoDB.Voyager').addTo(map);
 
 L.marker([50.13378832240194, 14.378124229373308], {icon: icon}).addTo(map)
     .bindPopup('Subemelaradio <br> muj house neraidovat pls')
-
+L.marker([50.0742633, 14.3588950], {icon: icon}).addTo(map).bindPopup('plná taška hulení')
 
 onBeforeUnmount(() => {
    map.off();
