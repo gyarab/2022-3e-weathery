@@ -3,11 +3,11 @@
 ## GET "/api/stations"
 vrati GPS vsech registrovanych stanic <br/> 
 format dat:
-```json
+```javascript
 {
   "stations": [
-    {"gps": "str"}
-    {"gps": "str"}
+    {"gps": "str"},
+    {"gps": "str"},
     ...
   ]
 }
@@ -16,38 +16,38 @@ format dat:
 ## GET "/api/now/{gps}"
 vrati aktualni pocasi stanice s temito GPS <br/> 
 format dat:
-```json
+```javascript
 {
-  "temperature": "int"        // C
-  "humidity": "int"           // %
-  "pressure": "int"           // Pa
-  "wind_speed": "int"         // km/h
-  "wind_direction": "str"     // directions
-  "rain": "int"               // mm/h 
+  "temperature": "int",        // C
+  "humidity": "int",           // %
+  "pressure": "int",           // Pa
+  "wind_speed": "int",         // km/h
+  "wind_direction": "str",     // directions
+  "rain": "int"                // mm/h 
 }
 ```
 
 ## GET "/api/stats/{gps}/{from}/{to}"
 vrati data v danem casomev intervalu <br/>
-```json
+```javascript
 {
   "data": [
     {
       "time": "str",
-      "temperature": "int"        // C
-      "humidity": "int"           // %
-      "pressure": "int"           // Pa
-      "wind_speed": "int"         // km/h
-      "wind_direction": "str"     // directions
+      "temperature": "int",        // C
+      "humidity": "int",           // %
+      "pressure": "int",           // Pa
+      "wind_speed": "int",         // km/h
+      "wind_direction": "str",     // directions
       "rain": "int"               // mm/h 
     },
     {
       "time": "str",
-      "temperature": "int"        // C
-      "humidity": "int"           // %
-      "pressure": "int"           // Pa
-      "wind_speed": "int"         // km/h
-      "wind_direction": "str"     // directions
+      "temperature": "int",        // C
+      "humidity": "int",           // %
+      "pressure": "int",           // Pa
+      "wind_speed": "int",         // km/h
+      "wind_direction": "str",     // directions
       "rain": "int"               // mm/h 
     },
     ...
