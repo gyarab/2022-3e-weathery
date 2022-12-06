@@ -4,8 +4,16 @@ import jwt
 import psycopg2
 from fastapi import FastAPI, Request
 from fastapi.encoders import jsonable_encoder
-from manage_data import add_stations, get_all_stations, station_exists, update_weather, valid_date, valid_input, \
-    get_latest_data, get_between_dates
+from manage_data import (
+    add_stations,
+    get_all_stations,
+    station_exists,
+    update_weather,
+    valid_date,
+    valid_input,
+    get_latest_data,
+    get_between_dates,
+)
 from models import Data, RegisterData
 
 SECRET_KEY = "SECRET_KEY"
@@ -17,8 +25,9 @@ USER = env.USER
 PASSWORD = env.PASSWORD
 
 app = FastAPI()
-con = psycopg2.connect(database="weatherydb", user=USER,
-                       password=PASSWORD, host="localhost", port=5432)
+con = psycopg2.connect(
+    database="weatherydb", user=USER, password=PASSWORD, host="localhost", port=5432
+)
 
 
 def get_token(req):
@@ -56,7 +65,7 @@ async def now(gps: str):
 # TODO: vrati vsechna namerena data ze stanice s danymi GPS
 @app.get("/api/stats/{gps}/{date_from}/{date_to}")
 async def stats(gps: str, date_from: str, date_to: str):
-    format = '%d-%m-%Y %H:%M:%S'
+    format = "%d-%m-%Y %H:%M:%S"
     if not valid_date(date_from):
         return {"message": "date is not valid"}
     if not valid_date(date_to):
@@ -65,10 +74,10 @@ async def stats(gps: str, date_from: str, date_to: str):
         date_from += " 00:00:00"
     if len(date_to) <= 10:
         date_to += " 23:59:59"
-    delta = datetime.strptime(date_to, format) - datetime.strptime(
-        date_from, format)
-    unix_delta = datetime.timestamp(datetime.strptime(date_to, format)) - datetime.timestamp(datetime.strptime(
-        date_from, format))
+    delta = datetime.strptime(date_to, format) - datetime.strptime(date_from, format)
+    unix_delta = datetime.timestamp(
+        datetime.strptime(date_to, format)
+    ) - datetime.timestamp(datetime.strptime(date_from, format))
     if unix_delta <= 0:
         return {"message": "date is not valid"}
     return get_between_dates(con, gps, date_from, date_to)
@@ -78,13 +87,12 @@ async def stats(gps: str, date_from: str, date_to: str):
 @app.post("/api/staion/update")
 async def update(req: Request, data: Data):
     token = get_token(req)
-    format = '%d-%m-%Y %H:%M:%S'
+    format = "%d-%m-%Y %H:%M:%S"
     if token is None:
         return {"message": "no token found"}
     if not authorized_token(token):
         return {"message": "token is not valid"}
-    update_weather(con, token["gps"],
-                   datetime.strftime(datetime.now(), format), data)
+    update_weather(con, token["gps"], datetime.strftime(datetime.now(), format), data)
     return {"message": "weather updated successfulaly"}
 
 
