@@ -151,7 +151,7 @@ def update_weather(connection, gps: str, time: str, data):
             data["rain"],
         ),
     )
-    con.commit()
+    connection.commit()
 
 
 # debug only
