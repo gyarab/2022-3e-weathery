@@ -75,7 +75,6 @@ async def stats(gps: str, date_from: str, date_to: str = "now"):
         date_from += " 00:00:00"
     if len(date_to) <= 10:
         date_to += " 23:59:59"
-    delta = datetime.strptime(date_to, format) - datetime.strptime(date_from, format)
     unix_delta = datetime.timestamp(
         datetime.strptime(date_to, format)
     ) - datetime.timestamp(datetime.strptime(date_from, format))
