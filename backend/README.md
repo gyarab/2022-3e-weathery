@@ -44,7 +44,7 @@ vrati zprumerovane data v danem casomev intervalu <br/>
       "wind_speed": "int",         // km/h
       "wind_direction": "str",     // directions
       "rain": "int",               // mm/h
-      "average_of": "int"           // sum  
+      "average_of": "int"          // sum  
     },
     {
       "time": "str",               // d-m-y H:M:S
@@ -54,7 +54,7 @@ vrati zprumerovane data v danem casomev intervalu <br/>
       "wind_speed": "int",         // km/h
       "wind_direction": "str",     // directions
       "rain": "int"                // mm/h 
-      "average_of": "int"           // sum  
+      "average_of": "int"          // sum  
     },
     ...
   ]
