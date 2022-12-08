@@ -32,13 +32,15 @@ def get_latest_data(connection, gps: str):
     }
 
 
-def get_between_dates(connection, gps: str, type: int, date_from: str, date_to: str):
+def get_between_dates(
+    connection, gps: str, avg_type: int, date_from: str, date_to: str
+):
     cur = connection.cursor()
     format = "%d-%m-%Y %H:%M:%S"
     d_from = datetime.strptime(date_from, format)
     d_to = datetime.strptime(date_to, format)
     data = {"data": []}
-    match type:
+    match avg_type:
         case 0:
             delta = d_to - d_from
             for i in range((delta.seconds // 3600) + 1):
@@ -90,7 +92,7 @@ def execute_between_dates(cur, gps, d_from, to):
         "wind_speed": wind_speed / avg,
         "wind_direction": max(wind_direction, key=wind_direction.count),
         "rain": rain / avg,
-        "avrage_of": avg,
+        "average_of": avg,
     }
     return data
 
