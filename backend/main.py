@@ -19,7 +19,8 @@ from models import Data, RegisterData
 SECRET_KEY = "SECRET_KEY"
 ALGORITHM = "HS256"
 
-WEEK = 604800
+DAY = 86400
+MONTH = 2678400
 
 USER = env.USER
 PASSWORD = env.PASSWORD
@@ -48,24 +49,24 @@ def create_token(gps, serial_number):
     return encoded_jwt
 
 
-# TODO: vrati GPS vsech stanic
 @app.get("/api/stations")
 async def stations():
     return get_all_stations(con)
 
 
-# TODO: vrati aktualni pocasi ze stanice s danymi GPS
 @app.get("/api/now/{gps}")
 async def now(gps: str):
     if not station_exists(con, gps):
-        return {"message": "staion does not exist"}
+        return {"message": "station does not exist"}
     return get_latest_data(con, gps)
 
 
 # TODO: vrati vsechna namerena data ze stanice s danymi GPS
 @app.get("/api/stats/{gps}/{date_from}/{date_to}")
-async def stats(gps: str, date_from: str, date_to: str):
+async def stats(gps: str, date_from: str, date_to: str = "now"):
     format = "%d-%m-%Y %H:%M:%S"
+    if date_to == "now":
+        date_to = str(datetime.strftime(datetime.now(), format))
     if not valid_date(date_from):
         return {"message": "date is not valid"}
     if not valid_date(date_to):
@@ -80,11 +81,15 @@ async def stats(gps: str, date_from: str, date_to: str):
     ) - datetime.timestamp(datetime.strptime(date_from, format))
     if unix_delta <= 0:
         return {"message": "date is not valid"}
-    return get_between_dates(con, gps, date_from, date_to)
+    elif unix_delta <= DAY:
+        return get_between_dates(con, gps, 0, date_from, date_to)
+    elif unix_delta <= 3 * MONTH:
+        return get_between_dates(con, gps, 1, date_from, date_to)
+    else:
+        return get_between_dates(con, gps, 2, date_from, date_to)
 
 
-# TODO: z tokenu zjisti gps souradnice a prida do databaze aktualni prijate hodnoty ze stanice
-@app.post("/api/staion/update")
+@app.post("/api/station/update")
 async def update(req: Request, data: Data):
     token = get_token(req)
     format = "%d-%m-%Y %H:%M:%S"
@@ -96,13 +101,11 @@ async def update(req: Request, data: Data):
     return {"message": "weather updated successfulaly"}
 
 
-# TODO: (ZATIM NEDELAT) overi si podle serial_number (seriove cislo stanice), ze stanice je realna
-# a vytvori pro ni token, ktery ji posle a zaregistruje ji do databeze
-@app.post("/api/staion/register")
+@app.post("/api/station/register")
 async def register(d: RegisterData):
     data = jsonable_encoder(d)
     if station_exists(con, data["gps"]):
-        return {"message": "staion already exists"}
+        return {"message": "station already exists"}
     if not valid_input(con, data["gps"]):
         return {"message": "input data are not valid"}
     add_stations(con, data["gps"], data["serial_number"])

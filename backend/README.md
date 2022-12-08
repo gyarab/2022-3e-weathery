@@ -28,27 +28,33 @@ format dat:
 ```
 
 ## GET "/api/stats/{gps}/{from}/{to}"
-vrati data v danem casomev intervalu <br/>
+vrati zprumerovane data v danem casomev intervalu <br/>
+- (interval <= DEN) -> prumer z kazde hodiny 
+- (interval <= 3 MESICE) -> prumer z kazdeho dne
+- (interval > 3 MESICE) -> prumer z kazedeho tydne
+
 ```javascript
 {
   "data": [
     {
-      "time": "str",
+      "time": "str",               // d-m-y H:M:S
       "temperature": "int",        // C
       "humidity": "int",           // %
       "pressure": "int",           // Pa
       "wind_speed": "int",         // km/h
       "wind_direction": "str",     // directions
-      "rain": "int"                // mm/h 
+      "rain": "int",               // mm/h
+      "avrage_of": "int"           // sum  
     },
     {
-      "time": "str",
+      "time": "str",               // d-m-y H:M:S
       "temperature": "int",        // C
       "humidity": "int",           // %
       "pressure": "int",           // Pa
       "wind_speed": "int",         // km/h
       "wind_direction": "str",     // directions
       "rain": "int"                // mm/h 
+      "avrage_of": "int"           // sum  
     },
     ...
   ]

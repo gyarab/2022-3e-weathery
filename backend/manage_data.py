@@ -1,6 +1,5 @@
 import env
-from datetime import datetime
-import psycopg2
+from datetime import datetime, timedelta
 
 USER = env.USER
 PASSWORD = env.PASSWORD
@@ -33,30 +32,66 @@ def get_latest_data(connection, gps: str):
     }
 
 
-def get_between_dates(connection, gps: str, date_from: str, date_to: str):
+def get_between_dates(connection, gps: str, type: int, date_from: str, date_to: str):
     cur = connection.cursor()
+    format = "%d-%m-%Y %H:%M:%S"
+    d_from = datetime.strptime(date_from, format)
+    d_to = datetime.strptime(date_to, format)
+    data = {"data": []}
+    match type:
+        case 0:
+            delta = d_to - d_from
+            for i in range((delta.seconds // 3600) + 1):
+                to = d_to - timedelta(hours=(delta.seconds // 3600) - i)
+                data["data"].append(execute_between_dates(cur, gps, d_from, to))
+                d_from += timedelta(hours=1)
+        case 1:
+            delta = d_to - d_from
+            for i in range(delta.days + 1):
+                to = d_to - timedelta(delta.days - i)
+                data["data"].append(execute_between_dates(cur, gps, d_from, to))
+                d_from += timedelta(days=1)
+        case 2:
+            delta = d_to - d_from
+            for i in range((delta.days // 7) + 1):
+                to = d_to - timedelta((delta.days // 7) - i)
+                data["data"].append(execute_between_dates(cur, gps, d_from, to))
+                d_from += timedelta(weeks=1)
+
+    return data
+
+
+def execute_between_dates(cur, gps, d_from, to):
+    format = "%d-%m-%Y %H:%M:%S"
     cur.execute(
         "SELECT time, temperature, humidity, pressure, wind_speed, wind_direction, rain from data WHERE gps=%s and time BETWEEN %s AND %s",
         (
             gps,
-            date_from,
-            date_to,
+            d_from,
+            to,
         ),
     )
     items = cur.fetchall()
-    data = {"data": []}
+    temperature, humidity, pressure, wind_speed, rain = 0, 0, 0, 0, 0
+    wind_direction = ""
     for i in items:
-        data["data"].append(
-            {
-                "time": str(i[0]),
-                "temperature": i[1],
-                "humidity": i[2],
-                "pressure": i[3],
-                "wind_speed": i[4],
-                "wind_direction": i[5],
-                "rain": i[6],
-            }
-        )
+        temperature += i[1]
+        humidity += i[2]
+        pressure += i[3]
+        wind_speed += i[4]
+        wind_direction += i[5]
+        rain += i[6]
+    avg = len(items) if len(items) > 0 else 1
+    data = {
+        "time": str(datetime.strftime(d_from, format)),
+        "temperature": temperature / avg,
+        "humidity": humidity / avg,
+        "pressure": pressure / avg,
+        "wind_speed": wind_speed / avg,
+        "wind_direction": max(wind_direction, key=wind_direction.count),
+        "rain": rain / avg,
+        "avrage_of": avg,
+    }
     return data
 
 
@@ -152,20 +187,3 @@ def update_weather(connection, gps: str, time: str, data):
         ),
     )
     connection.commit()
-
-
-# debug only
-def post_data(con):
-    format = "%d-%m-%Y %H:%M:%S"
-    for i in range(15):
-        data = {
-            "temperature": i,
-            "humidity": i * 5,
-            "pressure": i * 1000,
-            "wind_speed": i * 2,
-            "wind_direction": "N",
-            "rain": i,
-        }
-        update_weather(
-            con, "21.123456 -46.123456", datetime.strftime(datetime.now(), format), data
-        )
