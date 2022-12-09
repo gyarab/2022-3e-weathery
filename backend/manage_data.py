@@ -35,7 +35,6 @@ def get_latest_data(connection, gps: str):
 def get_between_dates(
     connection, gps: str, avg_type: int, date_from: str, date_to: str
 ):
-    cur = connection.cursor()
     format = "%d-%m-%Y %H:%M:%S"
     d_from = datetime.strptime(date_from, format)
     d_to = datetime.strptime(date_to, format)
@@ -45,26 +44,27 @@ def get_between_dates(
             delta = d_to - d_from
             for i in range((delta.seconds // 3600) + 1):
                 to = d_to - timedelta(hours=(delta.seconds // 3600) - i)
-                data["data"].append(execute_between_dates(cur, gps, d_from, to))
+                data["data"].append(execute_between_dates(connection, gps, d_from, to))
                 d_from += timedelta(hours=1)
         case 1:
             delta = d_to - d_from
             for i in range(delta.days + 1):
                 to = d_to - timedelta(delta.days - i)
-                data["data"].append(execute_between_dates(cur, gps, d_from, to))
+                data["data"].append(execute_between_dates(connection, gps, d_from, to))
                 d_from += timedelta(days=1)
         case 2:
             delta = d_to - d_from
             for i in range((delta.days // 7) + 1):
                 to = d_to - timedelta((delta.days // 7) - i)
-                data["data"].append(execute_between_dates(cur, gps, d_from, to))
+                data["data"].append(execute_between_dates(connection, gps, d_from, to))
                 d_from += timedelta(weeks=1)
 
     return data
 
 
-def execute_between_dates(cur, gps, d_from, to):
+def execute_between_dates(connection, gps, d_from, to):
     format = "%d-%m-%Y %H:%M:%S"
+    cur = connection.cursor()
     cur.execute(
         "SELECT time, temperature, humidity, pressure, wind_speed, wind_direction, rain from data WHERE gps=%s and time BETWEEN %s AND %s",
         (
