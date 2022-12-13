@@ -5,7 +5,7 @@ vrati GPS vsech registrovanych stanic <br/>
 format dat:
 ```javascript
 {
-  "stations": [
+  "station": [
     {"gps": "str"},
     {"gps": "str"},
     ...
