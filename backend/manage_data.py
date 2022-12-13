@@ -83,20 +83,27 @@ def execute_between_dates(connection, gps, d_from, to):
         wind_speed += i[4]
         wind_direction += i[5]
         rain += i[6]
-    avg = len(items) if len(items) > 0 else 1
-    data = {
+    avg = len(items)
+    if avg > 0:
+        return {
+            "time": str(datetime.strftime(d_from, format)),
+            "temperature": temperature / avg,
+            "humidity": humidity / avg,
+            "pressure": pressure / avg,
+            "wind_speed": wind_speed / avg,
+            "wind_direction": max(wind_direction, key=wind_direction.count),
+            "rain": rain / avg,
+            "average_of": avg,
+        }
+    return {
         "time": str(datetime.strftime(d_from, format)),
-        "temperature": temperature / avg,
-        "humidity": humidity / avg,
-        "pressure": pressure / avg,
-        "wind_speed": wind_speed / avg,
-        "wind_direction": max(wind_direction, key=wind_direction.count)
-        if len(wind_direction)
-        else "",
-        "rain": rain / avg,
-        "average_of": avg,
+        "temperature": 0,
+        "humidity": 0,
+        "pressure": 0,
+        "wind_speed": 0,
+        "wind_direction": "",
+        "average_of": 0,
     }
-    return data
 
 
 def get_all_data(connection, gps: str, from_date: int, to_date: int):
