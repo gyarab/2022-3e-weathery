@@ -9,9 +9,9 @@ def get_all_stations(connection):
     cur = connection.cursor()
     cur.execute("SELECT gps from stations;")
     items = cur.fetchall()
-    data = {}
+    data = {"station": []}
     for i in range(len(items)):
-        data[i] = {"gps": items[i][0]}
+        data["station"].append({"gps": items[i][0]})
     return data
 
 
@@ -104,31 +104,6 @@ def execute_between_dates(connection, gps, d_from, to):
         "wind_direction": "",
         "average_of": 0,
     }
-
-
-def get_all_data(connection, gps: str, from_date: int, to_date: int):
-    cur = connection.cursor()
-    cur.execute(
-        "SELECT temperature, humidity, pressure, wind_speed, wind_direction, rain ,time FROM data WHERE gps = %s and time > %s and time < %s",
-        (
-            gps,
-            from_date,
-            to_date,
-        ),
-    )
-    items = cur.fetchall()
-    data = {}
-    for i in range(len(items)):
-        data[i] = {
-            "temperature": items[i][0],
-            "humidity": items[i][1],
-            "pressure": items[i][2],
-            "wind_speed": items[i][3],
-            "wind_direction": items[i][4],
-            "rain": items[i][5],
-            "time": items[i][6],
-        }
-    return data
 
 
 def station_exists(connection, gps: str) -> bool:
