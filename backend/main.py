@@ -66,7 +66,7 @@ async def now(gps: str):
 async def stats(gps: str, date_from: str, date_to: str = "now"):
     format = "%d-%m-%Y %H:%M:%S"
     if date_to == "now":
-        date_to = str(datetime.strftime(datetime.now(), format))
+        date_to = str(datetime.strftime(datetime.now(), "%d-%m-%Y")) + " 23:59:59"
     if not valid_date(date_from):
         return {"message": "date is not valid"}
     if not valid_date(date_to):

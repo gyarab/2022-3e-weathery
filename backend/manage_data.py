@@ -90,7 +90,9 @@ def execute_between_dates(connection, gps, d_from, to):
         "humidity": humidity / avg,
         "pressure": pressure / avg,
         "wind_speed": wind_speed / avg,
-        "wind_direction": max(wind_direction, key=wind_direction.count),
+        "wind_direction": max(wind_direction, key=wind_direction.count)
+        if len(wind_direction)
+        else "",
         "rain": rain / avg,
         "average_of": avg,
     }
