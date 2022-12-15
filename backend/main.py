@@ -64,6 +64,8 @@ async def now(gps: str):
 # TODO: vrati vsechna namerena data ze stanice s danymi GPS
 @app.get("/api/stats/{gps}/{date_from}/{date_to}")
 async def stats(gps: str, date_from: str, date_to: str = "now"):
+    if not station_exists(con, gps):
+        return {"message": "station does not exist"}
     format = "%d-%m-%Y %H:%M:%S"
     if date_to == "now":
         date_to = str(datetime.strftime(datetime.now(), "%d-%m-%Y")) + " 23:59:59"

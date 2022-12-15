@@ -18,6 +18,7 @@ vrati aktualni pocasi stanice s temito GPS <br/>
 format dat:
 ```javascript
 {
+  "time": "str"                // d-m-y H:M:S
   "temperature": "int",        // C
   "humidity": "int",           // %
   "pressure": "int",           // Pa

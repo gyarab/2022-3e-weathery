@@ -17,12 +17,14 @@ def get_all_stations(connection):
 
 def get_latest_data(connection, gps: str):
     cur = connection.cursor()
+    format = "%d-%m-%Y %H:%M:%S"
     cur.execute(
         "SELECT temperature, humidity, pressure, wind_speed, wind_direction, rain, time from data WHERE gps=%s order by time DESC",
         (gps,),
     )
     data = cur.fetchall()[0]
     return {
+        "time": str(datetime.strftime(data[6], format)),
         "temperature": data[0],
         "humidity": data[1],
         "pressure": data[2],
