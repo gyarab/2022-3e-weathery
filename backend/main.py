@@ -62,8 +62,7 @@ def now(gps: str):
     return get_latest_data(con, gps)
 
 
-# TODO: vrati vsechna namerena data ze stanice s danymi GPS
-@app.get("/api/stats/{gps}/{date_from}/{date_to}")
+@app.get("/api/stats/{gps}")
 def stats(gps: str, date_from: str, date_to: str = "now"):
     if not station_exists(con, gps):
         return {"message": "station does not exist"}
