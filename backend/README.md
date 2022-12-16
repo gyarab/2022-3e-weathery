@@ -28,7 +28,7 @@ format dat:
 }
 ```
 
-## GET "/api/stats/{gps}/{from}/{to}"
+## GET "/api/stats/{gps}?from={from}&to={to}"
 vrati zprumerovane data v danem casomev intervalu <br/>
 - (interval <= DEN) -> prumer z kazde hodiny 
 - (interval <= 3 MESICE) -> prumer z kazdeho dne
