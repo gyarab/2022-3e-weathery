@@ -6,9 +6,10 @@
 //defineProps<{
 //    msg: string
 //}>()
+import axios from "axios";
 import L from 'leaflet'
 import '../assets/leaflet-providers.js'
-import {onBeforeUnmount, onDeactivated} from "vue";
+import {onBeforeUnmount, onDeactivated, onMounted} from "vue";
 
 var icon = L.icon({
     iconUrl: 'src/assets/target.png',
@@ -32,6 +33,14 @@ L.marker([50.0742633, 14.3588950], {icon: icon}).addTo(map).bindPopup('plnÃ¡ taÅ
 onBeforeUnmount(() => {
    map.off();
    map.remove();
+});
+
+onMounted(() => {
+    axios
+        .get("/api/stations")
+        .then(response => {
+            // neco s tim co ti prijde more
+        })
 });
 
 </script>
