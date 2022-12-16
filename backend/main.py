@@ -3,6 +3,7 @@ from datetime import datetime
 import jwt
 import psycopg2
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.encoders import jsonable_encoder
 from manage_data import (
     add_stations,
@@ -22,12 +23,23 @@ ALGORITHM = "HS256"
 DAY = 86400
 MONTH = 2678400
 
-USER = env.USER
-PASSWORD = env.PASSWORD
+USER = env.DB_USER
+PASSWORD = env.DB_PASSWORD
+DB_NAME = env.DB_NAME
+
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 con = psycopg2.connect(
-    database="weatherydb", user=USER, password=PASSWORD, host="localhost", port=5432
+    database=DB_NAME, user=USER, password=PASSWORD, host="localhost", port=5432
 )
 
 
@@ -61,8 +73,7 @@ def now(gps: str):
     return get_latest_data(con, gps)
 
 
-# TODO: vrati vsechna namerena data ze stanice s danymi GPS
-@app.get("/api/stats/{gps}/{date_from}/{date_to}")
+@app.get("/api/stats/{gps}")
 def stats(gps: str, date_from: str, date_to: str = "now"):
     if not station_exists(con, gps):
         return {"message": "station does not exist"}
