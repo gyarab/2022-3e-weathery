@@ -22,8 +22,8 @@ ALGORITHM = "HS256"
 DAY = 86400
 MONTH = 2678400
 
-USER = env.USER
-PASSWORD = env.PASSWORD
+USER = env.DB_USER
+PASSWORD = env.DB_PASSWORD
 
 app = FastAPI()
 con = psycopg2.connect(

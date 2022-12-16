@@ -1,9 +1,9 @@
 import env
 import psycopg2
 
-USER = env.USER
-PASSWORD = env.PASSWORD
-DBNAME = env.DBNAME
+USER = env.DB_USER
+PASSWORD = env.DB_PASSWORD
+DBNAME = env.DB_NAME
 con = psycopg2.connect(
     database=DBNAME, user=USER, password=PASSWORD, host="localhost", port=5432
 )

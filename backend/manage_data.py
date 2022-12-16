@@ -1,8 +1,4 @@
-import env
 from datetime import datetime, timedelta
-
-USER = env.USER
-PASSWORD = env.PASSWORD
 
 
 def get_all_stations(connection):
