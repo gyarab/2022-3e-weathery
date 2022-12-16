@@ -24,10 +24,11 @@ MONTH = 2678400
 
 USER = env.DB_USER
 PASSWORD = env.DB_PASSWORD
+DB_NAME = env.DB_NAME
 
 app = FastAPI()
 con = psycopg2.connect(
-    database="weatherydb", user=USER, password=PASSWORD, host="localhost", port=5432
+    database=DB_NAME, user=USER, password=PASSWORD, host="localhost", port=5432
 )
 
 
