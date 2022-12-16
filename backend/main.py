@@ -3,6 +3,7 @@ from datetime import datetime
 import jwt
 import psycopg2
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.encoders import jsonable_encoder
 from manage_data import (
     add_stations,
@@ -26,7 +27,17 @@ USER = env.DB_USER
 PASSWORD = env.DB_PASSWORD
 DB_NAME = env.DB_NAME
 
+
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 con = psycopg2.connect(
     database=DB_NAME, user=USER, password=PASSWORD, host="localhost", port=5432
 )
