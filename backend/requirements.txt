@@ -1,4 +1,5 @@
 uvicorn
 fastapi
 jwt
-psycopg2
+pyjwt
+psycopg2-bin
