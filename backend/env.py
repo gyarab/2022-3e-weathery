@@ -33,3 +33,4 @@ if os.path.isfile(_ENV_FILE):
 
 PASSWORD: str = env(str, "PASSWORD")
 USER: str = env(str, "USER")
+DBNAME: str = env(str, "DBNAME")

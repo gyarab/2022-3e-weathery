@@ -3,9 +3,9 @@ import psycopg2
 
 USER = env.USER
 PASSWORD = env.PASSWORD
-
+DBNAME = env.DBNAME
 con = psycopg2.connect(
-    database="weatherydb", user=USER, password=PASSWORD, host="localhost", port=5432
+    database=DBNAME, user=USER, password=PASSWORD, host="localhost", port=5432
 )
 cur = con.cursor()
 cur.execute("SET timezone='UTC';")
