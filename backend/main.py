@@ -50,12 +50,12 @@ def create_token(gps, serial_number):
 
 
 @app.get("/api/stations")
-async def stations():
+def stations():
     return get_all_stations(con)
 
 
 @app.get("/api/now/{gps}")
-async def now(gps: str):
+def now(gps: str):
     if not station_exists(con, gps):
         return {"message": "station does not exist"}
     return get_latest_data(con, gps)
@@ -63,7 +63,7 @@ async def now(gps: str):
 
 # TODO: vrati vsechna namerena data ze stanice s danymi GPS
 @app.get("/api/stats/{gps}/{date_from}/{date_to}")
-async def stats(gps: str, date_from: str, date_to: str = "now"):
+def stats(gps: str, date_from: str, date_to: str = "now"):
     if not station_exists(con, gps):
         return {"message": "station does not exist"}
     format = "%d-%m-%Y %H:%M:%S"
@@ -91,7 +91,7 @@ async def stats(gps: str, date_from: str, date_to: str = "now"):
 
 
 @app.post("/api/station/update")
-async def update(req: Request, data: Data):
+def update(req: Request, data: Data):
     token = get_token(req)
     format = "%d-%m-%Y %H:%M:%S"
     if token is None:
@@ -103,7 +103,7 @@ async def update(req: Request, data: Data):
 
 
 @app.post("/api/station/register")
-async def register(d: RegisterData):
+def register(d: RegisterData):
     data = jsonable_encoder(d)
     if station_exists(con, data["gps"]):
         return {"message": "station already exists"}
