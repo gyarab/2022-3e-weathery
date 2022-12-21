@@ -9,10 +9,11 @@ con = psycopg2.connect(
 )
 cur = con.cursor()
 cur.execute("SET timezone='UTC';")
-cur.execute("CREATE TABLE stations (gps TEXT, serial_number INT);")
 cur.execute(
     "CREATE TABLE data (gps TEXT, time TIMESTAMP, temperature INT, humidity INT, pressure INT, wind_speed INT, wind_direction TEXT, rain INT);"
 )
+cur.execute("CREATE TABLE stations (gps TEXT, serial_number INT);")
+
 cur.execute("CREATE TABLE serial_numbers (serial_number INT);")
 
 con.commit()
