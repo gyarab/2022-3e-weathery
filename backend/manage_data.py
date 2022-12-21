@@ -21,6 +21,7 @@ def get_latest_data(connection, gps: str):
     data = cur.fetchall()
     if len(data) <= 0:
         return {"message": "no data found"}
+    data = data[0]
     return {
         "message": "ok",
         "time": str(datetime.strftime(data[6], format)),
