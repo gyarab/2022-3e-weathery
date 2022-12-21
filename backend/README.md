@@ -1,14 +1,14 @@
 # API docs
 
-## GET "/api/stations"
-vrati GPS vsech registrovanych stanic <br/> 
+## GET /api/stations
+Tento endpoint vám vrátí GPS všech měřících stanic <br>
 format dat:
 ```javascript
 {
-  "station": [
-    {"gps": "str"},
-    {"gps": "str"},
-    ...
+  "message": "ok",
+  "stations": [
+     {"gps": "50.0993194_14.3596525"},
+     {"gps": "49.7454400_14.0578025"},
   ]
 }
 ```
@@ -18,7 +18,8 @@ vrati aktualni pocasi stanice s temito GPS <br/>
 format dat:
 ```javascript
 {
-  "time": "str"                // d-m-y H:M:S
+  "message": "ok",
+  "time": "str",                // d-m-y H:M:S
   "temperature": "int",        // C
   "humidity": "int",           // %
   "pressure": "int",           // Pa
@@ -36,6 +37,7 @@ vrati zprumerovane data v danem casomev intervalu <br/>
 
 ```javascript
 {
+  "message": "ok", 
   "data": [
     {
       "time": "str",               // d-m-y H:M:S
@@ -54,7 +56,7 @@ vrati zprumerovane data v danem casomev intervalu <br/>
       "pressure": "int",           // Pa
       "wind_speed": "int",         // km/h
       "wind_direction": "str",     // directions
-      "rain": "int"                // mm/h 
+      "rain": "int",                // mm/h 
       "average_of": "int"          // sum  
     },
     ...
