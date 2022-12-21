@@ -40,16 +40,32 @@ onMounted(() => {
         .then(response => {
             let stanice = response.data.station
             for (let i = 0; i < stanice.length; i++) {
-                let souradnice = stanice[i].gps.split(/\s+/);
-
+                let souradnice = stanice[i].gps; //pak to vrátit debile
+                let souradnice_split = stanice[i].gps.split("_");
                 axios
-                    .get("/api/now/" + stanice[i].gps)
+                    .get("/api/now/" + souradnice)
                     .then(response => {
-                        console.log(response.data)
+                        let stanice_obsah = response.data
+                        if (stanice_obsah.message == "ok") {
+                            console.log("fine")
+                            L.marker([souradnice_split[0], souradnice_split[1]], { icon: icon }).addTo(map).bindPopup(`<body>
+                                <h1>Stanice1</h1>
+                                <p>Můj milovaný bodík</p>
+                                <ul><li>Teplota:  ${stanice_obsah.temperature}  </li>
+                                <li>Tlak: ${stanice_obsah.pressure}</li>
+                                <li>Rychlost vzduchu: ${stanice_obsah.temperature}</li>
+                                <li>Vlhkost: ${stanice_obsah.humidity}</li>
+                                <li>Rychlost větru: ${stanice_obsah.wind_speed}</li>
+                                <li>Směr větru: ${stanice_obsah.wind_direction}</li>
+                                <li>Srážky: ${stanice_obsah.rain}</li>
+                                </ul><style>h1 {background-color: aqua;}</style></body>`)
+                            
+                        } else {
+                            //jsme vpíči to vymyslí firu
+                        }
                         // ulozim si to pocasi co mi prijde a potom to nasazim do toho BINDPOPUPu
+                        //https://weathery.ecko.ga/, https://weathery.ecko.ga/docs#/default/now_api_now__gps__get
                     })
-
-                L.marker([souradnice[0], souradnice[1]], { icon: icon }).addTo(map).bindPopup("<body><h1>Stanice1</h1><p>Můj milovaný bodík</p><ul><li>Teplota:" + "nic" + "</li><li>Tlak: {{stanice1.tlak}}</li><li>Rychlost vzduchu: {{stanice1.rychlost_vzduchu}}</li></ul><style>h1 {background-color: aqua;}</style></body>")
             }
         })
 });
