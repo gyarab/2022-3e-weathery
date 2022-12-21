@@ -13,7 +13,7 @@ format dat:
 }
 ```
 
-## GET "/api/now/{gps}"
+## GET /api/now/{gps}
 vrati aktualni pocasi stanice s temito GPS <br/> 
 format dat:
 ```javascript
@@ -29,7 +29,7 @@ format dat:
 }
 ```
 
-## GET "/api/stats/{gps}?date_from={from}&date_to={to}"
+## GET /api/stats/{gps}?date_from={from}&date_to={to}
 vrati zprumerovane data v danem casomev intervalu <br/>
 - (interval <= DEN) -> prumer z kazde hodiny 
 - (interval <= 3 MESICE) -> prumer z kazdeho dne
@@ -64,8 +64,8 @@ vrati zprumerovane data v danem casomev intervalu <br/>
 }
 ```
 
-## POST "/api/station/update"
+## POST /api/station/update
 server si pres token overi jaka stanice posila data a ulozi je do databaze pod prislusnou stanici
 
-## POST "/api/station/register"
+## POST /api/station/register
 server si podle secret_key overi ze stanice je realna a vytvori ji token s kterym se pozdeji stanice prokazuje a dale stanici zapise do databaze
