@@ -5,7 +5,7 @@ def get_all_stations(connection):
     cur = connection.cursor()
     cur.execute("SELECT gps from stations;")
     items = cur.fetchall()
-    data = {"station": []}
+    data = {"message": "ok", "station": []}
     for i in range(len(items)):
         data["station"].append({"gps": items[i][0]})
     return data
@@ -18,8 +18,12 @@ def get_latest_data(connection, gps: str):
         "SELECT temperature, humidity, pressure, wind_speed, wind_direction, rain, time from data WHERE gps=%s order by time DESC",
         (gps,),
     )
-    data = cur.fetchall()[0]
+    data = cur.fetchall()
+    if len(data) <= 0:
+        return {"message": "no data found"}
+    data = data[0]
     return {
+        "message": "ok",
         "time": str(datetime.strftime(data[6], format)),
         "temperature": data[0],
         "humidity": data[1],
@@ -36,7 +40,7 @@ def get_between_dates(
     format = "%d-%m-%Y %H:%M:%S"
     d_from = datetime.strptime(date_from, format)
     d_to = datetime.strptime(date_to, format)
-    data = {"data": []}
+    data = {"message": "ok", "data": []}
     match avg_type:
         case 0:
             delta = d_to - d_from

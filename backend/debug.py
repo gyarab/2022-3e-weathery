@@ -13,7 +13,7 @@ con = psycopg2.connect(
 
 def post_data(con):
     date = "16-12-2022"
-    gps = "50.1337883 14.3781242"
+    gps = "50.1337883_14.3781242"
     for i in range(24):
         for j in range(12):
             data = {
