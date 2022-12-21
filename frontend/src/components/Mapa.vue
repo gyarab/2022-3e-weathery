@@ -9,41 +9,48 @@
 import axios from "axios";
 import L from 'leaflet'
 import '../assets/leaflet-providers.js'
-import {onBeforeUnmount, onDeactivated, onMounted} from "vue";
+import { onBeforeUnmount, onDeactivated, onMounted } from "vue";
+import type { StandardPropertiesFallback } from "csstype";
 
 var icon = L.icon({
     iconUrl: 'src/assets/target.png',
     //shadowUrl: 'src/assets/map-pointer.png',
 
-    iconSize:     [20, 20], // size of the icon
+    iconSize: [20, 20], // size of the icon
     //shadowSize:   [50, 64], // size of the shadow
-    iconAnchor:   [10, 10], // point of the icon which will correspond to marker's location
+    iconAnchor: [10, 10], // point of the icon which will correspond to marker's location
     //shadowAnchor: [4, 62],  // the same for the shadow
-    popupAnchor:  [0, -15] // point from which the popup should open relative to the iconAnchor
+    popupAnchor: [0, -15] // point from which the popup should open relative to the iconAnchor
 });
 
 // tady info: https://github.com/leaflet-extras/leaflet-providers
 var map = L.map('map').setView([50.0835494, 14.4341414], 11); // Praha
 L.tileLayer.provider('CartoDB.Voyager').addTo(map);
 
-L.marker([50.13378832240194, 14.378124229373308], {icon: icon}).addTo(map)
-    .bindPopup('Subemelaradio <br> muj house neraidovat pls')
-var hruskq = L.marker([50.0742633, 14.3588950], {icon: icon}).addTo(map).bindPopup('plná taška hulení')
-hruskq.bindPopup
-        ("<h1>Stanice1</h1><p>Můj milovaný bodík</p><ul><li>Teplota:{{stanice1.teplota}}</li><li>Tlak: {{stanice1.tlak}}</li><li>Rychlost vzduchu: {{stanice1.rychlost_vzduchu}}</li></ul>")
-    
 
 
 onBeforeUnmount(() => {
-   map.off();
-   map.remove();
+    map.off();
+    map.remove();
 });
 
 onMounted(() => {
     axios
         .get("/api/stations")
         .then(response => {
-            // neco s tim co ti prijde more
+            let stanice = response.data.station
+            for (let i = 0; i < stanice.length; i++) {
+                let souradnice = stanice[i].gps.split(/\s+/);
+
+                axios
+                    .get("/api/now/" + stanice[i].gps)
+                    .then(response => {
+                        console.log(response.data)
+                        // ulozim si to pocasi co mi prijde a potom to nasazim do toho BINDPOPUPu
+                    })
+
+                L.marker([souradnice[0], souradnice[1]], { icon: icon }).addTo(map).bindPopup("<body><h1>Stanice1</h1><p>Můj milovaný bodík</p><ul><li>Teplota:" + "nic" + "</li><li>Tlak: {{stanice1.tlak}}</li><li>Rychlost vzduchu: {{stanice1.rychlost_vzduchu}}</li></ul><style>h1 {background-color: aqua;}</style></body>")
+            }
         })
 });
 
@@ -51,4 +58,5 @@ onMounted(() => {
 
 
 <template>
+    <Obsah></Obsah>
 </template>
