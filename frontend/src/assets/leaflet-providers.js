@@ -11,14 +11,14 @@
 
   L.TileLayer.Provider = L.TileLayer.extend({
     initialize: function(arg, options) {
-      var providers = L.TileLayer.Provider.providers;
-      var parts = arg.split('.');
-      var providerName = parts[0];
-      var variantName = parts[1];
+      let providers = L.TileLayer.Provider.providers;
+      let parts = arg.split('.');
+      let providerName = parts[0];
+      let variantName = parts[1];
       if (!providers[providerName]) {
         throw 'No such provider (' + providerName + ')';
       }
-      var provider = {
+      let provider = {
         url: providers[providerName].url,
         options: providers[providerName].options
       };
@@ -26,8 +26,8 @@
         if (!(variantName in providers[providerName].variants)) {
           throw 'No such variant of ' + providerName + ' (' + variantName + ')';
         }
-        var variant = providers[providerName].variants[variantName];
-        var variantOptions;
+        let variant = providers[providerName].variants[variantName];
+        let variantOptions;
         if (typeof variant === 'string') {
           variantOptions = {
             variant: variant
@@ -41,18 +41,18 @@
         };
       }
 
-      var attributionReplacer = function(attr) {
+      let attributionReplacer = function (attr) {
         if (attr.indexOf('{attribution.') === -1) {
           return attr;
         }
         return attr.replace(/\{attribution.(\w*)\}/g,
-          function(match, attributionName) {
-            return attributionReplacer(providers[attributionName].options.attribution);
-          }
+            function (match, attributionName) {
+              return attributionReplacer(providers[attributionName].options.attribution);
+            }
         );
       };
       provider.options.attribution = attributionReplacer(provider.options.attribution);
-      var layerOpts = L.Util.extend({}, provider.options, options);
+      let layerOpts = L.Util.extend({}, provider.options, options);
       L.TileLayer.prototype.initialize.call(this, provider.url, layerOpts);
     }
   });
