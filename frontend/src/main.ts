@@ -8,4 +8,7 @@ const app = createApp(App)
 
 app.use(router)
 
+import axios from "axios";
+axios.defaults.baseURL = "https://weathery.ecko.ga";
+
 app.mount('#app')

@@ -1,23 +1,25 @@
 # API docs
 
-## GET "/api/stations"
-vrati GPS vsech registrovanych stanic <br/> 
+## GET /api/stations
+Tento endpoint vám vrátí GPS všech měřících stanic <br>
 format dat:
 ```javascript
 {
+  "message": "ok",
   "stations": [
-    {"gps": "str"},
-    {"gps": "str"},
-    ...
+     {"gps": "50.0993194_14.3596525"},
+     {"gps": "49.7454400_14.0578025"},
   ]
 }
 ```
 
-## GET "/api/now/{gps}"
+## GET /api/now/{gps}
 vrati aktualni pocasi stanice s temito GPS <br/> 
 format dat:
 ```javascript
 {
+  "message": "ok",
+  "time": "str",                // d-m-y H:M:S
   "temperature": "int",        // C
   "humidity": "int",           // %
   "pressure": "int",           // Pa
@@ -27,7 +29,7 @@ format dat:
 }
 ```
 
-## GET "/api/stats/{gps}/{from}/{to}"
+## GET /api/stats/{gps}?date_from={from}&date_to={to}
 vrati zprumerovane data v danem casomev intervalu <br/>
 - (interval <= DEN) -> prumer z kazde hodiny 
 - (interval <= 3 MESICE) -> prumer z kazdeho dne
@@ -35,6 +37,7 @@ vrati zprumerovane data v danem casomev intervalu <br/>
 
 ```javascript
 {
+  "message": "ok", 
   "data": [
     {
       "time": "str",               // d-m-y H:M:S
@@ -53,7 +56,7 @@ vrati zprumerovane data v danem casomev intervalu <br/>
       "pressure": "int",           // Pa
       "wind_speed": "int",         // km/h
       "wind_direction": "str",     // directions
-      "rain": "int"                // mm/h 
+      "rain": "int",                // mm/h 
       "average_of": "int"          // sum  
     },
     ...
@@ -61,8 +64,8 @@ vrati zprumerovane data v danem casomev intervalu <br/>
 }
 ```
 
-## POST "/api/station/update"
+## POST /api/station/update
 server si pres token overi jaka stanice posila data a ulozi je do databaze pod prislusnou stanici
 
-## POST "/api/station/register"
+## POST /api/station/register
 server si podle secret_key overi ze stanice je realna a vytvori ji token s kterym se pozdeji stanice prokazuje a dale stanici zapise do databaze

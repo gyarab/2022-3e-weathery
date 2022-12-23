@@ -3,6 +3,7 @@ from datetime import datetime
 import jwt
 import psycopg2
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.encoders import jsonable_encoder
 from manage_data import (
     add_stations,
@@ -22,12 +23,23 @@ ALGORITHM = "HS256"
 DAY = 86400
 MONTH = 2678400
 
-USER = env.USER
-PASSWORD = env.PASSWORD
+USER = env.DB_USER
+PASSWORD = env.DB_PASSWORD
+DB_NAME = env.DB_NAME
+
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 con = psycopg2.connect(
-    database="weatherydb", user=USER, password=PASSWORD, host="localhost", port=5432
+    database=DB_NAME, user=USER, password=PASSWORD, host="localhost", port=5432
 )
 
 
@@ -50,23 +62,24 @@ def create_token(gps, serial_number):
 
 
 @app.get("/api/stations")
-async def stations():
+def stations():
     return get_all_stations(con)
 
 
 @app.get("/api/now/{gps}")
-async def now(gps: str):
+def now(gps: str):
     if not station_exists(con, gps):
         return {"message": "station does not exist"}
     return get_latest_data(con, gps)
 
 
-# TODO: vrati vsechna namerena data ze stanice s danymi GPS
-@app.get("/api/stats/{gps}/{date_from}/{date_to}")
-async def stats(gps: str, date_from: str, date_to: str = "now"):
+@app.get("/api/stats/{gps}")
+def stats(gps: str, date_from: str, date_to: str = "now"):
+    if not station_exists(con, gps):
+        return {"message": "station does not exist"}
     format = "%d-%m-%Y %H:%M:%S"
     if date_to == "now":
-        date_to = str(datetime.strftime(datetime.now(), format))
+        date_to = str(datetime.strftime(datetime.now(), "%d-%m-%Y")) + " 23:59:59"
     if not valid_date(date_from):
         return {"message": "date is not valid"}
     if not valid_date(date_to):
@@ -89,7 +102,7 @@ async def stats(gps: str, date_from: str, date_to: str = "now"):
 
 
 @app.post("/api/station/update")
-async def update(req: Request, data: Data):
+def update(req: Request, data: Data):
     token = get_token(req)
     format = "%d-%m-%Y %H:%M:%S"
     if token is None:
@@ -101,7 +114,7 @@ async def update(req: Request, data: Data):
 
 
 @app.post("/api/station/register")
-async def register(d: RegisterData):
+def register(d: RegisterData):
     data = jsonable_encoder(d)
     if station_exists(con, data["gps"]):
         return {"message": "station already exists"}

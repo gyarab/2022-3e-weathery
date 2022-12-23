@@ -1,28 +1,30 @@
-import env
 from datetime import datetime, timedelta
-
-USER = env.USER
-PASSWORD = env.PASSWORD
 
 
 def get_all_stations(connection):
     cur = connection.cursor()
     cur.execute("SELECT gps from stations;")
     items = cur.fetchall()
-    data = {}
+    data = {"message": "ok", "station": []}
     for i in range(len(items)):
-        data[i] = {"gps": items[i][0]}
+        data["station"].append({"gps": items[i][0]})
     return data
 
 
 def get_latest_data(connection, gps: str):
     cur = connection.cursor()
+    format = "%d-%m-%Y %H:%M:%S"
     cur.execute(
         "SELECT temperature, humidity, pressure, wind_speed, wind_direction, rain, time from data WHERE gps=%s order by time DESC",
         (gps,),
     )
-    data = cur.fetchall()[0]
+    data = cur.fetchall()
+    if len(data) <= 0:
+        return {"message": "no data found"}
+    data = data[0]
     return {
+        "message": "ok",
+        "time": str(datetime.strftime(data[6], format)),
         "temperature": data[0],
         "humidity": data[1],
         "pressure": data[2],
@@ -38,7 +40,7 @@ def get_between_dates(
     format = "%d-%m-%Y %H:%M:%S"
     d_from = datetime.strptime(date_from, format)
     d_to = datetime.strptime(date_to, format)
-    data = {"data": []}
+    data = {"message": "ok", "data": []}
     match avg_type:
         case 0:
             delta = d_to - d_from
@@ -83,43 +85,27 @@ def execute_between_dates(connection, gps, d_from, to):
         wind_speed += i[4]
         wind_direction += i[5]
         rain += i[6]
-    avg = len(items) if len(items) > 0 else 1
-    data = {
-        "time": str(datetime.strftime(d_from, format)),
-        "temperature": temperature / avg,
-        "humidity": humidity / avg,
-        "pressure": pressure / avg,
-        "wind_speed": wind_speed / avg,
-        "wind_direction": max(wind_direction, key=wind_direction.count),
-        "rain": rain / avg,
-        "average_of": avg,
-    }
-    return data
-
-
-def get_all_data(connection, gps: str, from_date: int, to_date: int):
-    cur = connection.cursor()
-    cur.execute(
-        "SELECT temperature, humidity, pressure, wind_speed, wind_direction, rain ,time FROM data WHERE gps = %s and time > %s and time < %s",
-        (
-            gps,
-            from_date,
-            to_date,
-        ),
-    )
-    items = cur.fetchall()
-    data = {}
-    for i in range(len(items)):
-        data[i] = {
-            "temperature": items[i][0],
-            "humidity": items[i][1],
-            "pressure": items[i][2],
-            "wind_speed": items[i][3],
-            "wind_direction": items[i][4],
-            "rain": items[i][5],
-            "time": items[i][6],
+    avg = len(items)
+    if avg > 0:
+        return {
+            "time": str(datetime.strftime(d_from, format)),
+            "temperature": temperature / avg,
+            "humidity": humidity / avg,
+            "pressure": pressure / avg,
+            "wind_speed": wind_speed / avg,
+            "wind_direction": max(wind_direction, key=wind_direction.count),
+            "rain": rain / avg,
+            "average_of": avg,
         }
-    return data
+    return {
+        "time": str(datetime.strftime(d_from, format)),
+        "temperature": 0,
+        "humidity": 0,
+        "pressure": 0,
+        "wind_speed": 0,
+        "wind_direction": "",
+        "average_of": 0,
+    }
 
 
 def station_exists(connection, gps: str) -> bool:

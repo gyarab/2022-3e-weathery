@@ -31,5 +31,6 @@ if os.path.isfile(_ENV_FILE):
                 continue
             _DOTENV[split[0]] = "=".join(split[1:])
 
-PASSWORD: str = env(str, "PASSWORD")
-USER: str = env(str, "USER")
+DB_PASSWORD: str = env(str, "DB_PASSWORD")
+DB_USER: str = env(str, "DB_USER")
+DB_NAME: str = env(str, "DB_NAME")
