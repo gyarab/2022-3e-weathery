@@ -161,3 +161,4 @@ cython_debug/
 test_main.http
 .vscode/
 
+debug.py
