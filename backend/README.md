@@ -1,4 +1,4 @@
-# API docs
+# [API docs](https://weathery.ecko.ga/)
 
 ## GET /api/stations
 Tento endpoint vám vrátí GPS všech měřících stanic <br>
