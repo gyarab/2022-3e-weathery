@@ -1,0 +1,67 @@
+\documentclass[a4paper,12pt]{extarticle}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper, total={5.5in, 10in}]{geometry}
+\usepackage[french, czech]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{csquotes}
+
+
+\graphicspath{ {./images/} }
+
+% citace
+\usepackage[
+    citestyle=numeric,
+    autocite=superscript,
+    sorting=none
+    ]{biblatex} 
+    
+% \usepackage{biblatex}
+\addbibresource{literature.bib}
+
+% zajištujě závorky okolo citací
+\DeclareCiteCommand{\supercite}[\mkbibsuperscript]
+  {\iffieldundef{prenote}
+     {}
+     {\BibliographyWarning{Ignoring prenote argument}}%
+   \iffieldundef{postnote}
+     {}
+     {\BibliographyWarning{Ignoring postnote argument}}%
+   \bibopenbracket}%
+  {\usebibmacro{citeindex}%
+   \usebibmacro{cite}}
+  {\supercitedelim}
+  {\bibclosebracket}
+  
+
+% abstrakt s větším písmem (https://tex.stackexchange.com/a/366170)
+\makeatletter
+\renewenvironment{abstract}{%
+    \if@twocolumn
+      \section*{\abstractname}%
+    \else %% <- here I've removed \small
+      \begin{center}%
+        {\bfseries \Large\abstractname\vspace{\z@}}%  %% <- here I've added \Large
+      \end{center}%
+      \quotation
+    \fi}
+    {\if@twocolumn\else\endquotation\fi}
+\makeatother
+
+\begin{document}
+
+\selectlanguage{czech}
+
+% Import kapitol
+\include{titlepage}
+\input{chapters/uvod}
+
+\newpage
+\onecolumn
+\listoffigures
+
+\printbibliography
+
+\end{document}
+
