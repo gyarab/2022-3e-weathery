@@ -6,11 +6,13 @@
 
 const char* nameWifi = NAME;
 const char* passWifi = PASSWORD;
-const char* server = "0.0.0.0";
+const char* server = SERVER;
+const char* token = TOKEN;
 String data = "";
-WiFiClient client;
+WiFiClientSecure client;
+int i = 0;
 
-struct ResponceData{
+struct ResponseData{
   int temperature;
   int humidity;
   int pressure;
@@ -35,35 +37,41 @@ void setup() {
   Serial.println(WiFi.localIP());
 }
 
-void printData(ResponceData data){
+void printData(ResponseData data){
   Serial.println(data.temperature);
   Serial.println(data.humidity);
   Serial.println(data.pressure);
   Serial.println(data.windSpeed);
   Serial.println(data.windDirection);
   Serial.println(data.rain);
+  Serial.println();
 }
 
-/*void sendData(ResponceData data) {
-  if (client.connect(server, 8000)) {
-    String message = "{\"message\": \"";
-    message += info;
-    //message.remove(zprava.length()-1,2);
-    message += "\"}";
-    Serial.println(message);
-    client.println("POST /post_data HTTP/1.1");
+String getJSON(ResponseData data){
+  String message = "{\"temperature\":"+(String)data.temperature+", \"humidity\":"+(String)data.humidity+", \"pressure\":"+(String)data.pressure;
+  message += ", \"wind_speed\":"+(String)data.windSpeed+", \"wind_direction\": \""+data.windDirection+"\", \"rain\":"+(String)data.rain+"}";
+  return message;
+}
+
+void sendData(ResponseData data) {
+  client.setInsecure();
+  if (client.connect(server, 443)) {
+    String message = getJSON(data);
+    client.println("POST /api/station/update HTTP/1.1");
     client.print("Host: ");
     client.println(server);
     client.println("Connection: close");
+    client.print("Authorization:Bearer ");
+    client.println(token);
     client.println("Content-Type: application/json");
     client.print("Content-Length: ");
     client.println(message.length());
     client.println();
     client.print(message);
+    Serial.println("Data sent");
   }
   client.stop();
-  Serial.println("Data sent");
-}*/
+}
 
 int getTemperature(){
   return 1;
@@ -90,13 +98,16 @@ int getRain(){
 }
 
 void loop() {
-  ResponceData data;
+  ResponseData data;
   data.temperature = getTemperature();
   data.humidity = getHumidity();
   data.pressure = getPressure();
   data.windSpeed = getWindSpeed();
   data.windDirection = getWindDirection();
   data.rain = getRain();
-  printData(data);
+  if (i < 2){
+    sendData(data);
+    i++;
+  }
   delay(3000);
 }
