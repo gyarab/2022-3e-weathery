@@ -108,8 +108,9 @@ def stats(gps: str, date_from: str, date_to: str = "now"):
 
 
 @app.post("/api/station/update")
-def update(req: Request, data: Data):
+def update(req: Request, d: Data):
     token = get_token(req)
+    data = jsonable_encoder(d)
     format = "%d-%m-%Y %H:%M:%S"
     if token is None:
         return {"message": "no token found"}
