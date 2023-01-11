@@ -1,13 +1,23 @@
 #include <ESP8266WiFi.h>
 #include <Wire.h>
-#include <Adafruit_Sensor.h>
-#include <Adafruit_BMP280.h>
+//#include <Adafruit_Sensor.h>
+//#include <Adafruit_BMP280.h>
+#include "WiFiCredentials.h"
 
-const char* nameWifi = "name";
-const char* passWifi = "password";
+const char* nameWifi = NAME;
+const char* passWifi = PASSWORD;
 const char* server = "0.0.0.0";
 String data = "";
 WiFiClient client;
+
+struct ResponceData{
+  int temperature;
+  int humidity;
+  int pressure;
+  int windSpeed;
+  String windDirection;
+  int rain;
+}
 
 void setup() {
 
@@ -25,7 +35,7 @@ void setup() {
   Serial.println(WiFi.localIP());
 }
 
-void sendData(String info) {
+void sendData(ResponceData data) {
   if (client.connect(server, 8000)) {
     String message = "{\"message\": \"";
     message += info;
@@ -46,11 +56,16 @@ void sendData(String info) {
   Serial.println("Data sent");
 }
 
+int getTemperature(){
+  return 1;
+}
+
 void loop() {
-  data = Serial.readString();
+  ResponceData data;
+  data.temperature = getTemperature();
   if (data != "") {
     data.remove(data.length() - 1, 2);
     Serial.print(data);
     sendData(data);
-  }
+  }*/
 }
