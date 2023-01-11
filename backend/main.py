@@ -46,7 +46,13 @@ con = psycopg2.connect(
 def get_token(req):
     try:
         token = req.headers["Authorization"].split()[1]
-        return jwt.decode(token, SECRET_KEY)
+        return jwt.decode(
+            token,
+            SECRET_KEY,
+            algorithms=[
+                ALGORITHM,
+            ],
+        )
     except KeyError:
         return None
 
