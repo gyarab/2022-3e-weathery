@@ -11,5 +11,5 @@ class Data(BaseModel):
     humidity: int  # %
     pressure: int  # Pa
     wind_speed: int  # km/h
-    wind_direction: int  # directions
+    wind_direction: str  # directions
     rain: int  # mm/h
