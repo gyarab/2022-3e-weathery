@@ -118,7 +118,7 @@ def register(d: RegisterData):
     data = jsonable_encoder(d)
     if station_exists(con, data["gps"]):
         return {"message": "station already exists"}
-    if not valid_input(con, data["gps"]):
+    if not valid_input(con, data["serial_number"]):
         return {"message": "input data are not valid"}
     add_stations(con, data["gps"], data["serial_number"])
     return {"token": create_token(data["gps"], data["serial_number"])}

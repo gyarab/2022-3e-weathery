@@ -17,7 +17,7 @@ struct ResponceData{
   int windSpeed;
   String windDirection;
   int rain;
-}
+};
 
 void setup() {
 
@@ -35,7 +35,16 @@ void setup() {
   Serial.println(WiFi.localIP());
 }
 
-void sendData(ResponceData data) {
+void printData(ResponceData data){
+  Serial.println(data.temperature);
+  Serial.println(data.humidity);
+  Serial.println(data.pressure);
+  Serial.println(data.windSpeed);
+  Serial.println(data.windDirection);
+  Serial.println(data.rain);
+}
+
+/*void sendData(ResponceData data) {
   if (client.connect(server, 8000)) {
     String message = "{\"message\": \"";
     message += info;
@@ -54,18 +63,40 @@ void sendData(ResponceData data) {
   }
   client.stop();
   Serial.println("Data sent");
-}
+}*/
 
 int getTemperature(){
   return 1;
 }
 
+int getHumidity(){
+  return 2;
+}
+
+int getPressure(){
+  return 3;
+}
+
+int getWindSpeed(){
+  return 4;
+}
+
+String getWindDirection(){
+  return "A";
+}
+
+int getRain(){
+  return 5;
+}
+
 void loop() {
   ResponceData data;
   data.temperature = getTemperature();
-  if (data != "") {
-    data.remove(data.length() - 1, 2);
-    Serial.print(data);
-    sendData(data);
-  }*/
+  data.humidity = getHumidity();
+  data.pressure = getPressure();
+  data.windSpeed = getWindSpeed();
+  data.windDirection = getWindDirection();
+  data.rain = getRain();
+  printData(data);
+  delay(3000);
 }
