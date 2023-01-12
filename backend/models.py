@@ -7,9 +7,9 @@ class RegisterData(BaseModel):
 
 
 class Data(BaseModel):
-    temperature: int  # C
-    humidity: int  # %
-    pressure: int  # Pa
-    wind_speed: int  # km/h
+    temperature: float  # C
+    humidity: float  # %
+    pressure: float  # Pa
+    wind_speed: float  # km/h
     wind_direction: str  # directions
-    rain: int  # mm/h
+    rain: float  # mm/h
