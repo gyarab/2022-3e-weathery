@@ -1,4 +1,4 @@
-# [API docs](https://weathery.ecko.ga/)
+# [API docs](https://weathery.svs.gyarab.cz/)
 
 ## GET /api/stations
 Tento endpoint vám vrátí GPS všech měřících stanic <br>
@@ -20,12 +20,12 @@ format dat:
 {
   "message": "ok",
   "time": "str",                // d-m-y H:M:S
-  "temperature": "int",        // C
-  "humidity": "int",           // %
-  "pressure": "int",           // Pa
-  "wind_speed": "int",         // km/h
+  "temperature": "float",        // C
+  "humidity": "float",          // %
+  "pressure": "float",           // Pa
+  "wind_speed": "float",         // km/h
   "wind_direction": "str",     // directions
-  "rain": "int"                // mm/h 
+  "rain": "float"                // mm/h 
 }
 ```
 
@@ -41,22 +41,22 @@ vrati zprumerovane data v danem casomev intervalu <br/>
   "data": [
     {
       "time": "str",               // d-m-y H:M:S
-      "temperature": "int",        // C
-      "humidity": "int",           // %
-      "pressure": "int",           // Pa
-      "wind_speed": "int",         // km/h
+      "temperature": "float",        // C
+      "humidity": "float",           // %
+      "pressure": "float",           // Pa
+      "wind_speed": "float",         // km/h
       "wind_direction": "str",     // directions
-      "rain": "int",               // mm/h
+      "rain": "float",               // mm/h
       "average_of": "int"          // sum  
     },
     {
       "time": "str",               // d-m-y H:M:S
-      "temperature": "int",        // C
-      "humidity": "int",           // %
-      "pressure": "int",           // Pa
-      "wind_speed": "int",         // km/h
+      "temperature": "float",        // C
+      "humidity": "float",           // %
+      "pressure": "float",           // Pa
+      "wind_speed": "float",         // km/h
       "wind_direction": "str",     // directions
-      "rain": "int",                // mm/h 
+      "rain": "float",                // mm/h 
       "average_of": "int"          // sum  
     },
     ...
