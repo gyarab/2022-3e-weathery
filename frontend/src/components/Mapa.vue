@@ -48,18 +48,22 @@ onMounted(() => {
                         let stanice_obsah = response.data
                         if (stanice_obsah.message == "ok") {
                             console.log("fine")
-                            L.marker([souradnice_split[0], souradnice_split[1]], { icon: icon }).addTo(map).bindPopup(`<body>
-                                <h1>Stanice1</h1>
-                                <p>Můj milovaný bodík</p>
-                                <ul><li>Teplota:  ${stanice_obsah.temperature}  </li>
-                                <li>Tlak: ${stanice_obsah.pressure}</li>
-                                <li>Rychlost vzduchu: ${stanice_obsah.temperature}</li>
-                                <li>Vlhkost: ${stanice_obsah.humidity}</li>
-                                <li>Rychlost větru: ${stanice_obsah.wind_speed}</li>
-                                <li>Směr větru: ${stanice_obsah.wind_direction}</li>
-                                <li>Srážky: ${stanice_obsah.rain}</li>
-                                </ul><style>h1 {background-color: aqua;}</style></body>`)
-                            
+                            L.marker([souradnice_split[0], souradnice_split[1]], {icon: icon}).addTo(map).bindPopup(`
+                                <body>
+                                    <h1>Stanice1</h1>
+                                    <p>Můj milovaný bodík</p>
+                                    <ul>
+                                        <li>Teplota: ${stanice_obsah.temperature}</li>
+                                        <li>Tlak: ${stanice_obsah.pressure}</li>
+                                        <li>Rychlost vzduchu: ${stanice_obsah.temperature}</li>
+                                        <li>Vlhkost: ${stanice_obsah.humidity}</li>
+                                        <li>Rychlost větru: ${stanice_obsah.wind_speed}</li>
+                                        <li>Směr větru: ${stanice_obsah.wind_direction}</li>
+                                        <li>Srážky: ${stanice_obsah.rain}</li>
+                                    </ul>
+                                    <style>h1 {background-color: aqua;}</style>
+                                </body>`, {offset: [115, 150]})
+
                         } else {
                             //jsme vpíči to vymyslí firu
                         }

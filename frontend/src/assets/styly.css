@@ -10,9 +10,10 @@
 }
 
 :root {
+    --vyska-popupu-mapa: 200px;
     --vyska-menu: 60px;
     --velikost-pisma-menu: 20px;
-    --bila: rgb(245, 245, 245);
+    --bila: rgb(250, 250, 250);
 }
 
 body {
@@ -51,4 +52,11 @@ body {
 
 .leaflet-popup-content-wrapper, .leaflet-popup-tip {
     background-color: var(--bila);
+}
+
+.leaflet-popup-tip-container { /*tohle je kvuli pozici sipicky u popupu doleva*/
+    position: absolute;
+    left: -9px;
+    top: calc(-10px + 50%);
+    transform: rotate(90deg);
 }
