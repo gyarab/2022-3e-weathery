@@ -13,7 +13,7 @@ import { onBeforeUnmount, onDeactivated, onMounted } from "vue";
 import type { StandardPropertiesFallback } from "csstype";
 
 var icon = L.icon({
-    iconUrl: 'src/assets/target.png',
+    iconUrl: 'src/assets/icony/target.png',
     //shadowUrl: 'src/assets/map-pointer.png',
 
     iconSize: [20, 20], // size of the icon
@@ -27,8 +27,6 @@ var icon = L.icon({
 var map = L.map('map').setView([50.0835494, 14.4341414], 11); // Praha
 L.tileLayer.provider('CartoDB.Voyager').addTo(map);
 
-
-
 onBeforeUnmount(() => {
     map.off();
     map.remove();
@@ -39,6 +37,7 @@ onMounted(() => {
         .get("/api/stations")
         .then(response => {
             let stanice = response.data.station
+            console.log(stanice)
             for (let i = 0; i < stanice.length; i++) {
                 let souradnice = stanice[i].gps; //pak to vrátit debile
                 let souradnice_split = stanice[i].gps.split("_");
@@ -47,27 +46,22 @@ onMounted(() => {
                     .then(response => {
                         let stanice_obsah = response.data
                         if (stanice_obsah.message == "ok") {
-                            console.log("fine")
                             L.marker([souradnice_split[0], souradnice_split[1]], {icon: icon}).addTo(map).bindPopup(`
                                 <body>
-                                    <h1>Stanice1</h1>
-                                    <p>Můj milovaný bodík</p>
-                                    <ul>
-                                        <li>Teplota: ${stanice_obsah.temperature}</li>
-                                        <li>Tlak: ${stanice_obsah.pressure}</li>
-                                        <li>Rychlost vzduchu: ${stanice_obsah.temperature}</li>
-                                        <li>Vlhkost: ${stanice_obsah.humidity}</li>
-                                        <li>Rychlost větru: ${stanice_obsah.wind_speed}</li>
-                                        <li>Směr větru: ${stanice_obsah.wind_direction}</li>
-                                        <li>Srážky: ${stanice_obsah.rain}</li>
-                                    </ul>
-                                    <style>h1 {background-color: aqua;}</style>
-                                </body>`, {offset: [115, 150]})
+                                    <h1><router-link :to="/">${souradnice.replace("_", "° S ").replaceAll(".", ",")}° E</router-link></h1>
+                                    <hr>
+                                    <h2><img class="icony_popup" src="src/assets/icony/teplo.png" alt="Teplota">${stanice_obsah.temperature}°C</h2>
+                                    <h2><img class="icony_popup" src="src/assets/icony/tlak.png" alt="Teplota">${Math.round(stanice_obsah.pressure / 10) / 10} hPa</h2>
+                                    <h2><img class="icony_popup" src="src/assets/icony/vlhkost.png" alt="Teplota">${stanice_obsah.humidity}%</h2>
+                                    <h2><img class="icony_popup" src="src/assets/icony/rychlost_vetru.png" alt="Teplota">${stanice_obsah.wind_speed} m/s</h2>
+                                    <h2><img class="icony_popup" src="src/assets/icony/smer_vetru.png" alt="Teplota">${stanice_obsah.wind_direction}</h2>
+                                    <h2><img class="icony_popup" src="src/assets/icony/dest.png" alt="Teplota">${stanice_obsah.rain} mm/h</h2>
+                                </body>`, {offset: [180, 201], maxWidth: 250})
 
                         } else {
                             //jsme vpíči to vymyslí firu
                         }
-                        // ulozim si to pocasi co mi prijde a potom to nasazim do toho BINDPOPUPu
+                        // ulozim si to pocasi co mi prijde a potom to nasazim do toho bindPOPUPu
                         //https://weathery.ecko.ga/, https://weathery.ecko.ga/docs#/default/now_api_now__gps__get
                     })
             }

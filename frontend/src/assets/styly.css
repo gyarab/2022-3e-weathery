@@ -13,7 +13,7 @@
     --vyska-popupu-mapa: 200px;
     --vyska-menu: 60px;
     --velikost-pisma-menu: 20px;
-    --bila: rgb(250, 250, 250);
+    --bila: rgb(245, 245, 245);
 }
 
 body {
@@ -52,6 +52,24 @@ body {
 
 .leaflet-popup-content-wrapper, .leaflet-popup-tip {
     background-color: var(--bila);
+    font-family: 'Roboto Mono', monospace;
+}
+
+.leaflet-popup-content h2 {
+    font-size: 1.7em;
+}
+
+.leaflet-popup-content h1 {
+    margin-bottom: 4px;
+    text-align: center;
+}
+
+.leaflet-popup-content hr {
+    height: 1px;
+    color: gray;
+    background-color: gray;
+    border-width: 0;
+    margin-bottom: 20px;
 }
 
 .leaflet-popup-tip-container { /*tohle je kvuli pozici sipicky u popupu doleva*/
@@ -59,4 +77,14 @@ body {
     left: -9px;
     top: calc(-10px + 50%);
     transform: rotate(90deg);
+}
+
+.icony_popup {
+    height: 35px;
+    vertical-align: middle;
+    margin-right: 20px;
+}
+
+.leaflet-popup-content {
+    margin: 13px 24px 13px 24px;
 }

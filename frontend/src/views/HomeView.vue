@@ -3,9 +3,9 @@
 import Mapa from '../components/Mapa.vue'
 
 export default {
-  components: {
-    Mapa
-  }
+    components: {
+        Mapa
+    }
 }
 </script>
 
