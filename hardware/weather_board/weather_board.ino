@@ -1,8 +1,19 @@
 #include <ESP8266WiFi.h>
 #include <Wire.h>
-//#include <Adafruit_Sensor.h>
-//#include <Adafruit_BMP280.h>
-#include "WiFiCredentials.h"
+#include <AS5600.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BMP280.h>
+#include <Adafruit_AM2320.h>
+#include "env.h"
+
+#define BMP280_ADRESS (0x76)
+
+Adafruit_AM2320 am2320 = Adafruit_AM2320();
+Adafruit_BMP280 bmp;
+AS5600 as5600;
+int WIND_SPEED_PIN = 14;
+int correction = 32;
+int windSpeedState = 0;
 
 const char* nameWifi = NAME;
 const char* passWifi = PASSWORD;
@@ -12,16 +23,23 @@ String data = "";
 WiFiClientSecure client;
 int i = 0;
 
-struct ResponseData{
-  int temperature;
-  int humidity;
-  int pressure;
-  int windSpeed;
+struct ResponseData {
+  float temperature;
+  float humidity;
+  float pressure;
+  float windSpeed;
   String windDirection;
-  int rain;
+  float rain;
 };
 
 void setup() {
+  pinMode(WIND_SPEED_PIN, INPUT);
+  pinMode(2, OUTPUT);
+  windSpeedState = digitalRead(WIND_SPEED_PIN);
+  as5600.begin(4);
+  as5600.setDirection(AS5600_CLOCK_WISE);
+  am2320.begin();
+  bmp.begin(BMP280_ADRESS);
 
   Serial.begin(9600);
   WiFi.begin(nameWifi, passWifi);
@@ -37,7 +55,7 @@ void setup() {
   Serial.println(WiFi.localIP());
 }
 
-void printData(ResponseData data){
+void printData(ResponseData data) {
   Serial.println(data.temperature);
   Serial.println(data.humidity);
   Serial.println(data.pressure);
@@ -47,9 +65,9 @@ void printData(ResponseData data){
   Serial.println();
 }
 
-String getJSON(ResponseData data){
-  String message = "{\"temperature\":"+(String)data.temperature+", \"humidity\":"+(String)data.humidity+", \"pressure\":"+(String)data.pressure;
-  message += ", \"wind_speed\":"+(String)data.windSpeed+", \"wind_direction\": \""+data.windDirection+"\", \"rain\":"+(String)data.rain+"}";
+String getJSON(ResponseData data) {
+  String message = "{\"temperature\":" + (String)data.temperature + ", \"humidity\":" + (String)data.humidity + ", \"pressure\":" + (String)data.pressure;
+  message += ", \"wind_speed\":" + (String)data.windSpeed + ", \"wind_direction\": \"" + data.windDirection + "\", \"rain\":" + (String)data.rain + "}";
   return message;
 }
 
@@ -69,45 +87,66 @@ void sendData(ResponseData data) {
     client.println();
     client.print(message);
     Serial.println("Data sent");
+    while (client.connected()) {
+      Serial.println(client.readStringUntil('\n'));
+    }
+  } else {
+    Serial.println("Connection failed");
   }
   client.stop();
 }
 
-int getTemperature(){
-  return 1;
+float getTemperature() {
+  return am2320.readTemperature();
 }
 
-int getHumidity(){
-  return 2;
+float getHumidity() {
+  return am2320.readHumidity();
 }
 
-int getPressure(){
-  return 3;
+float getPressure() {
+  return bmp.readPressure();
 }
 
-int getWindSpeed(){
+int getWindSpeed() {
   return 4;
 }
 
-String getWindDirection(){
-  return "A";
+String getWindDirection() {
+  int angle = as5600.readAngle();
+  if (angle > 256 && angle <= 768) {
+    return "NE";
+  } else if (angle > 768 && angle <= 1280) {
+    return "E";
+  } else if (angle > 1280 && angle <= 1792) {
+    return "SE";
+  } else if (angle > 1792 && angle <= 2304) {
+    return "S";
+  } else if (angle > 2304 && angle <= 2816) {
+    return "SW";
+  } else if (angle > 2816 && angle <= 3328) {
+    return "W";
+  } else if (angle > 3840 || angle <= 256) {
+    return "N";
+  } else {
+    return "NW";
+  }
 }
 
-int getRain(){
+int getRain() {
   return 5;
 }
 
 void loop() {
   ResponseData data;
   data.temperature = getTemperature();
+  delay(100);
   data.humidity = getHumidity();
   data.pressure = getPressure();
   data.windSpeed = getWindSpeed();
   data.windDirection = getWindDirection();
   data.rain = getRain();
-  if (i < 2){
-    sendData(data);
-    i++;
-  }
+  Serial.println(getJSON(data));
+  //sendData(data);
   delay(3000);
 }
