@@ -14,6 +14,7 @@ AS5600 as5600;
 int WIND_SPEED_PIN = 14;
 int correction = 32;
 int windSpeedState = 0;
+unsigned long myTime;
 
 const char* nameWifi = NAME;
 const char* passWifi = PASSWORD;
@@ -109,7 +110,20 @@ float getPressure() {
 }
 
 int getWindSpeed() {
-  return 4;
+  int tick = 0;
+  int state = digitalRead(WIND_SPEED_PIN);
+  unsigned long start = millis();
+  while ((millis() - start) <= 10000) {
+    if (digitalRead(WIND_SPEED_PIN) == 0 && state == 1) {
+      tick++;
+      state = false;
+    }else if (digitalRead(WIND_SPEED_PIN) == 1 && state == 0){
+      tick++;
+      state = true;
+    }
+    yield();
+  }
+  return tick;
 }
 
 String getWindDirection() {
@@ -139,11 +153,11 @@ int getRain() {
 
 void loop() {
   ResponseData data;
+  data.windSpeed = getWindSpeed();
   data.temperature = getTemperature();
   delay(100);
   data.humidity = getHumidity();
   data.pressure = getPressure();
-  data.windSpeed = getWindSpeed();
   data.windDirection = getWindDirection();
   data.rain = getRain();
   Serial.println(getJSON(data));
