@@ -4,9 +4,13 @@
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BMP280.h>
 #include <Adafruit_AM2320.h>
+#include <SoftwareSerial.h>
+#include <TinyGPS.h>
 #include "env.h"
 
 #define BMP280_ADRESS (0x76)
+
+
 
 Adafruit_AM2320 am2320 = Adafruit_AM2320();
 Adafruit_BMP280 bmp;
@@ -117,7 +121,7 @@ int getWindSpeed() {
     if (digitalRead(WIND_SPEED_PIN) == 0 && state == 1) {
       tick++;
       state = false;
-    }else if (digitalRead(WIND_SPEED_PIN) == 1 && state == 0){
+    } else if (digitalRead(WIND_SPEED_PIN) == 1 && state == 0) {
       tick++;
       state = true;
     }
@@ -152,6 +156,7 @@ int getRain() {
 }
 
 void loop() {
+  
   ResponseData data;
   data.windSpeed = getWindSpeed();
   data.temperature = getTemperature();
@@ -162,5 +167,6 @@ void loop() {
   data.rain = getRain();
   Serial.println(getJSON(data));
   //sendData(data);
+
   delay(3000);
 }
