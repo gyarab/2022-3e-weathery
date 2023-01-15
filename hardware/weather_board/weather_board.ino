@@ -10,23 +10,22 @@
 
 #define BMP280_ADRESS (0x76)
 
-
-
 Adafruit_AM2320 am2320 = Adafruit_AM2320();
 Adafruit_BMP280 bmp;
 AS5600 as5600;
-int WIND_SPEED_PIN = 14;
-int correction = 32;
-int windSpeedState = 0;
-unsigned long myTime;
-
+WiFiClientSecure client;
+const int WIND_SPEED_PIN = 14;
+const int RAIN_PIN = 12;
+const int correction = 32;
 const char* nameWifi = NAME;
 const char* passWifi = PASSWORD;
 const char* server = SERVER;
 const char* token = TOKEN;
+const int VOLUME = 0;
+
+int windSpeedState = 0;
+int currentRain = 0;
 String data = "";
-WiFiClientSecure client;
-int i = 0;
 
 struct ResponseData {
   float temperature;
@@ -38,6 +37,8 @@ struct ResponseData {
 };
 
 void setup() {
+  pinMode(RAIN_PIN, INPUT);
+  attachInterrupt(0, rainSwitch, FALLING);
   pinMode(WIND_SPEED_PIN, INPUT);
   pinMode(2, OUTPUT);
   windSpeedState = digitalRead(WIND_SPEED_PIN);
@@ -45,6 +46,8 @@ void setup() {
   as5600.setDirection(AS5600_CLOCK_WISE);
   am2320.begin();
   bmp.begin(BMP280_ADRESS);
+
+
 
   Serial.begin(9600);
   WiFi.begin(nameWifi, passWifi);
@@ -151,12 +154,16 @@ String getWindDirection() {
   }
 }
 
+void rainSwitch() {
+  currentRain += VOLUME;
+}
+
 int getRain() {
   return 5;
 }
 
 void loop() {
-  
+
   ResponseData data;
   data.windSpeed = getWindSpeed();
   data.temperature = getTemperature();
