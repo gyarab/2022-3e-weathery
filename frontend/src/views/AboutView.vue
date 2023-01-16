@@ -5,3 +5,14 @@
         <p>Sem napíšem jak jsme to hezky udělali</p>
     </div>
 </template>
+<script>
+import {h} from "vue";
+
+export default {
+    name: "About",
+    mounted() {
+        h('span', {}, [h('strong', 'Bold')]);
+    }
+}
+
+</script>
