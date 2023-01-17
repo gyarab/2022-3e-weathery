@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 class RegisterData(BaseModel):
     gps: str  # (40.123455 -35.6543321)
-    serial_number: int  # 123456
+    id: int  # 123456
 
 
 class Data(BaseModel):
