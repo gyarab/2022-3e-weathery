@@ -50,8 +50,8 @@ export default {
                                         <hr>
                                         <h2><img class="icony_popup" src="src/assets/icony/teplo.png" alt="Teplota">${stanice_obsah.temperature}°C</h2>
                                         <h2><img class="icony_popup" src="src/assets/icony/tlak.png" alt="Teplota">${Math.round(stanice_obsah.pressure /
-                                                                    10)
-                                                                / 10} hPa</h2>
+                                    10)
+                                / 10} hPa</h2>
                                         <h2><img class="icony_popup" src="src/assets/icony/vlhkost.png" alt="Teplota">${stanice_obsah.humidity}%</h2>
                                         <h2><img class="icony_popup" src="src/assets/icony/rychlost_vetru.png" alt="Teplota">${stanice_obsah.wind_speed}
                                             m/s
@@ -63,6 +63,10 @@ export default {
                                             .nadpis-popup {
                                                 text-decoration: none;
                                                 color: #333 !important;
+                                            }
+                                            h1 {
+                                                font-weight: bold;
+                                                font-size: 2em;
                                             }
                                             </style>
                                     </body>`, { offset: [180, 201], maxWidth: 250 })

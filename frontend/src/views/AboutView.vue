@@ -15,3 +15,9 @@ export default {
 }
 
 </script>
+
+<style scoped>
+.about {
+    padding: 10px;
+}
+</style>

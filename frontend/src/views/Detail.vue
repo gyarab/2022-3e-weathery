@@ -1,19 +1,41 @@
 <template>
-    <p>tady budou ty grafiky</p>
-    <br>
-    {{ souradnice }}
-    {{ data }}
+    <div id="detail">
+        <h1>{{ souradnice[0] }} {{ souradnice[1] }}</h1>
+
+        <div id="content">
+            <div id="menicko">
+                <button class="tlacitkoPrepinani" v-for="jmenoGrafu in Object.keys(grafy)" @click="aktivniGraf = jmenoGrafu">
+                    {{ jmenoGrafu }}
+                </button>
+            </div>
+
+            <Line v-if="grafData !== null" :data="grafData" :options="options"/>
+            {{ aktivniGraf }}
+        </div>
+    </div>
 </template>
 
 <script>
 import axios from "axios";
+import {Line} from 'vue-chartjs'
+import {Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale} from 'chart.js'
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 export default {
     name: "Detail",
+    components: {Line},
     data() {
         return {
+            grafy: {"Teplota": ['#ff0000', 'jmenoSouboru'], "Vlhkost": ['#003dff', 'jmenoSouboru']},
+            aktivniGraf: "Teplota",
             souradnice: this.$route.params.souradnice.replaceAll(',', '.').split('-'),
-            data: null
+            data: null,
+            grafData: null,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
         }
     },
     mounted() {
@@ -27,8 +49,24 @@ export default {
             }
         })
             .then(response => {
-                this.data = response.data
+                this.data = response.data.data
+                console.log(this.data)
 
+                this.grafData = {
+                    labels: [],
+                    datasets: []
+                }
+
+                for (let i in this.data[0]) {
+                    console.log(this.data[0][i])
+                    this.grafData.labels.push()
+                }
+
+                // {
+                //     label: this.aktivniGraf,
+                //     backgroundColor: this.grafy[this.aktivniGraf],
+                //     data: []
+                // }
             })
 
         // zobrazení grafu pomocí https://vue-chartjs.org/
@@ -37,5 +75,23 @@ export default {
 </script>
 
 <style scoped>
+#detail {
+    padding: 10px;
+}
 
+#content {
+    display: flex;
+}
+
+#menicko {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.tlacitkoPrepinani {
+    padding: 30px;
+    border: 1px solid;
+    background-color: white;
+}
 </style>

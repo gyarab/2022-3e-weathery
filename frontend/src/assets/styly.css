@@ -38,16 +38,14 @@ body {
     line-height: var(--velikost-pisma-menu);
 }
 
-#obsah {
-}
-
 #mapa {
     width: 100px;
     height: 100px;
 }
 
-.about {
-    padding: 10px;
+h1 {
+    font-weight: 1;
+    font-size: 3em;
 }
 
 .leaflet-popup-content-wrapper, .leaflet-popup-tip {
