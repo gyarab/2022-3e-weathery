@@ -10,10 +10,14 @@ con = psycopg2.connect(
 cur = con.cursor()
 cur.execute("SET timezone='UTC';")
 cur.execute(
-    "CREATE TABLE if not exists data (gps TEXT, time TIMESTAMP, temperature FLOAT, humidity FLOAT, pressure FLOAT, wind_speed FLOAT, wind_direction TEXT, rain FLOAT);"
+    "CREATE TABLE if not exists data (gps TEXT not null, time TIMESTAMP not null, temperature FLOAT not null, humidity FLOAT not null, pressure FLOAT not null, wind_speed FLOAT not null, wind_direction TEXT not null, rain FLOAT not null);"
 )
-cur.execute("CREATE TABLE if not exists stations (gps TEXT, serial_number INT);")
+cur.execute(
+    "CREATE TABLE if not exists stations (gps TEXT not null, serial_number INT not null);"
+)
 
-cur.execute("CREATE TABLE if not exists serial_numbers (serial_number INT);")
+cur.execute(
+    "CREATE TABLE if not exists serial_numbers (serial_number INT not null unique);"
+)
 
 con.commit()
