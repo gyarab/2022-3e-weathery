@@ -15,7 +15,7 @@ const router = createRouter({
             }
         },
         {
-            path: '/about.k',
+            path: '/about',
             name: 'about',
             component: AboutView,
             meta: {

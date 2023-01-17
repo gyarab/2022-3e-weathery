@@ -9,6 +9,6 @@ const app = createApp(App)
 app.use(router)
 
 import axios from "axios";
-axios.defaults.baseURL = "https://weathery.svs.gyarab.cz/";
+axios.defaults.baseURL = "https://weathery.svs.gyarab.cz/api";
 
 app.mount('#app')

@@ -11,7 +11,6 @@ import {h} from "vue";
 export default {
     name: "About",
     mounted() {
-        h('span', {}, [h('strong', 'Bold')]);
     }
 }
 
