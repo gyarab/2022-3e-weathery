@@ -32,14 +32,14 @@ export default {
         L.tileLayer.provider('CartoDB.Voyager').addTo(this.map);
 
         axios
-            .get("/api/stations")
+            .get("/stations")
             .then(response => {
                 let stanice = response.data.station
                 for (let i = 0; i < stanice.length; i++) {
                     let souradnice = stanice[i].gps; //pak to vrátit debile
                     let souradnice_split = stanice[i].gps.split("_");
                     axios
-                        .get("/api/now/" + souradnice)
+                        .get("/now/" + souradnice)
                         .then(response => {
                             let stanice_obsah = response.data
                             if (stanice_obsah.message == "ok") {
