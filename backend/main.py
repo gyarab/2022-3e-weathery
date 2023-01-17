@@ -61,8 +61,8 @@ def authorized_token(token) -> bool:
     return station_exists(con, token["gps"])
 
 
-def create_token(gps, serial_number):
-    payload = {"gps": gps, "serial_number": serial_number}
+def create_token(gps, id):
+    payload = {"gps": gps, "id": id}
     encoded_jwt = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
@@ -116,7 +116,7 @@ def update(req: Request, d: Data):
         return {"message": "no token found"}
     if not authorized_token(token):
         return {"message": "token is not valid"}
-    update_weather(con, token["gps"], datetime.strftime(datetime.now(), format), data)
+    update_weather(con, token["id"], datetime.strftime(datetime.now(), format), data)
     return {"message": "weather updated successfulaly"}
 
 
@@ -125,7 +125,7 @@ def register(d: RegisterData):
     data = jsonable_encoder(d)
     if station_exists(con, data["gps"]):
         return {"message": "station already exists"}
-    if not valid_input(con, data["serial_number"]):
+    if not valid_input(con, data["id"]):
         return {"message": "input data are not valid"}
-    add_stations(con, data["gps"], data["serial_number"])
-    return {"token": create_token(data["gps"], data["serial_number"])}
+    add_stations(con, data["gps"], data["id"])
+    return {"token": create_token(data["gps"], data["id"])}
