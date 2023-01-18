@@ -5,23 +5,17 @@
 <script lang="ts">
 import axios from "axios";
 import L from 'leaflet'
-import '../assets/leaflet-providers.js'
-import {onBeforeUnmount, onDeactivated, onMounted, h, createApp} from "vue";
-import type {StandardPropertiesFallback} from "csstype";
+import '../assets/leaflet-providers'
 
 export default {
     name: 'Mapa',
     data() {
         return {
             icon: L.icon({
-                iconUrl: 'src/assets/icony/target.png',
-                //shadowUrl: 'src/assets/map-pointer.png',
-
-                iconSize: [20, 20], // size of the icon
-                //shadowSize:   [50, 64], // size of the shadow
-                iconAnchor: [10, 10], // point of the icon which will correspond to marker's location
-                //shadowAnchor: [4, 62],  // the same for the shadow
-                popupAnchor: [0, -15] // point from which the popup should open relative to the iconAnchor
+                iconUrl: 'src/assets/icony/target2.png',
+                iconSize: [40, 40], // size of the icon
+                iconAnchor: [20, 35], // point of the icon which will correspond to marker's location
+                popupAnchor: [8, -32] // point from which the popup should open relative to the iconAnchor
             }),
             map: L.map('map').setView([50.0835494, 14.4341414], 11), // Praha
 
@@ -29,7 +23,7 @@ export default {
     },
     mounted() {
         // tady info: https://github.com/leaflet-extras/leaflet-providers
-        L.tileLayer.provider('CartoDB.Voyager').addTo(this.map);
+        L.tileLayer.provider('CartoDB.Positron').addTo(this.map);
 
         axios
             .get("/stations")
@@ -49,15 +43,10 @@ export default {
                                         <a href="${souradnice.replace('_', '-').replaceAll('.', ',')}" class="nadpis-popup" ><h1>${souradnice.replace("_", "° S ").replaceAll(".", ",")}° E</h1></a> <!-- seru na to more mozna nekdy z toho udelame router-link -->
                                         <hr>
                                         <h2><img class="icony_popup" src="src/assets/icony/teplo.png" alt="Teplota">${stanice_obsah.temperature}°C</h2>
-                                        <h2><img class="icony_popup" src="src/assets/icony/tlak.png" alt="Teplota">${Math.round(stanice_obsah.pressure /
-                                    10)
-                                / 10} hPa</h2>
+                                        <h2><img class="icony_popup" src="src/assets/icony/tlak.png" alt="Teplota">${Math.round(stanice_obsah.pressure / 10) / 10} hPa</h2>
                                         <h2><img class="icony_popup" src="src/assets/icony/vlhkost.png" alt="Teplota">${stanice_obsah.humidity}%</h2>
-                                        <h2><img class="icony_popup" src="src/assets/icony/rychlost_vetru.png" alt="Teplota">${stanice_obsah.wind_speed}
-                                            m/s
-                                        </h2>
-                                        <h2><img class="icony_popup" src="src/assets/icony/smer_vetru.png" alt="Teplota">${stanice_obsah.wind_direction}
-                                        </h2>
+                                        <h2><img class="icony_popup" src="src/assets/icony/rychlost_vetru.png" alt="Teplota">${stanice_obsah.wind_speed}m/s</h2>
+                                        <h2><img class="icony_popup" src="src/assets/icony/smer_vetru.png" alt="Teplota">${stanice_obsah.wind_direction}</h2>
                                         <h2><img class="icony_popup" src="src/assets/icony/dest.png" alt="Teplota">${stanice_obsah.rain} mm/h</h2>
                                         <style>
                                             .nadpis-popup {
@@ -68,8 +57,8 @@ export default {
                                                 font-weight: bold;
                                                 font-size: 2em;
                                             }
-                                            </style>
-                                    </body>`, { offset: [180, 201], maxWidth: 250 })
+                                        </style>
+                                    </body>`, {offset: [180, 201], maxWidth: 250})
                             } else {
                                 //jsme vpíči to vymyslí firu
                             }
