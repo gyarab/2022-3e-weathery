@@ -47,26 +47,48 @@ def get_between_dates(
     d_from = datetime.strptime(date_from, format)
     d_to = datetime.strptime(date_to, format)
     data = {"message": "ok", "data": []}
+    delta = d_to - d_from
     match avg_type:
-        case 0:
-            delta = d_to - d_from
-            for i in range((delta.seconds // 3600) + 1):
-                to = d_to - timedelta(hours=(delta.seconds // 3600) - i)
-                data["data"].append(execute_between_dates(connection, gps, d_from, to))
-                d_from += timedelta(hours=1)
         case 1:
-            delta = d_to - d_from
-            for i in range(delta.days + 1):
-                to = d_to - timedelta(delta.days - i)
-                data["data"].append(execute_between_dates(connection, gps, d_from, to))
-                d_from += timedelta(days=1)
+            for i in range((int(delta.total_seconds()) // 300) + 1):
+                data["data"].append(
+                    execute_between_dates(
+                        connection, gps, d_from, d_from + timedelta(seconds=300)
+                    )
+                )
+                d_from += timedelta(seconds=300)
         case 2:
-            delta = d_to - d_from
-            for i in range((delta.days // 7) + 1):
-                to = d_to - timedelta((delta.days // 7) - i)
-                data["data"].append(execute_between_dates(connection, gps, d_from, to))
+            for i in range((int(delta.total_seconds()) // 1800) + 1):
+                data["data"].append(
+                    execute_between_dates(
+                        connection, gps, d_from, d_from + timedelta(seconds=1800)
+                    )
+                )
+                d_from += timedelta(seconds=1800)
+        case 3:
+            for i in range((int(delta.total_seconds()) // 3600) + 1):
+                data["data"].append(
+                    execute_between_dates(
+                        connection, gps, d_from, d_from + timedelta(hours=1)
+                    )
+                )
+                d_from += timedelta(hours=1)
+        case 4:
+            for i in range((int(delta.total_seconds()) // 86400) + 1):
+                data["data"].append(
+                    execute_between_dates(
+                        connection, gps, d_from, d_from + timedelta(days=1)
+                    )
+                )
+                d_from += timedelta(days=1)
+        case 5:
+            for i in range((int(delta.total_seconds()) // 604800) + 1):
+                data["data"].append(
+                    execute_between_dates(
+                        connection, gps, d_from, d_from + timedelta(weeks=1)
+                    )
+                )
                 d_from += timedelta(weeks=1)
-
     return data
 
 

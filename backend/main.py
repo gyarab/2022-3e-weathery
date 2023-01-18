@@ -80,7 +80,7 @@ def now(gps: str):
 
 
 @app.get("/api/stats/{gps}")
-def stats(gps: str, date_from: str, date_to: str = "now"):
+def stats(gps: str, date_from: str, date_to: str = "now", freq: int = 0):
     if not station_exists(con, gps):
         return {"message": "station does not exist"}
     format = "%d-%m-%Y %H:%M:%S"
@@ -99,12 +99,23 @@ def stats(gps: str, date_from: str, date_to: str = "now"):
     ) - datetime.timestamp(datetime.strptime(date_from, format))
     if unix_delta <= 0:
         return {"message": "date is not valid"}
-    elif unix_delta <= DAY:
-        return get_between_dates(con, gps, 0, date_from, date_to)
-    elif unix_delta <= 3 * MONTH:
+    if freq == 1:
         return get_between_dates(con, gps, 1, date_from, date_to)
-    else:
+    elif freq == 2:
         return get_between_dates(con, gps, 2, date_from, date_to)
+    elif freq == 3:
+        return get_between_dates(con, gps, 3, date_from, date_to)
+    elif freq == 4:
+        return get_between_dates(con, gps, 4, date_from, date_to)
+    elif freq == 5:
+        return get_between_dates(con, gps, 5, date_from, date_to)
+    else:
+        if unix_delta <= DAY:
+            return get_between_dates(con, gps, 3, date_from, date_to)
+        elif unix_delta <= 3 * MONTH:
+            return get_between_dates(con, gps, 4, date_from, date_to)
+        else:
+            return get_between_dates(con, gps, 5, date_from, date_to)
 
 
 @app.post("/api/station/update")
