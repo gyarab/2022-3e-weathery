@@ -13,24 +13,27 @@
     --vyska-popupu-mapa: 200px;
     --vyska-menu: 60px;
     --velikost-pisma-menu: 20px;
-    --bila: rgb(245, 245, 245);
+    --bila: #EEF1FF;
+    --svetla: #D2DAFF;
+    --tmava: #AAC4FF;
+    --fialova: #B1B2FF;
 }
 
 body {
     font-family: 'Roboto Mono', monospace;
     height: 100%;
+    background-color: var(--bila);
 }
 
 #menu {
-    background-color: var(--bila);
+    background-color: var(--fialova);
     height: var(--vyska-menu);
-    border-bottom: 1px solid;
 }
 
 #menu a {
     font-size: var(--velikost-pisma-menu);
     display: block;
-    color: rgb(35, 35, 35);
+    color: black;
     text-align: center;
     padding: calc((var(--vyska-menu) - var(--velikost-pisma-menu))/2) 16px;
     text-decoration: none;
@@ -85,4 +88,8 @@ h1 {
 
 .leaflet-popup-content {
     margin: 13px 24px 13px 24px;
+}
+
+.leaflet-control-attribution a svg {
+    display: none !important; /*more zadna ukrainska vlajka nebude*/
 }

@@ -1,18 +1,17 @@
 <template>
     <div id="detail">
-        <h1>{{ souradnice[0] }}° S, {{ souradnice[1] }}° E</h1>
 
         <div id="content">
             <div id="menicko">
-                <button class="tlacitkoPrepinani" :class="{aktivniTlacitko: aktivniGraf === jmenoGrafu}"
-                        v-for="jmenoGrafu in Object.keys(grafy)"
+                <button v-for="jmenoGrafu in Object.keys(grafy)" class="tlacitkoPrepinani" :class="{aktivniTlacitko: aktivniGraf === jmenoGrafu}"
                         @click="zmenaAktivnihoGrafu(jmenoGrafu)">
                     {{ jmenoGrafu }}
                 </button>
             </div>
 
             <div id="grafContainer">
-                <apexchart width="800" height="450px" type="line" :options="chartOptions" :series="series"></apexchart>
+                <apexchart id="graf" width="800" height="450px" type="area" :options="chartOptions" :series="series"></apexchart>
+                <h2>{{ souradnice[0] }}° S, {{ souradnice[1] }}° E</h2>
             </div>
         </div>
     </div>
@@ -42,7 +41,8 @@ export default {
                     },
                     toolbar: {
                         show: false,
-                    }
+                    },
+                    background: '#AAC4FF'
                 },
                 xaxis: {
                     categories: [],
@@ -78,6 +78,7 @@ export default {
             this.data = response.data.data
 
             for (let i in this.data) {
+                console.log(this.data[i].pressure /= 100) // aby jsme to měli v hPa
             }
 
             this.zmenaAktivnihoGrafu(this.aktivniGraf)
@@ -104,38 +105,53 @@ export default {
 
 <style scoped>
 #detail {
-    padding: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
 #content {
     display: flex;
-    margin-top: 30px;
+    margin-top: 5px;
+    align-self: center;
 }
 
 #menicko {
     display: flex;
     flex-direction: column;
     gap: 5px;
-}
-
-.tlacitkoPrepinani {
-    padding: 30px;
-    border: none;
-    background-color: white;
+    align-items: end;
 }
 
 #grafContainer {
     padding: 20px;
-    box-shadow: 0px 0px 25px grey;
+    border-radius: 5px;
+    z-index: 3;
+    background-color: var(--svetla);
+}
+
+#graf {
+    border-radius: 5px;
+}
+
+.tlacitkoPrepinani {
+    padding: 20px 20px 20px 0;
+    background-color: var(--svetla);
+    border-radius: 5px 0 0 5px;
+    left: 20px;
     position: relative;
-    z-index: 1;
+    width: 80px;
+    border: none;
+    transition: 0.2s;
+    margin-left: 34px;
 }
 
 .aktivniTlacitko {
-    box-shadow: 0px 0px 25px grey;
-    position: relative;
-    z-index: 1;
-    transition: 0.2s;
-    border-radius: 10px 0 0 10px;
+    width: 100px;
+    transition: 1s;
+    border-right: none;
+    background-color: var(--tmava);
+    z-index: 4;
+    margin-left: 0;
 }
 </style>
