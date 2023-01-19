@@ -5,26 +5,31 @@
 #include <Adafruit_BMP280.h>
 #include <Adafruit_AM2320.h>
 #include <SoftwareSerial.h>
-#include <TinyGPS.h>
+#include <TinyGPS++.h>
 #include "env.h"
 
 #define BMP280_ADRESS (0x76)
+#define RAIN_PIN 12
+#define TX 6
+#define RX 13
 
+TinyGPSPlus gps;
+SoftwareSerial swSerial(RX, TX);
 Adafruit_AM2320 am2320 = Adafruit_AM2320();
 Adafruit_BMP280 bmp;
 AS5600 as5600;
 WiFiClientSecure client;
 const int WIND_SPEED_PIN = 14;
-const int RAIN_PIN = 12;
 const int correction = 32;
 const char* nameWifi = NAME;
 const char* passWifi = PASSWORD;
 const char* server = SERVER;
 const char* token = TOKEN;
-const int VOLUME = 0;
+const int VOLUME = 1;
 
 int windSpeedState = 0;
 int currentRain = 0;
+String GPS = "0.0_0.0";
 String data = "";
 
 struct ResponseData {
@@ -36,9 +41,14 @@ struct ResponseData {
   float rain;
 };
 
+
+void ICACHE_RAM_ATTR rainSwitch() {
+  currentRain += VOLUME;
+}
+
 void setup() {
   pinMode(RAIN_PIN, INPUT);
-  attachInterrupt(0, rainSwitch, FALLING);
+  attachInterrupt(digitalPinToInterrupt(RAIN_PIN), rainSwitch, FALLING);
   pinMode(WIND_SPEED_PIN, INPUT);
   pinMode(2, OUTPUT);
   windSpeedState = digitalRead(WIND_SPEED_PIN);
@@ -46,7 +56,7 @@ void setup() {
   as5600.setDirection(AS5600_CLOCK_WISE);
   am2320.begin();
   bmp.begin(BMP280_ADRESS);
-
+  swSerial.begin(9600);
 
 
   Serial.begin(9600);
@@ -104,6 +114,42 @@ void sendData(ResponseData data) {
   client.stop();
 }
 
+void getGPS() {
+  /*bool novaData = false;
+  unsigned long znaky;
+  unsigned short slova, chyby;
+  for (unsigned long start = millis(); millis() - start < 1000;) {
+    while (swSerial.available()) {
+      char c = swSerial.read();
+      if (gps.encode(c)) {
+        novaData = true;
+      }
+    }
+  }
+  if (novaData) {
+    float zSirka, zDelka;
+    unsigned long stariDat;
+    int rok;
+    byte mesic, den, hodina, minuta, sekunda, setinaSekundy;
+    gps.f_get_position(&zSirka, &zDelka, &stariDat);
+    zSirka = TinyGPS::GPS_INVALID_F_ANGLE ? 0.0 : zSirka, 7;
+    zDelka = TinyGPS::GPS_INVALID_F_ANGLE ? 0.0 : zDelka, 7;
+    Serial.println(String(zSirka) + " " + String(zDelka));
+    if (stariDat == TinyGPS::GPS_INVALID_AGE) {
+      Serial.println("Nelze nacist datum a cas.");
+    } else {
+      char datumCas[32];
+      Serial.print("Datum a cas: ");
+      sprintf(datumCas, "%02d/%02d/%02d %02d:%02d:%02d", mesic, den, rok, hodina, minuta, sekunda);
+      Serial.println(datumCas);
+    }
+  }
+  gps.stats(&znaky, &slova, &chyby);
+  if (znaky == 0) {
+    Serial.println("Chyba pri prijmu dat z GPS, zkontrolujte zapojeni!");
+  }*/
+}
+
 float getTemperature() {
   return am2320.readTemperature();
 }
@@ -154,26 +200,46 @@ String getWindDirection() {
   }
 }
 
-void rainSwitch() {
-  currentRain += VOLUME;
-}
 
 int getRain() {
-  return 5;
+  float x = (currentRain / 13 * 3600) / 0.020096;
+  currentRain = 0;
+  return x;
 }
 
 void loop() {
+  if (GPS == "0.0_0.0") {
+    //getGPS();
+    while (swSerial.available() > 0) {
+      gps.encode(swSerial.read());
+      yield();
+    }
+    if (gps.location.isUpdated()) {
+      Serial.print("LAT=");
+      Serial.print(gps.location.lat(), 6);
+      Serial.print("LNG=");
+      Serial.println(gps.location.lng(), 6);
+      float lat = gps.location.lat();
+      float lng = gps.location.lng();
+      GPS = String(lat) + "_" + String(lng);
+    }
+    Serial.println(GPS);
+  } else {
+    Serial.println("done");
+    /*ResponseData data;
+    data.windSpeed = getWindSpeed();
+    data.temperature = getTemperature();
+    delay(100);
+    data.humidity = getHumidity();
+    data.pressure = getPressure();
+    data.windDirection = getWindDirection();
+    data.rain = getRain();
+    Serial.println(getJSON(data));
+    //sendData(data);
 
-  ResponseData data;
-  data.windSpeed = getWindSpeed();
-  data.temperature = getTemperature();
-  delay(100);
-  data.humidity = getHumidity();
-  data.pressure = getPressure();
-  data.windDirection = getWindDirection();
-  data.rain = getRain();
-  Serial.println(getJSON(data));
-  //sendData(data);
-
-  delay(3000);
+*/
+    delay(1000);
+  }
+  yield();
+  //delay(1000);
 }

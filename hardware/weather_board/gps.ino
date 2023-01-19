@@ -1,4 +1,4 @@
-#include <SoftwareSerial.h>
+/*#include <SoftwareSerial.h>
 #include <TinyGPS.h>
 // nastavení propojovacích pinů
 #define TX 6
@@ -91,4 +91,4 @@ void loop() {
     Serial.println("Chyba pri prijmu dat z GPS, zkontrolujte zapojeni!");
   }
   Serial.println();
-}
+}*/
