@@ -25,9 +25,12 @@ export default {
     data() {
         return {
             grafy: {
-                Teplota: ['temperature', '#ff4d00', 'pathIcona'],
-                Vlhkost: ['humidity', '#000dff', 'pathIcona'],
-                Tlak: ['pressure', '#595959', 'pathIcona']
+                Teplota: ['temperature', '#ff0000', ''],
+                Vlhkost: ['humidity', '#000dff', ],
+                Tlak: ['pressure', '#595959', 'pathIcona'],
+                WindSpeed: ['windspeed', '#00FFEC' , 'pathIcona'],
+                WindDirection: ['Winddirection', '#00FF51', 'pathIcona'],
+                Rain: ['rain', '#0093FF', '3']
             },
             casoveRozmezi: 14, // dní
             aktivniGraf: "Teplota",
