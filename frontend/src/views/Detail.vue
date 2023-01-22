@@ -4,8 +4,9 @@
         <div id="content">
             <div id="menicko">
                 <button v-for="jmenoGrafu in Object.keys(grafy)" class="tlacitkoPrepinani" :class="{aktivniTlacitko: aktivniGraf === jmenoGrafu}"
-                        @click="zmenaAktivnihoGrafu(jmenoGrafu)">
+                    @click="zmenaAktivnihoGrafu(jmenoGrafu)">
                     {{ jmenoGrafu }}
+                    <img :src="`@/src/assets/icony/${grafy[jmenoGrafu][2]}`">
                 </button>
             </div>
 
@@ -25,12 +26,12 @@ export default {
     data() {
         return {
             grafy: {
-                Teplota: ['temperature', '#ff0000', ''],
-                Vlhkost: ['humidity', '#000dff', ],
-                Tlak: ['pressure', '#595959', 'pathIcona'],
-                WindSpeed: ['windspeed', '#00FFEC' , 'pathIcona'],
-                WindDirection: ['Winddirection', '#00FF51', 'pathIcona'],
-                Rain: ['rain', '#0093FF', '3']
+                Teplota: ['temperature', '#ff0000', 'teplo.png'],
+                Vlhkost: ['humidity', '#000dff', 'vlhkost.png'],
+                Tlak: ['pressure', '#595959', 'tlak.png'],
+                WindSpeed: ['windspeed', '#00FFEC' , 'rychlost_vetru.png'],
+                WindDirection: ['winddirection', '#00FF51', 'smer_vetru.png'],
+                Rain: ['rain', '#0093FF', 'dest.png']
             },
             casoveRozmezi: 14, // dní
             aktivniGraf: "Teplota",
