@@ -5,8 +5,7 @@
             <div id="menicko">
                 <button v-for="jmenoGrafu in Object.keys(grafy)" class="tlacitkoPrepinani" :class="{aktivniTlacitko: aktivniGraf === jmenoGrafu}"
                     @click="zmenaAktivnihoGrafu(jmenoGrafu)">
-                    {{ jmenoGrafu }}
-                    <img :src="`@/src/assets/icony/${grafy[jmenoGrafu][2]}`">
+                    <img class="graf_ikonky" :src="'src/assets/icony/'+grafy[jmenoGrafu][2]">
                 </button>
             </div>
 
@@ -20,7 +19,7 @@
 
 <script>
 import axios from "axios";
-
+//<img :src="`@/src/assets/icony/${grafy[jmenoGrafu][2]}`">
 export default {
     name: "Detail",
     data() {
@@ -157,5 +156,9 @@ export default {
     background-color: var(--tmava);
     z-index: 4;
     margin-left: 0;
+}
+.graf_ikonky {
+    width: 30px;
+    height: 30px;
 }
 </style>
