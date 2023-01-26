@@ -11,6 +11,11 @@
 
             <div id="grafContainer">
                 <apexchart id="graf" width="800" height="450px" type="area" :options="chartOptions" :series="series"></apexchart>
+                <select id="change_date_btn" v-model="selected" @click="zmenaCasovehoRozmezi(selected)">
+                    <option value="week">week</option>
+                    <option value="month">month</option>
+                    <option value="year">year</option>
+                </select>
                 <h2>{{ souradnice[0] }}° S, {{ souradnice[1] }}° E</h2>
             </div>
         </div>
@@ -19,7 +24,7 @@
 
 <script>
 import axios from "axios";
-//<img :src="`@/src/assets/icony/${grafy[jmenoGrafu][2]}`">
+
 export default {
     name: "Detail",
     data() {
@@ -85,6 +90,7 @@ export default {
             }
 
             this.zmenaAktivnihoGrafu(this.aktivniGraf)
+            this.zmenaCasovehoRozmezi(this.selected)
         })
 
         // zobrazení grafu pomocí https://vue-chartjs.org/
@@ -101,6 +107,32 @@ export default {
             }
             this.series[0].name = this.aktivniGraf
             ApexCharts.exec('1', 'updateOptions', {colors: [this.grafy[this.aktivniGraf][1]]})
+        },
+        zmenaCasovehoRozmezi(selected){
+            this.aktivniRozmezi = selected
+            let now = new Date() // dnešek
+            if (selected == "week") {
+                    this.aktivniRozmezi = 7
+                }
+                else if (selected == "month") {
+                    this.casoveRozmezi = 30
+                }
+                else if (selected == "year") {
+                    this.casoveRozmezi = 365
+                }
+            now.setDate(now.getDate() - this.casoveRozmezi)
+            axios.get("/stats/" + this.souradnice[0] + "_" + this.souradnice[1], {
+                params: {
+                    date_from: `${now.getDate()}-${now.getMonth() + 1}-${now.getFullYear()}`,
+                    date_to: 'now'
+                }
+            }).then(response => {
+                this.data = response.data.data
+                for (let i in this.data){
+                    console.log(this.data[i].time)
+                }
+                
+            })
         }
     }
 }
@@ -124,6 +156,17 @@ export default {
     flex-direction: column;
     gap: 5px;
     align-items: end;
+}
+#change_date_btn{
+    display: flex;
+    margin-left: 45%;
+    background-color: var(--tmava);
+    left: 20px;
+    position: relative;
+    width: 80px;
+    height: 35px;
+    border-radius: 12px;
+    border: none;
 }
 
 #grafContainer {
