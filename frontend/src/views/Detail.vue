@@ -112,7 +112,7 @@ export default {
             this.aktivniRozmezi = selected
             let now = new Date() // dnešek
             if (selected == "week") {
-                    this.aktivniRozmezi = 7
+                    this.casoveRozmezi = 7
                 }
                 else if (selected == "month") {
                     this.casoveRozmezi = 30
@@ -120,7 +120,7 @@ export default {
                 else if (selected == "year") {
                     this.casoveRozmezi = 365
                 }
-            now.setDate(now.getDate() - this.casoveRozmezi)
+            now.setDate(now.getDate() - this.casoveRozmezi + 1)
             axios.get("/stats/" + this.souradnice[0] + "_" + this.souradnice[1], {
                 params: {
                     date_from: `${now.getDate()}-${now.getMonth() + 1}-${now.getFullYear()}`,
@@ -128,9 +128,7 @@ export default {
                 }
             }).then(response => {
                 this.data = response.data.data
-                for (let i in this.data){
-                    console.log(this.data[i].time)
-                }
+                this.zmenaAktivnihoGrafu(this.aktivniGraf)
                 
             })
         }
