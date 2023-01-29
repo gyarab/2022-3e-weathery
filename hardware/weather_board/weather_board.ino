@@ -28,7 +28,8 @@ const char* token = TOKEN;
 const int VOLUME = 1;
 
 int windSpeedState = 0;
-int currentRain = 0;
+float currentRain = 0;
+float distancePerTict = 0.036717364138831;
 String GPS = "0.0_0.0";
 String data = "";
 
@@ -73,15 +74,6 @@ void setup() {
   Serial.println(WiFi.localIP());
 }
 
-void printData(ResponseData data) {
-  Serial.println(data.temperature);
-  Serial.println(data.humidity);
-  Serial.println(data.pressure);
-  Serial.println(data.windSpeed);
-  Serial.println(data.windDirection);
-  Serial.println(data.rain);
-  Serial.println();
-}
 
 String getJSON(ResponseData data) {
   String message = "{\"temperature\":" + (String)data.temperature + ", \"humidity\":" + (String)data.humidity + ", \"pressure\":" + (String)data.pressure;
@@ -115,39 +107,20 @@ void sendData(ResponseData data) {
 }
 
 void getGPS() {
-  /*bool novaData = false;
-  unsigned long znaky;
-  unsigned short slova, chyby;
-  for (unsigned long start = millis(); millis() - start < 1000;) {
-    while (swSerial.available()) {
-      char c = swSerial.read();
-      if (gps.encode(c)) {
-        novaData = true;
-      }
-    }
+  while (swSerial.available() > 0) {
+    gps.encode(swSerial.read());
+    yield();
   }
-  if (novaData) {
-    float zSirka, zDelka;
-    unsigned long stariDat;
-    int rok;
-    byte mesic, den, hodina, minuta, sekunda, setinaSekundy;
-    gps.f_get_position(&zSirka, &zDelka, &stariDat);
-    zSirka = TinyGPS::GPS_INVALID_F_ANGLE ? 0.0 : zSirka, 7;
-    zDelka = TinyGPS::GPS_INVALID_F_ANGLE ? 0.0 : zDelka, 7;
-    Serial.println(String(zSirka) + " " + String(zDelka));
-    if (stariDat == TinyGPS::GPS_INVALID_AGE) {
-      Serial.println("Nelze nacist datum a cas.");
-    } else {
-      char datumCas[32];
-      Serial.print("Datum a cas: ");
-      sprintf(datumCas, "%02d/%02d/%02d %02d:%02d:%02d", mesic, den, rok, hodina, minuta, sekunda);
-      Serial.println(datumCas);
-    }
+  if (gps.location.isUpdated()) {
+    Serial.print("LAT=");
+    Serial.print(gps.location.lat(), 6);
+    Serial.print("LNG=");
+    Serial.println(gps.location.lng(), 6);
+    float lat = gps.location.lat();
+    float lng = gps.location.lng();
+    GPS = String(lat) + "_" + String(lng);
   }
-  gps.stats(&znaky, &slova, &chyby);
-  if (znaky == 0) {
-    Serial.println("Chyba pri prijmu dat z GPS, zkontrolujte zapojeni!");
-  }*/
+  Serial.println(GPS);
 }
 
 float getTemperature() {
@@ -162,11 +135,11 @@ float getPressure() {
   return bmp.readPressure();
 }
 
-int getWindSpeed() {
+float getWindSpeed() {
   int tick = 0;
   int state = digitalRead(WIND_SPEED_PIN);
   unsigned long start = millis();
-  while ((millis() - start) <= 10000) {
+  while ((millis() - start) <= 60000) {
     if (digitalRead(WIND_SPEED_PIN) == 0 && state == 1) {
       tick++;
       state = false;
@@ -176,7 +149,7 @@ int getWindSpeed() {
     }
     yield();
   }
-  return tick;
+  return tick * distancePerTict / 60;
 }
 
 String getWindDirection() {
@@ -201,32 +174,17 @@ String getWindDirection() {
 }
 
 
-int getRain() {
-  float x = (currentRain / 13 * 3600) / 0.020096;
+float getRain() {
+  float x = currentRain / 1000 * 60 / 0.005411;
   currentRain = 0;
   return x;
 }
 
 void loop() {
   if (GPS == "0.0_0.0") {
-    //getGPS();
-    while (swSerial.available() > 0) {
-      gps.encode(swSerial.read());
-      yield();
-    }
-    if (gps.location.isUpdated()) {
-      Serial.print("LAT=");
-      Serial.print(gps.location.lat(), 6);
-      Serial.print("LNG=");
-      Serial.println(gps.location.lng(), 6);
-      float lat = gps.location.lat();
-      float lng = gps.location.lng();
-      GPS = String(lat) + "_" + String(lng);
-    }
-    Serial.println(GPS);
+    getGPS();
   } else {
-    Serial.println("done");
-    /*ResponseData data;
+    ResponseData data;
     data.windSpeed = getWindSpeed();
     data.temperature = getTemperature();
     delay(100);
@@ -237,9 +195,6 @@ void loop() {
     Serial.println(getJSON(data));
     //sendData(data);
 
-*/
     delay(1000);
   }
-  yield();
-  //delay(1000);
 }
