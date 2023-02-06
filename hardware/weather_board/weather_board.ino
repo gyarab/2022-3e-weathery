@@ -83,7 +83,7 @@ String getJSON(ResponseData data) {
 }
 
 String getJSON(String gps, int id) {
-  String message = "{\"gps\":" + gps + ", \"id\":" + (String)id + "}";
+  String message = "{\"gps\": \"" + (String)gps + "\",  \"id\":" + (String)id + "}";
   return message;
 }
 
@@ -103,9 +103,7 @@ void sendData(ResponseData data) {
     client.println();
     client.print(message);
     Serial.println("Data sent");
-    while (client.connected()) {
-      Serial.println(client.readStringUntil('\n'));
-    }
+    client.readStringUntil('\n');
   } else {
     Serial.println("Connection failed");
   }
@@ -119,15 +117,21 @@ String getToken(String gps, int id) {
     client.println("POST /api/station/register HTTP/1.1");
     client.print("Host: ");
     client.println(server);
-    client.println("Connection: close");
+    client.println("Connection: keep-alive");
     client.println("Content-Type: application/json");
     client.print("Content-Length: ");
     client.println(message.length());
     client.println();
     client.print(message);
-    Serial.println("Data sent");
-    while (client.connected()) {
-      Serial.println(client.readStringUntil('\n'));
+    for (int i = 0; i < 9; i++) {
+      if (i == 8) {
+        String body = client.readStringUntil('\n');
+        if (body[0] == '"') {
+          return body.substring(1, body.length() - 1);
+        }
+      } else {
+        client.readStringUntil('\n');
+      }
     }
   } else {
     Serial.println("Connection failed");
@@ -150,7 +154,6 @@ void getGPS() {
     float lng = gps.location.lng();
     GPS = String(lat) + "_" + String(lng);
   }
-  Serial.println(GPS);
 }
 
 float getTemperature() {
@@ -169,7 +172,7 @@ float getWindSpeed() {
   int tick = 0;
   int state = digitalRead(WIND_SPEED_PIN);
   unsigned long start = millis();
-  while ((millis() - start) <= 59000) {
+  while ((millis() - start) <= 299000) {
     if (digitalRead(WIND_SPEED_PIN) == 0 && state == 1) {
       tick++;
       state = false;
@@ -206,7 +209,7 @@ String getWindDirection() {
 
 
 float getRain() {
-  float x = currentRain / 1000 * 60 / 0.005411;
+  float x = currentRain / 1000 * 12 / 0.005411;
   currentRain = 0;
   return x;
 }
@@ -225,7 +228,6 @@ void loop() {
     data.pressure = getPressure();
     data.windDirection = getWindDirection();
     data.rain = getRain();
-    Serial.println(getJSON(data));
     sendData(data);
     delay(1000);
   }
