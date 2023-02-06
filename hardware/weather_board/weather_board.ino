@@ -21,16 +21,17 @@ AS5600 as5600;
 WiFiClientSecure client;
 const int WIND_SPEED_PIN = 14;
 const int correction = 32;
+const int id = SERIALNUMBER;
 const char* nameWifi = NAME;
 const char* passWifi = PASSWORD;
 const char* server = SERVER;
-const char* token = TOKEN;
 const int VOLUME = 1;
 
 int windSpeedState = 0;
 float currentRain = 0;
 float distancePerTict = 0.036717364138831;
-String GPS = "0.0_0.0";
+String token = "";
+String GPS = "-0.0_-0.0";
 String data = "";
 
 struct ResponseData {
@@ -81,6 +82,11 @@ String getJSON(ResponseData data) {
   return message;
 }
 
+String getJSON(String gps, int id) {
+  String message = "{\"gps\":" + gps + ", \"id\":" + (String)id + "}";
+  return message;
+}
+
 void sendData(ResponseData data) {
   client.setInsecure();
   if (client.connect(server, 443)) {
@@ -104,6 +110,30 @@ void sendData(ResponseData data) {
     Serial.println("Connection failed");
   }
   client.stop();
+}
+
+String getToken(String gps, int id) {
+  client.setInsecure();
+  if (client.connect(server, 443)) {
+    String message = getJSON(gps, id);
+    client.println("POST /api/station/register HTTP/1.1");
+    client.print("Host: ");
+    client.println(server);
+    client.println("Connection: close");
+    client.println("Content-Type: application/json");
+    client.print("Content-Length: ");
+    client.println(message.length());
+    client.println();
+    client.print(message);
+    Serial.println("Data sent");
+    while (client.connected()) {
+      Serial.println(client.readStringUntil('\n'));
+    }
+  } else {
+    Serial.println("Connection failed");
+  }
+  client.stop();
+  return "";
 }
 
 void getGPS() {
@@ -139,7 +169,7 @@ float getWindSpeed() {
   int tick = 0;
   int state = digitalRead(WIND_SPEED_PIN);
   unsigned long start = millis();
-  while ((millis() - start) <= 60000) {
+  while ((millis() - start) <= 59000) {
     if (digitalRead(WIND_SPEED_PIN) == 0 && state == 1) {
       tick++;
       state = false;
@@ -149,8 +179,9 @@ float getWindSpeed() {
     }
     yield();
   }
-  return tick * distancePerTict / 60;
+  return tick * distancePerTict / 59;
 }
+
 
 String getWindDirection() {
   int angle = as5600.readAngle();
@@ -181,8 +212,10 @@ float getRain() {
 }
 
 void loop() {
-  if (GPS == "0.0_0.0") {
+  if (GPS == "-0.0_-0.0") {
+    GPS = FIXED_GPS;
     getGPS();
+    token = getToken(GPS, id);
   } else {
     ResponseData data;
     data.windSpeed = getWindSpeed();
@@ -193,8 +226,7 @@ void loop() {
     data.windDirection = getWindDirection();
     data.rain = getRain();
     Serial.println(getJSON(data));
-    //sendData(data);
-
+    sendData(data);
     delay(1000);
   }
 }

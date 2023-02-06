@@ -2,4 +2,4 @@
 #define NAME "name"
 #define PASSWORD "password"
 #define SERIALNUMBER 111111
-#define TOKEN "aaaaaaaaaaaaaaaaa.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.ccccccccccccccc"
+#define FIXED_GPS "13.0000001_12.0000002"

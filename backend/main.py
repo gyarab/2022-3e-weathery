@@ -55,7 +55,7 @@ def get_token(req):
                 ALGORITHM,
             ],
         )
-    except KeyError:
+    except:
         return None
 
 
