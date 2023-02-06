@@ -14,6 +14,8 @@ from manage_data import (
     valid_input,
     get_latest_data,
     get_between_dates,
+    id_exists,
+    update_station,
 )
 from models import Data, RegisterData
 
@@ -134,9 +136,10 @@ def update(req: Request, d: Data):
 @app.post("/api/station/register")
 def register(d: RegisterData):
     data = jsonable_encoder(d)
-    if station_exists(con, data["gps"]):
-        return {"message": "station already exists"}
     if not valid_input(con, data["id"]):
         return {"message": "input data are not valid"}
-    add_stations(con, data["gps"], data["id"])
-    return {"token": create_token(data["gps"], data["id"])}
+    if not id_exists(con, data["id"]):
+        add_stations(con, data["gps"], data["id"])
+        return {"message": "ok", "token": create_token(data["gps"], data["id"])}
+    update_station(con, data["id"], data["gps"])
+    return {"message": "ok", "token": create_token(data["gps"], data["id"])}

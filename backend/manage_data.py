@@ -7,7 +7,7 @@ def get_id_by_gps(connection, gps: str) -> int:
     return cur.fetchall()[0][0]
 
 
-def get_all_stations(connection):
+def get_all_stations(connection) -> dict:
     cur = connection.cursor()
     cur.execute("SELECT gps from stations;")
     items = cur.fetchall()
@@ -17,7 +17,7 @@ def get_all_stations(connection):
     return data
 
 
-def get_latest_data(connection, gps: str):
+def get_latest_data(connection, gps: str) -> dict:
     cur = connection.cursor()
     format = "%d-%m-%Y %H:%M:%S"
     cur.execute(
@@ -42,7 +42,7 @@ def get_latest_data(connection, gps: str):
 
 def get_between_dates(
     connection, gps: str, avg_type: int, date_from: str, date_to: str
-):
+) -> dict:
     format = "%d-%m-%Y %H:%M:%S"
     d_from = datetime.strptime(date_from, format)
     d_to = datetime.strptime(date_to, format)
@@ -92,7 +92,7 @@ def get_between_dates(
     return data
 
 
-def execute_between_dates(connection, gps, d_from, to):
+def execute_between_dates(connection, gps: str, d_from: datetime, to: datetime) -> dict:
     format = "%d-%m-%Y %H:%M:%S"
     cur = connection.cursor()
     cur.execute(
@@ -147,7 +147,27 @@ def station_exists(connection, gps: str) -> bool:
     return False
 
 
-def add_stations(connection, gps: str, id: int):
+def id_exists(connection, id: int) -> bool:
+    cur = connection.cursor()
+    cur.execute("SELECT id from stations where id= %s;", (id,))
+    if len(cur.fetchall()) == 1:
+        return True
+    return False
+
+
+def update_station(connection, id: int, gps: str) -> None:
+    cur = connection.cursor()
+    cur.execute(
+        "UPDATE stations SET gps = %s WHERE id = %s",
+        (
+            gps,
+            id,
+        ),
+    )
+    connection.commit()
+
+
+def add_stations(connection, gps: str, id: int) -> None:
     cur = connection.cursor()
     cur.execute(
         "INSERT INTO stations(gps, id) VALUES (%s, %s)",
@@ -159,7 +179,7 @@ def add_stations(connection, gps: str, id: int):
     connection.commit()
 
 
-def valid_input(connection, id: int):
+def valid_input(connection, id: int) -> bool:
     cur = connection.cursor()
     cur2 = connection.cursor()
     cur.execute(
@@ -194,7 +214,7 @@ def valid_date(date: str) -> bool:
             return False
 
 
-def update_weather(connection, id: int, time: str, data):
+def update_weather(connection, id: int, time: str, data) -> None:
     cur = connection.cursor()
     cur.execute(
         "INSERT INTO data(id, time, temperature , humidity , pressure , wind_speed , wind_direction , rain) VALUES (%s,  %s ,%s ,%s ,%s ,%s ,%s, %s);",
