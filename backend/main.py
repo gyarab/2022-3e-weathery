@@ -137,9 +137,9 @@ def update(req: Request, d: Data):
 def register(d: RegisterData):
     data = jsonable_encoder(d)
     if not valid_input(con, data["id"]):
-        return {"message": "input data are not valid"}
+        return ""
     if not id_exists(con, data["id"]):
         add_stations(con, data["gps"], data["id"])
-        return {"message": "ok", "token": create_token(data["gps"], data["id"])}
+        return create_token(data["gps"], data["id"])
     update_station(con, data["id"], data["gps"])
-    return {"message": "ok", "token": create_token(data["gps"], data["id"])}
+    return create_token(data["gps"], data["id"])
