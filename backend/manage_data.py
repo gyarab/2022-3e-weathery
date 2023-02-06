@@ -181,18 +181,11 @@ def add_stations(connection, gps: str, id: int) -> None:
 
 def valid_input(connection, id: int) -> bool:
     cur = connection.cursor()
-    cur2 = connection.cursor()
     cur.execute(
         "SELECT id from serial_numbers WHERE id = %s",
         (id,),
     )
     if len(cur.fetchall()) != 1:
-        return False
-    cur2.execute(
-        "select id from stations where id = %s",
-        (id,),
-    )
-    if len(cur2.fetchall()) > 0:
         return False
     return True
 
