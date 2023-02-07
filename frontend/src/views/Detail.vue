@@ -160,8 +160,8 @@ export default {
 }
 #change_date_btn{
     display: flex;
-    margin-left: 45%;
     background-color: var(--tmava);
+    margin-left: 30px;
     width: 80px;
     height: 35px;
     border-radius: 12px;
@@ -169,9 +169,8 @@ export default {
 }
 #milan{
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-start;
     margin: 0;
-    padding: 0;
 }    
 
 #grafContainer {
