@@ -11,11 +11,14 @@
 
             <div id="grafContainer">
                 <apexchart id="graf" width="800" height="450px" type="area" :options="chartOptions" :series="series"></apexchart>
-                <select id="change_date_btn" v-model="selected" @click="zmenaCasovehoRozmezi(selected)">
-                    <option value="week">week</option>
-                    <option value="month">month</option>
-                    <option value="year">year</option>
-                </select>
+                <div id="milan">    
+                    <h2><label for="change_date_btn">Choose time range:</label></h2>
+                    <select id="change_date_btn" v-model="input_selected" @click="zmenaCasovehoRozmezi(input_selected)">
+                        <option value="week">week</option>
+                        <option value="month">month</option>
+                        <option value="year">year</option>
+                    </select>
+                </div>
                 <h2>{{ souradnice[0] }}° S, {{ souradnice[1] }}° E</h2>
             </div>
         </div>
@@ -37,7 +40,7 @@ export default {
                 WindDirection: ['winddirection', '#00FF51', 'smer_vetru.png'],
                 Rain: ['rain', '#0093FF', 'dest.png']
             },
-            casoveRozmezi: 14, // dní
+            casoveRozmezi: 7, // dní - default
             aktivniGraf: "Teplota",
             souradnice: this.$route.params.souradnice.replaceAll(',', '.').split('-'),
             data: null,
@@ -48,7 +51,7 @@ export default {
                         enabled: false
                     },
                     toolbar: {
-                        show: false,
+                        show: true,
                     },
                     background: '#AAC4FF'
                 },
@@ -159,13 +162,17 @@ export default {
     display: flex;
     margin-left: 45%;
     background-color: var(--tmava);
-    left: 20px;
-    position: relative;
     width: 80px;
     height: 35px;
     border-radius: 12px;
     border: none;
 }
+#milan{
+    display: flex;
+    justify-content: space-around;
+    margin: 0;
+    padding: 0;
+}    
 
 #grafContainer {
     padding: 20px;
