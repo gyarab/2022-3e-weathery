@@ -132,6 +132,7 @@ String getToken(String gps, int id) {
       } else {
         client.readStringUntil('\n');
       }
+      yield();      
     }
   } else {
     Serial.println("Connection failed");
@@ -229,6 +230,7 @@ void loop() {
     data.windDirection = getWindDirection();
     data.rain = getRain();
     sendData(data);
+    free(data);
     delay(1000);
   }
 }
