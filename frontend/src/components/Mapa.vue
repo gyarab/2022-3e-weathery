@@ -109,7 +109,7 @@ export default {
             popup.style.display = "block";
         },
         closePopup: function() {
-            popup = document.getElementById("myPopup");
+            popup = document.getElementById("popup-btn");
             popup.style.display = "none";
         }
     }
