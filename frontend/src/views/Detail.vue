@@ -134,6 +134,18 @@ export default {
                 this.zmenaAktivnihoGrafu(this.aktivniGraf)
                 
             })
+        },
+        vyberCasovehoRozmezi(input_date_from, input_date_to){
+            axios.get("/stats/" + this.souradnice[0] + "_" + this.souradnice[1], {
+                params: {
+                    date_from: input_date_from,
+                    date_to: input_date_to
+                }
+            }).then(response => {
+                this.data = response.data.data
+                this.zmenaAktivnihoGrafu(this.aktivniGraf)
+                
+            })
         }
     }
 }

@@ -48,6 +48,16 @@ export default {
                                         <h2><img class="icony_popup" src="src/assets/icony/rychlost_vetru.png" alt="Teplota">${stanice_obsah.wind_speed}m/s</h2>
                                         <h2><img class="icony_popup" src="src/assets/icony/smer_vetru.png" alt="Teplota">${stanice_obsah.wind_direction}</h2>
                                         <h2><img class="icony_popup" src="src/assets/icony/dest.png" alt="Teplota">${stanice_obsah.rain} mm/h</h2>
+                                        <hr>
+                                        <a href='#' onclick='openPopup(); return false;' class='nadpis-second-popup'><p>Select custom range</p></a>
+                                        <div id='myPopup'>
+                                            <div class='popup-content'>
+                                                <textarea>weather from</textarea>
+                                                <textarea>weather to</textarea>
+                                                <button id='popup-btn' onclick='closePopup(); return false;'>jeba</button>
+                                            </div>
+                                        </div>
+
                                         <style>
                                             .nadpis-popup {
                                                 text-decoration: none;
@@ -56,6 +66,27 @@ export default {
                                             h1 {
                                                 font-weight: bold;
                                                 font-size: 2em;
+                                            }
+                                            .default-time-selector {
+                                                height: 25px;
+                                            }
+                                            .nadpis-second-popup {
+                                                font-size: 22px;
+                                                text-align: center;
+                                                text-decoration: none;
+                                            }
+                                            #popup-btn {
+                                                height: 25px;
+                                                width: 50px;
+                                                border: solid 1px red;
+                                                border-radius: 10px;
+                                            }
+                                            .popup-content {
+                                                display: flex;
+                                                flex-direction: column;
+                                                align-items: center;
+                                                align-content: space-between;
+                                                justify-content: space-around;
                                             }
                                         </style>
                                     </body>`, {offset: [180, 201], maxWidth: 250})
@@ -71,6 +102,16 @@ export default {
     beforeUnmount() {
         this.map.off();
         this.map.remove();
+    },
+    methods: {
+        openPopup: function() {
+            popup = document.getElementById("myPopup");
+            popup.style.display = "block";
+        },
+        closePopup: function() {
+            popup = document.getElementById("myPopup");
+            popup.style.display = "none";
+        }
     }
 }
 </script>
