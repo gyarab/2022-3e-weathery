@@ -104,11 +104,11 @@ export default {
         this.map.remove();
     },
     methods: {
-        openPopup: function() {
+        openPopup() {
             popup = document.getElementById("myPopup");
             popup.style.display = "block";
         },
-        closePopup: function() {
+        closePopup() {
             popup = document.getElementById("popup-btn");
             popup.style.display = "none";
         }
