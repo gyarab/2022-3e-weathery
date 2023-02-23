@@ -88,14 +88,14 @@ def execute_between_dates(connection, gps: str, d_from: datetime, to: datetime) 
             "average_of": 0,
         }
     return {
-        "time": str(datetime.strftime(items[1], format)),
-        "temperature": items[2],
-        "humidity": items[3],
-        "pressure": items[4],
-        "wind_speed": items[5],
-        "wind_direction": items[6],
-        "rain": items[7],
-        "average_of": items[0],
+        "time": str(datetime.strftime(items[0][1], format)),
+        "temperature": items[0][2],
+        "humidity": items[0][3],
+        "pressure": items[0][4],
+        "wind_speed": items[0][5],
+        "wind_direction": items[0][6],
+        "rain": items[0][7],
+        "average_of": items[0][0],
     }
 
 
