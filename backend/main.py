@@ -1,6 +1,7 @@
 import env
 from datetime import datetime
 import jwt
+import stripe
 import psycopg2
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -28,6 +29,8 @@ MONTH = 2678400
 USER = env.DB_USER
 PASSWORD = env.DB_PASSWORD
 DB_NAME = env.DB_NAME
+STRIPE_SEC = env.STRIPE_SEC
+WEBHOOK_SEC = env.WEBHOOK_SEC
 
 
 app = FastAPI()
@@ -40,6 +43,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+stripe.api_key = STRIPE_SEC
+"""
 con = psycopg2.connect(
     database=DB_NAME, user=USER, password=PASSWORD, host="localhost", port=5432
 )
@@ -142,4 +147,28 @@ def register(d: RegisterData):
         add_stations(con, data["gps"], data["id"])
         return create_token(data["gps"], data["id"])
     update_station(con, data["id"], data["gps"])
-    return create_token(data["gps"], data["id"])
+    return create_token(data["gps"], data["id"])"""
+
+
+@app.post("/payment-webhook")
+async def webhook(req: Request):
+    payload = await req.body()
+    sig_header = req.headers.get("Stripe-Signature")
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload,
+            str(sig_header),
+            WEBHOOK_SEC,
+        )
+    except ValueError:
+        return 400
+
+    # Handle the event based on its type
+    if event["type"] == "payment_intent.succeeded":
+        print(event)
+        payment_intent_id = event["data"]["object"]["id"]
+        # Update your database or perform other actions
+        print(f"Payment succeeded for PaymentIntent {payment_intent_id}")
+
+    return 200

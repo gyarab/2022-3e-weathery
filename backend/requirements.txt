@@ -2,3 +2,4 @@ uvicorn
 fastapi
 pyjwt
 psycopg2-binary
+stripe
