@@ -1,15 +1,14 @@
-<script lang="ts">
-//import TheWelcome from '../components/TheWelcome.vue'
-import Mapa from '../components/Mapa.vue'
+<template>
+    <h1>1.3% foleeeeeee</h1>
+    <p>tady budou takzvane nejaky cisla aa neco jako co je wethery proste</p>
+</template>
 
+<script>
 export default {
-    components: {
-        Mapa
-    }
+    name: "HomeView.vue"
 }
 </script>
 
-<template>
-    <div id="map"></div>
-    <Mapa/>
-</template>
+<style scoped>
+
+</style>

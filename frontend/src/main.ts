@@ -12,6 +12,6 @@ app.use(VueApexCharts);
 app.use(router)
 
 import axios from "axios";
-axios.defaults.baseURL = "https://weathery.svs.gyarab.cz/api";
+axios.defaults.baseURL = "https://api.weathery.svs.gyarab.cz/";
 
 app.mount('#app')
