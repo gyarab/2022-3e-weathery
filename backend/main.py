@@ -69,19 +69,19 @@ def create_token(gps, id):
     return encoded_jwt
 
 
-@app.get("/api/stations")
+@app.get("/stations")
 def stations():
     return get_all_stations(con)
 
 
-@app.get("/api/now/{gps}")
+@app.get("/now/{gps}")
 def now(gps: str):
     if not station_exists(con, gps):
         return {"message": "station does not exist"}
     return get_latest_data(con, gps)
 
 
-@app.get("/api/stats/{gps}")
+@app.get("/stats/{gps}")
 def stats(gps: str, date_from: str, date_to: str = "now", freq: int = 0):
     if not station_exists(con, gps):
         return {"message": "station does not exist"}
@@ -120,7 +120,7 @@ def stats(gps: str, date_from: str, date_to: str = "now", freq: int = 0):
             return get_between_dates(con, gps, 5, date_from, date_to)
 
 
-@app.post("/api/station/update")
+@app.post("/station/update")
 def update(req: Request, d: Data):
     token = get_token(req)
     data = jsonable_encoder(d)
@@ -133,7 +133,7 @@ def update(req: Request, d: Data):
     return {"message": "weather updated successfulaly"}
 
 
-@app.post("/api/station/register")
+@app.post("/station/register")
 def register(d: RegisterData):
     data = jsonable_encoder(d)
     if not valid_input(con, data["id"]):
