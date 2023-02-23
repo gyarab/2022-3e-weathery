@@ -47,48 +47,20 @@ def get_between_dates(
     d_from = datetime.strptime(date_from, format)
     d_to = datetime.strptime(date_to, format)
     data = {"message": "ok", "data": []}
-    delta = d_to - d_from
-    match avg_type:
-        case 1:
-            for i in range((int(delta.total_seconds()) // 300) + 1):
-                data["data"].append(
-                    execute_between_dates(
-                        connection, gps, d_from, d_from + timedelta(seconds=300)
-                    )
-                )
-                d_from += timedelta(seconds=300)
-        case 2:
-            for i in range((int(delta.total_seconds()) // 1800) + 1):
-                data["data"].append(
-                    execute_between_dates(
-                        connection, gps, d_from, d_from + timedelta(seconds=1800)
-                    )
-                )
-                d_from += timedelta(seconds=1800)
-        case 3:
-            for i in range((int(delta.total_seconds()) // 3600) + 1):
-                data["data"].append(
-                    execute_between_dates(
-                        connection, gps, d_from, d_from + timedelta(hours=1)
-                    )
-                )
-                d_from += timedelta(hours=1)
-        case 4:
-            for i in range((int(delta.total_seconds()) // 86400) + 1):
-                data["data"].append(
-                    execute_between_dates(
-                        connection, gps, d_from, d_from + timedelta(days=1)
-                    )
-                )
-                d_from += timedelta(days=1)
-        case 5:
-            for i in range((int(delta.total_seconds()) // 604800) + 1):
-                data["data"].append(
-                    execute_between_dates(
-                        connection, gps, d_from, d_from + timedelta(weeks=1)
-                    )
-                )
-                d_from += timedelta(weeks=1)
+    increment_map = {
+        1: timedelta(seconds=300),
+        2: timedelta(seconds=1800),
+        3: timedelta(hours=1),
+        4: timedelta(days=1),
+        5: timedelta(weeks=1),
+    }
+
+    increment = increment_map[avg_type]
+    while d_from <= d_to:
+        data["data"].append(
+            execute_between_dates(connection, gps, d_from, d_from + increment)
+        )
+        d_from += increment
     return data
 
 
@@ -96,7 +68,7 @@ def execute_between_dates(connection, gps: str, d_from: datetime, to: datetime) 
     format = "%d-%m-%Y %H:%M:%S"
     cur = connection.cursor()
     cur.execute(
-        "SELECT time, temperature, humidity, pressure, wind_speed, wind_direction, rain from data WHERE id=%s and time BETWEEN %s AND %s",
+        "select count(*), min(time), avg(temperature), avg(humidity), avg(pressure), avg(wind_speed),MODE() WITHIN GROUP (ORDER BY wind_direction), avg(rain) from data where id = %s and time between %s and %s group by id",
         (
             get_id_by_gps(connection, gps),
             d_from,
@@ -104,35 +76,26 @@ def execute_between_dates(connection, gps: str, d_from: datetime, to: datetime) 
         ),
     )
     items = cur.fetchall()
-    temperature, humidity, pressure, wind_speed, rain = 0, 0, 0, 0, 0
-    wind_direction = ""
-    for i in items:
-        temperature += i[1]
-        humidity += i[2]
-        pressure += i[3]
-        wind_speed += i[4]
-        wind_direction += i[5]
-        rain += i[6]
-    avg = len(items)
-    if avg > 0:
+    if len(items) == 0:
         return {
             "time": str(datetime.strftime(d_from, format)),
-            "temperature": temperature / avg,
-            "humidity": humidity / avg,
-            "pressure": pressure / avg,
-            "wind_speed": wind_speed / avg,
-            "wind_direction": max(wind_direction, key=wind_direction.count),
-            "rain": rain / avg,
-            "average_of": avg,
+            "temperature": 0,
+            "humidity": 0,
+            "pressure": 0,
+            "wind_speed": 0,
+            "wind_direction": "",
+            "rain": 0,
+            "average_of": 0,
         }
     return {
-        "time": str(datetime.strftime(d_from, format)),
-        "temperature": 0,
-        "humidity": 0,
-        "pressure": 0,
-        "wind_speed": 0,
-        "wind_direction": "",
-        "average_of": 0,
+        "time": str(datetime.strftime(items[1], format)),
+        "temperature": items[2],
+        "humidity": items[3],
+        "pressure": items[4],
+        "wind_speed": items[5],
+        "wind_direction": items[6],
+        "rain": items[7],
+        "average_of": items[0],
     }
 
 
