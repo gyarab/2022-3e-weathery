@@ -6,6 +6,7 @@ import { RouterLink, RouterView } from 'vue-router'
     <header>
         <nav id="menu">
             <RouterLink to="/">Domů</RouterLink>
+            <RouterLink to="/mapa">Mapa</RouterLink>
             <RouterLink to="/about">O nás</RouterLink>
         </nav>
     </header>

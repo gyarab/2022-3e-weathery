@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import AboutView from '../views/AboutView.vue'
+import MapaView from '../views/MapaView.vue'
 import Detail from "@/views/Detail.vue";
 
 const router = createRouter({
@@ -20,6 +21,14 @@ const router = createRouter({
             component: AboutView,
             meta: {
                 title: 'About'
+            }
+        },
+        {
+            path: '/mapa',
+            name: 'about',
+            component: MapaView,
+            meta: {
+                title: 'Mapa'
             }
         },
         {

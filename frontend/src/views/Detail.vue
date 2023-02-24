@@ -11,7 +11,7 @@
 
             <div id="grafContainer">
                 <apexchart id="graf" width="800" height="450px" type="area" :options="chartOptions" :series="series"></apexchart>
-                <div id="milan">    
+                <div>
                     <h2><label for="change_date_btn">Choose time range:</label></h2>
                     <select id="change_date_btn" v-model="input_selected" @click="zmenaCasovehoRozmezi(input_selected)">
                         <option value="week">week</option>
@@ -45,6 +45,9 @@ export default {
             souradnice: this.$route.params.souradnice.replaceAll(',', '.').split('-'),
             data: null,
             chartOptions: {
+                bar: {
+                    borderRadius: 30
+                },
                 chart: {
                     id: 1,
                     zoom: {
@@ -179,11 +182,6 @@ export default {
     border-radius: 12px;
     border: none;
 }
-#milan{
-    display: flex;
-    justify-content: flex-start;
-    margin: 0;
-}    
 
 #grafContainer {
     padding: 20px;
@@ -219,5 +217,9 @@ export default {
 .graf_ikonky {
     width: 30px;
     height: 30px;
+}
+
+#apexcharts1{
+    border-radius: 5px;
 }
 </style>
