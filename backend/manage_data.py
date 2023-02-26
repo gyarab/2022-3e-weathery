@@ -53,6 +53,8 @@ def get_between_dates(
         3: timedelta(hours=1),
         4: timedelta(days=1),
         5: timedelta(weeks=1),
+        6: timedelta(weeks=2),
+        7: timedelta(weeks=4),
     }
 
     increment = increment_map[avg_type]

@@ -10,14 +10,19 @@
             </div>
 
             <div id="grafContainer">
-                <apexchart id="graf" width="800" height="450px" type="area" :options="chartOptions" :series="series"></apexchart>
+                <apexchart id="graf" width="800" height="450px" :type="chart_type" :options="chartOptions" :series="series"></apexchart>
                 <div>
                     <h2><label for="change_date_btn">Choose time range:</label></h2>
                     <select id="change_date_btn" v-model="input_selected" @click="zmenaCasovehoRozmezi(input_selected)">
                         <option value="week">week</option>
                         <option value="month">month</option>
                         <option value="year">year</option>
+                        <option value="custom">custom</option>
                     </select>
+                </div>
+                <div v-if="custom_selected" id="dateContainer">
+                    <input type="date" id="cstm_from" v-model="cstm_date_from" @change="customZmena()">
+                    <input type="date" id="cstm_to" v-model="cstm_date_to" @change="customZmena()">
                 </div>
                 <h2>{{ souradnice[0] }}° S, {{ souradnice[1] }}° E</h2>
             </div>
@@ -37,13 +42,16 @@ export default {
                 Vlhkost: ['humidity', '#000dff', 'vlhkost.png'],
                 Tlak: ['pressure', '#595959', 'tlak.png'],
                 WindSpeed: ['windspeed', '#00FFEC' , 'rychlost_vetru.png'],
-                WindDirection: ['winddirection', '#00FF51', 'smer_vetru.png'],
                 Rain: ['rain', '#0093FF', 'dest.png']
             },
             casoveRozmezi: 7, // dní - default
             aktivniGraf: "Teplota",
             souradnice: this.$route.params.souradnice.replaceAll(',', '.').split('-'),
             data: null,
+            custom_selected: false,
+            cstm_date_from: null,
+            cstm_date_to: null,
+            chart_type: 'area', 
             chartOptions: {
                 bar: {
                     borderRadius: 30
@@ -92,14 +100,14 @@ export default {
             this.data = response.data.data
 
             for (let i in this.data) {
-                console.log(this.data[i].pressure /= 100) // aby jsme to měli v hPa
+                this.data[i].pressure /= 100 // aby jsme to měli v hPa
             }
 
             this.zmenaAktivnihoGrafu(this.aktivniGraf)
             this.zmenaCasovehoRozmezi(this.selected)
         })
 
-        // zobrazení grafu pomocí https://vue-chartjs.org/
+        // zobrazení grafu pomocí https://apexcharts.com/
     }
     ,
     methods: {
@@ -113,42 +121,75 @@ export default {
             }
             this.series[0].name = this.aktivniGraf
             ApexCharts.exec('1', 'updateOptions', {colors: [this.grafy[this.aktivniGraf][1]]})
+
+            if (noveAktivni == WindSpeed) { //chci dát na osu y hodnoty z widspeedu a podle barev linky rozlišovat směr větru
+                this.chart_type = 'line'
+
+            }
         },
         zmenaCasovehoRozmezi(selected){
-            this.aktivniRozmezi = selected
             let now = new Date() // dnešek
             if (selected == "week") {
                     this.casoveRozmezi = 7
+                    this.custom_selected = false
                 }
                 else if (selected == "month") {
                     this.casoveRozmezi = 30
+                    this.custom_selected = false
                 }
                 else if (selected == "year") {
                     this.casoveRozmezi = 365
+                    this.custom_selected = false
                 }
-            now.setDate(now.getDate() - this.casoveRozmezi + 1)
-            axios.get("/stats/" + this.souradnice[0] + "_" + this.souradnice[1], {
-                params: {
-                    date_from: `${now.getDate()}-${now.getMonth() + 1}-${now.getFullYear()}`,
-                    date_to: 'now'
+                else if (selected == "custom") {
+                    this.custom_selected = true
                 }
-            }).then(response => {
-                this.data = response.data.data
-                this.zmenaAktivnihoGrafu(this.aktivniGraf)
-                
-            })
+
+            if (selected !== "custom") {
+                now.setDate(now.getDate() - this.casoveRozmezi + 1)
+                axios.get("/stats/" + this.souradnice[0] + "_" + this.souradnice[1], {
+                    params: {
+                        date_from: `${now.getDate()}-${now.getMonth() + 1}-${now.getFullYear()}`,
+                        date_to: 'now',
+                    }
+                }).then(response => {
+                    this.data = response.data.data
+                    this.zmenaAktivnihoGrafu(this.aktivniGraf)
+                    
+                })
+            }
         },
-        vyberCasovehoRozmezi(input_date_from, input_date_to){
-            axios.get("/stats/" + this.souradnice[0] + "_" + this.souradnice[1], {
-                params: {
-                    date_from: input_date_from,
-                    date_to: input_date_to
+        customZmena() {
+            if ((this.cstm_date_from && this.cstm_date_to) !== null) {
+                var a = this.cstm_date_from.split('-')
+                var b = this.cstm_date_to.split('-')
+                var a_date = new Date(`${a[1]}/${a[2]}/${a[0]}`) //měsíc, den, rok, aby fungovala metoda getTime()
+                var b_date = new Date(`${b[1]}/${b[2]}/${b[0]}`)
+                var date_diff = ((b_date.getTime() - a_date.getTime())/86400000) //rozdíl dat ve dnech
+                var freq = null
+                if (date_diff <= 1){ //3 - hodiny, 4 - dny, 5 - týdny, 6 - 14 dní, 7 - měsíce
+                    freq = 3
+                }else if(date_diff <= 50){
+                    freq = 4
+                }else if (date_diff <= 365){
+                    freq = 5
+                }else if (date_diff <= 365*2) {
+                    freq = 6
+                }else{
+                    freq = 7
                 }
-            }).then(response => {
-                this.data = response.data.data
-                this.zmenaAktivnihoGrafu(this.aktivniGraf)
-                
-            })
+                axios.get("/stats/" + this.souradnice[0] + "_" + this.souradnice[1], {
+                    params: {
+                        date_from: `${a[2]}-${a[1]}-${a[0]}`,
+                        date_to: `${b[2]}-${b[1]}-${b[0]}`,
+                        freq: freq
+                    }
+                }).then(response => {
+                    this.data = response.data.data
+                    this.zmenaAktivnihoGrafu(this.aktivniGraf)
+                })
+            }
+            
         }
     }
 }

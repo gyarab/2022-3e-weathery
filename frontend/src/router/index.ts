@@ -5,42 +5,42 @@ import MapaView from "../views/MapaView.vue";
 import Detail from "@/views/Detail.vue";
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: "/",
-      name: "home",
-      component: HomeView,
-      meta: {
-        title: "",
-      },
-    },
-    {
-      path: "/about",
-      name: "about",
-      component: AboutView,
-      meta: {
-        title: "About",
-      },
-    },
-    {
-      path: "/mapa",
-      name: "mapa",
-      component: MapaView,
-      meta: {
-        title: "Mapa",
-      },
-    },
-    {
-      path: "/:souradnice",
-      name: "detail",
-      component: Detail,
-      meta: {
-        title: "Detail",
-      },
-    },
-  ],
-});
+    history: createWebHistory(import.meta.env.BASE_URL),
+    routes: [
+        {
+            path: '/',
+            name: 'home',
+            component: HomeView,
+            meta: {
+                title: ''
+            }
+        },
+        {
+            path: '/about',
+            name: 'about',
+            component: AboutView,
+            meta: {
+                title: 'About'
+            }
+        },
+        {
+            path: '/mapa',
+            name: 'about',
+            component: MapaView,
+            meta: {
+                title: 'Mapa'
+            }
+        },
+        {
+            path: '/:souradnice',
+            name: 'detail',
+            component: Detail,
+            meta: {
+                title: 'Detail'
+            }
+        }
+    ],
+})
 
 router.beforeEach((to, from, next) => {
   // nadpis stránky

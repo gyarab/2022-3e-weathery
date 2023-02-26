@@ -118,6 +118,10 @@ def stats(gps: str, date_from: str, date_to: str = "now", freq: int = 0):
         return get_between_dates(con, gps, 4, date_from, date_to)
     elif freq == 5:
         return get_between_dates(con, gps, 5, date_from, date_to)
+    elif freq == 6:
+        return get_between_dates(con, gps, 6, date_from, date_to)
+    elif freq == 7:
+        return get_between_dates(con, gps, 7, date_from, date_to)
     else:
         if unix_delta <= DAY:
             return get_between_dates(con, gps, 3, date_from, date_to)
