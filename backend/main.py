@@ -1,4 +1,6 @@
+from random import randint
 import env
+import emails
 from datetime import datetime
 import jwt
 import stripe
@@ -154,7 +156,6 @@ def register(d: RegisterData):
 async def webhook(req: Request):
     payload = await req.body()
     sig_header = req.headers.get("Stripe-Signature")
-
     try:
         event = stripe.Webhook.construct_event(
             payload,
@@ -164,11 +165,22 @@ async def webhook(req: Request):
     except ValueError:
         return 400
 
-    # Handle the event based on its type
     if event["type"] == "payment_intent.succeeded":
-        print(event)
-        payment_intent_id = event["data"]["object"]["id"]
-        # Update your database or perform other actions
-        print(f"Payment succeeded for PaymentIntent {payment_intent_id}")
-
+        data = event["data"]["object"]
+        customer_data = {
+            "id": int(str(randint(10000, 99999)) + str(datetime.now.timestamp())),
+            "email": data["receipt_email"],
+            "name": data["shipping"]["name"],
+            "phone": data["shipping"]["phone"],
+            "address": data["shipping"]["address"],
+            "date": data["created"],
+            "stripe_json": event,
+        }
+        emails.send_order_confirmation(
+            customer_data["id"],
+            customer_data["email"],
+            customer_data["name"],
+            customer_data["phone"],
+            customer_data["address"],
+        )
     return 200
