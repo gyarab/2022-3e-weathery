@@ -1,7 +1,7 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import AboutView from '../views/AboutView.vue'
-import MapaView from '../views/MapaView.vue'
+import { createRouter, createWebHistory } from "vue-router";
+import HomeView from "../views/HomeView.vue";
+import AboutView from "../views/AboutView.vue";
+import MapaView from "../views/MapaView.vue";
 import Detail from "@/views/Detail.vue";
 
 const router = createRouter({
@@ -25,7 +25,7 @@ const router = createRouter({
         },
         {
             path: '/mapa',
-            name: 'mapa',
+            name: 'about',
             component: MapaView,
             meta: {
                 title: 'Mapa'
@@ -42,14 +42,14 @@ const router = createRouter({
     ],
 })
 
-router.beforeEach((to, from, next) => { // nadpis stránky
-    if (to.meta.title && to.meta.title != ""){
-        document.title = to.meta.title + ' | Weathery';
-    } else if (to.meta.title == "") {
-        document.title = 'Weathery';
-    }
-    next();
+router.beforeEach((to, from, next) => {
+  // nadpis stránky
+  if (to.meta.title && to.meta.title != "") {
+    document.title = to.meta.title + " | Weathery";
+  } else if (to.meta.title == "") {
+    document.title = "Weathery";
+  }
+  next();
 });
 
-
-export default router
+export default router;
