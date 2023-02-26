@@ -10,7 +10,7 @@
             </div>
 
             <div id="grafContainer">
-                <apexchart id="graf" width="800" height="450px" type="area" :options="chartOptions" :series="series"></apexchart>
+                <apexchart id="graf" width="800" height="450px" :type="chart_type" :options="chartOptions" :series="series"></apexchart>
                 <div>
                     <h2><label for="change_date_btn">Choose time range:</label></h2>
                     <select id="change_date_btn" v-model="input_selected" @click="zmenaCasovehoRozmezi(input_selected)">
@@ -42,7 +42,6 @@ export default {
                 Vlhkost: ['humidity', '#000dff', 'vlhkost.png'],
                 Tlak: ['pressure', '#595959', 'tlak.png'],
                 WindSpeed: ['windspeed', '#00FFEC' , 'rychlost_vetru.png'],
-                WindDirection: ['winddirection', '#00FF51', 'smer_vetru.png'],
                 Rain: ['rain', '#0093FF', 'dest.png']
             },
             casoveRozmezi: 7, // dní - default
@@ -52,6 +51,7 @@ export default {
             custom_selected: false,
             cstm_date_from: null,
             cstm_date_to: null,
+            chart_type: 'area', 
             chartOptions: {
                 bar: {
                     borderRadius: 30
@@ -121,6 +121,11 @@ export default {
             }
             this.series[0].name = this.aktivniGraf
             ApexCharts.exec('1', 'updateOptions', {colors: [this.grafy[this.aktivniGraf][1]]})
+
+            if (noveAktivni == WindSpeed) { //chci dát na osu y hodnoty z widspeedu a podle barev linky rozlišovat směr větru
+                this.chart_type = 'line'
+
+            }
         },
         zmenaCasovehoRozmezi(selected){
             let now = new Date() // dnešek
@@ -161,9 +166,8 @@ export default {
                 var a_date = new Date(`${a[1]}/${a[2]}/${a[0]}`) //měsíc, den, rok, aby fungovala metoda getTime()
                 var b_date = new Date(`${b[1]}/${b[2]}/${b[0]}`)
                 var date_diff = ((b_date.getTime() - a_date.getTime())/86400000) //rozdíl dat ve dnech
-                console.log(date_diff)
                 var freq = null
-                if (date_diff <= 2){ //3 - hodiny, 4 - dny, 5 - týdny, 6 - 14 dní, 7 - měsíce
+                if (date_diff <= 1){ //3 - hodiny, 4 - dny, 5 - týdny, 6 - 14 dní, 7 - měsíce
                     freq = 3
                 }else if(date_diff <= 50){
                     freq = 4
