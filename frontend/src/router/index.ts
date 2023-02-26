@@ -25,7 +25,7 @@ const router = createRouter({
         },
         {
             path: '/mapa',
-            name: 'about',
+            name: 'mapa',
             component: MapaView,
             meta: {
                 title: 'Mapa'
