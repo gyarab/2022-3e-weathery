@@ -18,7 +18,7 @@ def send_order_confirmation(id: int, email: str, name: str, phone: str, address:
     text = f"""\
     Dobrý den {name}, \n
     Děkujeme Vám za objadnávku č.{id}\n
-    Balíček Vám dodá Česká pošta na Vámi zadanou adresu: \n
+    Objednávku právě zpracováváme a hned jak to bude možné odešleme ji na Vámi zadanou adresu: \n
     {name}, {phone} \n 
     {address["city"]} {address["postal_code"]} \n
     {address["line1"]} \n
@@ -28,8 +28,8 @@ def send_order_confirmation(id: int, email: str, name: str, phone: str, address:
     <html>
       <body>
         <h3>Dobrý den {name}</h3>
-        <p>Děkujeme Vám za objadnávku č.<a href="https://www.w3schools.com">{id}</a></p>
-        <p>Balíček Vám dodá Česká pošta na Vámi zadanou adresu: <br>
+        <p>Děkujeme Vám za objadnávku č.<a href="https://weathery.svs.gyarab.cz/objednavka/{id}">{id}</a></p>
+        <p>Objednávku právě zpracováváme a hned jak to bude možné odešleme ji na Vámi zadanou adresu: <br>
           <i>{name}, {phone}<br>
           {address["city"]}, {address["line1"]}<br>
           {address["postal_code"]}</i><br>

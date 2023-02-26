@@ -188,3 +188,71 @@ def update_weather(connection, id: int, time: str, data) -> None:
         ),
     )
     connection.commit()
+
+
+def create_order(connection, customer_data: dict) -> None:
+    cur = connection.cursor()
+    cur.execute(
+        "INSERT into orders(id, order_state, email, name, phone, country, state, city, street, postal_code, date, stripe_json) VALUES (%s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s);",
+        (
+            customer_data["id"],
+            "pending",
+            customer_data["email"],
+            customer_data["name"],
+            customer_data["phone"],
+            customer_data["shipping"]["country"],
+            customer_data["shipping"]["state"],
+            customer_data["shipping"]["city"],
+            customer_data["shipping"]["street"],
+            customer_data["shipping"]["postal_code"],
+            customer_data["date"],
+            customer_data["stripe_json"],
+        ),
+    )
+    connection.commit()
+
+
+def update_order_state(connection, id: int, order_state: str) -> None:
+    cur = connection.cursor()
+    cur.execute(
+        "update orders set order_state = %s where id = %s",
+        (
+            order_state,
+            id,
+        ),
+    )
+    connection.commit()
+
+
+def order_exists(connection, id: int) -> bool:
+    cur = connection.execute()
+    cur.execute("select id from orders where id = %s", (id,))
+    items = cur.fetchall()
+    if len(items) > 0:
+        return True
+    return False
+
+
+def get_order_details(connection, id: int) -> dict:
+    cur = connection.cursor()
+    cur.execute(
+        "select id, order_state, email, name, phone, country, state, city, street, postal_code, date from orders where id = %s",
+        (id,),
+    )
+    if cur.fetchall() < 1:
+        return {"message": "order does not exist"}
+    items = cur.fetchall()[0]
+    details = {
+        "id": items[0],
+        "order_state": items[1],
+        "email": items[2],
+        "name": items[3],
+        "phone": items[4],
+        "country": items[5],
+        "state": items[6],
+        "city": items[7],
+        "street": items[8],
+        "postal_code": items[9],
+        "date": items[10],
+    }
+    return {"message": "ok", "data": details}

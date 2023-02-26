@@ -19,6 +19,10 @@ from manage_data import (
     get_between_dates,
     id_exists,
     update_station,
+    create_order,
+    update_order_state,
+    order_exists,
+    get_order_details,
 )
 from models import Data, RegisterData
 
@@ -108,20 +112,8 @@ def stats(gps: str, date_from: str, date_to: str = "now", freq: int = 0):
     ) - datetime.timestamp(datetime.strptime(date_from, format))
     if unix_delta <= 0:
         return {"message": "date is not valid"}
-    if freq == 1:
-        return get_between_dates(con, gps, 1, date_from, date_to)
-    elif freq == 2:
-        return get_between_dates(con, gps, 2, date_from, date_to)
-    elif freq == 3:
-        return get_between_dates(con, gps, 3, date_from, date_to)
-    elif freq == 4:
-        return get_between_dates(con, gps, 4, date_from, date_to)
-    elif freq == 5:
-        return get_between_dates(con, gps, 5, date_from, date_to)
-    elif freq == 6:
-        return get_between_dates(con, gps, 6, date_from, date_to)
-    elif freq == 7:
-        return get_between_dates(con, gps, 7, date_from, date_to)
+    if freq > 0 and freq < 8:
+        return get_between_dates(con, gps, freq, date_from, date_to)
     else:
         if unix_delta <= DAY:
             return get_between_dates(con, gps, 3, date_from, date_to)
@@ -172,14 +164,17 @@ async def webhook(req: Request):
     if event["type"] == "payment_intent.succeeded":
         data = event["data"]["object"]
         customer_data = {
-            "id": int(str(randint(10000, 99999)) + str(datetime.now.timestamp())),
+            "id": int(str(randint(10000, 99999)) + data["created"]),
             "email": data["receipt_email"],
             "name": data["shipping"]["name"],
             "phone": data["shipping"]["phone"],
             "address": data["shipping"]["address"],
-            "date": data["created"],
+            "date": datetime.fromtimestamp(data["created"]).strftime(
+                "%d-%m-%Y %H:%M:%S"
+            ),
             "stripe_json": event,
         }
+        # create_order(con, customer_data)
         emails.send_order_confirmation(
             customer_data["id"],
             customer_data["email"],
@@ -188,3 +183,10 @@ async def webhook(req: Request):
             customer_data["address"],
         )
     return 200
+
+
+@app.get("/order/{id}")
+def order(id: int):
+    if not order_exists(con, id):
+        return {"message": "order does not exist"}
+    return get_order_details(con, id)
