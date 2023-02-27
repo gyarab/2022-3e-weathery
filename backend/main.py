@@ -23,6 +23,7 @@ from manage_data import (
     update_order_state,
     order_exists,
     get_order_details,
+    get_all_orders,
 )
 from models import Data, RegisterData
 
@@ -174,7 +175,7 @@ async def webhook(req: Request):
             ),
             "stripe_json": event,
         }
-        # create_order(con, customer_data)
+        create_order(con, customer_data)
         emails.send_order_confirmation(
             customer_data["id"],
             customer_data["email"],
@@ -190,3 +191,16 @@ def order(id: int):
     if not order_exists(con, id):
         return {"message": "order does not exist"}
     return get_order_details(con, id)
+
+
+@app.get("/orders")
+def orders(req: Request):
+    if not authored(req):
+        return {"message": "you are not authored"}
+    return get_all_orders(con)
+
+
+@app.get("/login")
+def login(req: Request):
+    token = ""
+    return {"message": "ok", "token": token}

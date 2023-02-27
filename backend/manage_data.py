@@ -256,3 +256,13 @@ def get_order_details(connection, id: int) -> dict:
         "date": items[10],
     }
     return {"message": "ok", "data": details}
+
+
+def get_all_orders(connection) -> dict:
+    cur = connection.cursor()
+    cur.execute("select id from orders")
+    items = cur.fetchall()
+    orders = []
+    for x in items:
+        orders.append({"id": x[0]})
+    return {"message": "ok", "orders": orders}
