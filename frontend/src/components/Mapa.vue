@@ -94,16 +94,6 @@ export default {
         this.map.off();
         this.map.remove();
     },
-    methods: {
-        openPopup() {
-            popup = document.getElementById("myPopup");
-            popup.style.display = "block";
-        },
-        closePopup() {
-            popup = document.getElementById("popup-btn");
-            popup.style.display = "none";
-        }
-    }
 }
 </script>
 
