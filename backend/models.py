@@ -1,6 +1,11 @@
 from pydantic import BaseModel
 
 
+class LoginItem(BaseModel):
+    name: str
+    password: str
+
+
 class RegisterData(BaseModel):
     gps: str  # (40.123455 -35.6543321)
     id: int  # 123456

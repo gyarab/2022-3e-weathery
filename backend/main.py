@@ -1,6 +1,11 @@
+from random import randint
 import env
+import emails
 from datetime import datetime
 import jwt
+import stripe
+import hashlib
+import secrets
 import psycopg2
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -16,8 +21,16 @@ from manage_data import (
     get_between_dates,
     id_exists,
     update_station,
+    create_order,
+    update_order_state,
+    order_exists,
+    get_order_details,
+    get_all_orders,
+    user_exists,
+    get_password,
+    get_email,
 )
-from models import Data, RegisterData
+from models import Data, RegisterData, LoginItem
 
 SECRET_KEY = "SECRET_KEY"
 ALGORITHM = "HS256"
@@ -28,6 +41,8 @@ MONTH = 2678400
 USER = env.DB_USER
 PASSWORD = env.DB_PASSWORD
 DB_NAME = env.DB_NAME
+STRIPE_SEC = env.STRIPE_SEC
+WEBHOOK_SEC = env.WEBHOOK_SEC
 
 
 app = FastAPI()
@@ -40,9 +55,29 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+stripe.api_key = STRIPE_SEC
+
 con = psycopg2.connect(
     database=DB_NAME, user=USER, password=PASSWORD, host="localhost", port=5432
 )
+
+
+def get_salt():
+    return secrets.token_hex(8)
+
+
+def hash_password(plain_text_password):
+    salt = get_salt()
+    password = (plain_text_password + salt).encode("utf-8")
+    hashed_password = hashlib.sha512(password).hexdigest()
+    return f"{salt}${hashed_password}"
+
+
+def verify_password(plain_text_password, hashed_password):
+    salt = hashed_password.split("$")[0]
+    password = (plain_text_password + salt).encode("utf-8")
+    new_hash = hashlib.sha512(password).hexdigest()
+    return f"{salt}${new_hash}" == hashed_password
 
 
 def get_token(req):
@@ -59,7 +94,18 @@ def get_token(req):
         return None
 
 
+def authorized(req: Request) -> bool:
+    token = get_token(req)
+    if token is None:
+        return False
+    if not user_exists(con, token["name"]):
+        return False
+    return True
+
+
 def authorized_token(token) -> bool:
+    if token is None:
+        return False
     return station_exists(con, token["gps"])
 
 
@@ -101,20 +147,8 @@ def stats(gps: str, date_from: str, date_to: str = "now", freq: int = 0):
     ) - datetime.timestamp(datetime.strptime(date_from, format))
     if unix_delta <= 0:
         return {"message": "date is not valid"}
-    if freq == 1:
-        return get_between_dates(con, gps, 1, date_from, date_to)
-    elif freq == 2:
-        return get_between_dates(con, gps, 2, date_from, date_to)
-    elif freq == 3:
-        return get_between_dates(con, gps, 3, date_from, date_to)
-    elif freq == 4:
-        return get_between_dates(con, gps, 4, date_from, date_to)
-    elif freq == 5:
-        return get_between_dates(con, gps, 5, date_from, date_to)
-    elif freq == 6:
-        return get_between_dates(con, gps, 6, date_from, date_to)
-    elif freq == 7:
-        return get_between_dates(con, gps, 7, date_from, date_to)
+    if freq > 0 and freq < 8:
+        return get_between_dates(con, gps, freq, date_from, date_to)
     else:
         if unix_delta <= DAY:
             return get_between_dates(con, gps, 3, date_from, date_to)
@@ -125,7 +159,7 @@ def stats(gps: str, date_from: str, date_to: str = "now", freq: int = 0):
 
 
 @app.post("/station/update")
-def update(req: Request, d: Data):
+def station_update(req: Request, d: Data):
     token = get_token(req)
     data = jsonable_encoder(d)
     format = "%d-%m-%Y %H:%M:%S"
@@ -147,3 +181,87 @@ def register(d: RegisterData):
         return create_token(data["gps"], data["id"])
     update_station(con, data["id"], data["gps"])
     return create_token(data["gps"], data["id"])
+
+
+@app.post("/payment-webhook")
+async def webhook(req: Request):
+    payload = await req.body()
+    sig_header = req.headers.get("Stripe-Signature")
+    try:
+        event = stripe.Webhook.construct_event(
+            payload,
+            str(sig_header),
+            WEBHOOK_SEC,
+        )
+    except ValueError:
+        return 400
+
+    if event["type"] == "payment_intent.succeeded":
+        data = event["data"]["object"]
+        customer_data = {
+            "id": int(str(randint(10000, 99999)) + data["created"]),
+            "email": data["receipt_email"],
+            "name": data["shipping"]["name"],
+            "phone": data["shipping"]["phone"],
+            "address": data["shipping"]["address"],
+            "date": datetime.fromtimestamp(data["created"]).strftime(
+                "%d-%m-%Y %H:%M:%S"
+            ),
+            "stripe_json": event,
+        }
+        create_order(con, customer_data)
+        emails.send_order_confirmation(
+            customer_data["id"],
+            customer_data["email"],
+            customer_data["name"],
+            customer_data["phone"],
+            customer_data["address"],
+        )
+    return 200
+
+
+@app.get("/order/{id}")
+def order(id: int):
+    if not order_exists(con, id):
+        return {"message": "order does not exist"}
+    return get_order_details(con, id)
+
+
+@app.get("/orders")
+def orders(req: Request):
+    if not authorized(req):
+        return {"message": "you are not authorized"}
+    return get_all_orders(con)
+
+
+@app.get("/update/{id}")
+def order_update(req: Request, id: int, state: int):
+    if not authorized(req):
+        return {"message": "you are not authorized"}
+    if not order_exists(con, id):
+        return {"message": "order does not exist"}
+    if state == 1:
+        update_order_state(con, id, "sent")
+        emails.send_state_info(id, get_email(con, id), "odesláno")
+    elif state == 0:
+        update_order_state(con, id, "paid")
+        emails.send_state_info(id, get_email(con, id), "zaplaceno")
+    else:
+        return {"message": "invalid state"}
+
+    return {"message": "order state updated"}
+
+
+@app.post("/login")
+def login(login_item: LoginItem):
+    login_data = jsonable_encoder(login_item)
+    if not user_exists(con, login_data["username"]):
+        return {"message": "login failed"}
+    if not verify_password(
+        login_data["password"], get_password(con, login_data["username"])
+    ):
+        return {"message": "wrong password"}
+    payload = {
+        "username": login_data["username"],
+    }
+    return {"token": jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)}
