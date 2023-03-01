@@ -266,3 +266,17 @@ def get_all_orders(connection) -> dict:
     for x in items:
         orders.append({"id": x[0]})
     return {"message": "ok", "orders": orders}
+
+
+def user_exists(connection, name: str) -> bool:
+    cur = connection.cursor()
+    cur.execute("select name from super_users where name = %s", (name,))
+    if cur.fetchall() > 0:
+        return True
+    return False
+
+
+def get_password(connection, name: str) -> str:
+    cur = connection.cursor()
+    cur.execute("select password from super_users where name = %s", (name,))
+    return cur.fetchall()[0][0]

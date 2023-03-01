@@ -4,6 +4,8 @@ import emails
 from datetime import datetime
 import jwt
 import stripe
+import hashlib
+import secrets
 import psycopg2
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -24,8 +26,10 @@ from manage_data import (
     order_exists,
     get_order_details,
     get_all_orders,
+    user_exists,
+    get_password,
 )
-from models import Data, RegisterData
+from models import Data, RegisterData, LoginItem
 
 SECRET_KEY = "SECRET_KEY"
 ALGORITHM = "HS256"
@@ -51,10 +55,28 @@ app.add_middleware(
 )
 
 stripe.api_key = STRIPE_SEC
-"""
+
 con = psycopg2.connect(
     database=DB_NAME, user=USER, password=PASSWORD, host="localhost", port=5432
 )
+
+
+def get_salt():
+    return secrets.token_hex(8)
+
+
+def hash_password(plain_text_password):
+    salt = get_salt()
+    password = (plain_text_password + salt).encode("utf-8")
+    hashed_password = hashlib.sha512(password).hexdigest()
+    return f"{salt}${hashed_password}"
+
+
+def verify_password(plain_text_password, hashed_password):
+    salt = hashed_password.split("$")[0]
+    password = (plain_text_password + salt).encode("utf-8")
+    new_hash = hashlib.sha512(password).hexdigest()
+    return f"{salt}${new_hash}" == hashed_password
 
 
 def get_token(req):
@@ -71,7 +93,18 @@ def get_token(req):
         return None
 
 
+def authorized(req: Request) -> bool:
+    token = get_token(req)
+    if token is None:
+        return False
+    if not user_exists(con, token["name"]):
+        return False
+    return True
+
+
 def authorized_token(token) -> bool:
+    if token is None:
+        return False
     return station_exists(con, token["gps"])
 
 
@@ -146,7 +179,7 @@ def register(d: RegisterData):
         add_stations(con, data["gps"], data["id"])
         return create_token(data["gps"], data["id"])
     update_station(con, data["id"], data["gps"])
-    return create_token(data["gps"], data["id"])"""
+    return create_token(data["gps"], data["id"])
 
 
 @app.post("/payment-webhook")
@@ -195,12 +228,21 @@ def order(id: int):
 
 @app.get("/orders")
 def orders(req: Request):
-    if not authored(req):
+    if not authorized(req):
         return {"message": "you are not authored"}
     return get_all_orders(con)
 
 
-@app.get("/login")
-def login(req: Request):
-    token = ""
-    return {"message": "ok", "token": token}
+@app.post("/login")
+def login(login_item: LoginItem):
+    login_data = jsonable_encoder(login_item)
+    if not user_exists(con, login_data["username"]):
+        return {"message": "login failed"}
+    if not verify_password(
+        login_data["password"], get_password(con, login_data["username"])
+    ):
+        return {"message": "wrong password"}
+    payload = {
+        "username": login_data["username"],
+    }
+    return {"token": jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)}
