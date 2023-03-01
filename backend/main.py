@@ -28,6 +28,7 @@ from manage_data import (
     get_all_orders,
     user_exists,
     get_password,
+    get_email,
 )
 from models import Data, RegisterData, LoginItem
 
@@ -158,7 +159,7 @@ def stats(gps: str, date_from: str, date_to: str = "now", freq: int = 0):
 
 
 @app.post("/station/update")
-def update(req: Request, d: Data):
+def station_update(req: Request, d: Data):
     token = get_token(req)
     data = jsonable_encoder(d)
     format = "%d-%m-%Y %H:%M:%S"
@@ -229,8 +230,26 @@ def order(id: int):
 @app.get("/orders")
 def orders(req: Request):
     if not authorized(req):
-        return {"message": "you are not authored"}
+        return {"message": "you are not authorized"}
     return get_all_orders(con)
+
+
+@app.get("/update/{id}")
+def order_update(req: Request, id: int, state: int):
+    if not authorized(req):
+        return {"message": "you are not authorized"}
+    if not order_exists(con, id):
+        return {"message": "order does not exist"}
+    if state == 1:
+        update_order_state(con, id, "sent")
+        emails.send_state_info(id, get_email(con, id), "odesláno")
+    elif state == 0:
+        update_order_state(con, id, "paid")
+        emails.send_state_info(id, get_email(con, id), "zaplaceno")
+    else:
+        return {"message": "invalid state"}
+
+    return {"message": "order state updated"}
 
 
 @app.post("/login")

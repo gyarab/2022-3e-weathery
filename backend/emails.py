@@ -50,3 +50,39 @@ def send_order_confirmation(id: int, email: str, name: str, phone: str, address:
         server.starttls()
         server.login(sender_email, password)
         server.sendmail(sender_email, receiver_email, message.as_string())
+
+
+def send_state_info(id: int, email: str, state: str):
+    receiver_email = email
+
+    message = MIMEMultipart("alternative")
+    message["Subject"] = "Změna svavu objednávky"
+    message["From"] = sender_email
+    message["To"] = receiver_email
+
+    text = f"""\
+    Dobrý den, \n
+    Chceme Vám oznámít, že stav u objednávky č.{id} se změnil na "{state}"\n
+    Se srdečným pozdravem, \n
+    Váš tým Weathery"""
+    html = f"""\
+    <html>
+      <body>
+        <h3>Dobrý den</h3>
+        <p>Chceme Vám oznámít, že stav u objednávky č.<a href="https://weathery.svs.gyarab.cz/objednavka/{id}">{id} se změnil.</a></p>
+        <p>Se srdečným pozdravem, <br>
+        Váš tým Weathery</p>
+      </body>
+    </html>
+    """
+
+    part1 = MIMEText(text, "plain")
+    part2 = MIMEText(html, "html")
+
+    message.attach(part1)
+    message.attach(part2)
+
+    with smtplib.SMTP("smtp.gmail.com", 587) as server:
+        server.starttls()
+        server.login(sender_email, password)
+        server.sendmail(sender_email, receiver_email, message.as_string())

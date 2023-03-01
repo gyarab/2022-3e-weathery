@@ -268,6 +268,12 @@ def get_all_orders(connection) -> dict:
     return {"message": "ok", "orders": orders}
 
 
+def get_email(connection, id) -> str:
+    cur = connection.cursor()
+    cur.execute("select email from orders where id = %s", (id,))
+    return cur.fetchall()[0][0]
+
+
 def user_exists(connection, name: str) -> bool:
     cur = connection.cursor()
     cur.execute("select name from super_users where name = %s", (name,))
