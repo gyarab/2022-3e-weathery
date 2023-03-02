@@ -3,6 +3,7 @@ import env
 import emails
 from datetime import datetime
 import jwt
+import json
 import stripe
 import hashlib
 import secrets
@@ -206,7 +207,7 @@ async def webhook(req: Request):
             "date": datetime.fromtimestamp(event["created"]).strftime(
                 "%d-%m-%Y %H:%M:%S"
             ),
-            "stripe_json": str(event),
+            "stripe_json": json.loads(str(event)),
         }
         create_order(con, customer_data)
         emails.send_order_confirmation(
