@@ -193,13 +193,12 @@ def update_weather(connection, id: int, time: str, data) -> None:
 def create_order(connection, customer_data: dict) -> None:
     cur = connection.cursor()
     cur.execute(
-        "INSERT into orders(id, order_state, email, name, phone, country, state, city, street, postal_code, date, stripe_json) VALUES (%s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s);",
+        "INSERT into orders(id, order_state, email, name, country, state, city, street, postal_code, date, stripe_json) VALUES (%s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s);",
         (
             customer_data["id"],
             "pending",
             customer_data["email"],
             customer_data["name"],
-            customer_data["phone"],
             customer_data["shipping"]["country"],
             customer_data["shipping"]["state"],
             customer_data["shipping"]["city"],
@@ -236,7 +235,7 @@ def order_exists(connection, id: int) -> bool:
 def get_order_details(connection, id: int) -> dict:
     cur = connection.cursor()
     cur.execute(
-        "select id, order_state, email, name, phone, country, state, city, street, postal_code, date from orders where id = %s",
+        "select id, order_state, email, name, country, state, city, street, postal_code, date from orders where id = %s",
         (id,),
     )
     if cur.fetchall() < 1:
@@ -247,13 +246,12 @@ def get_order_details(connection, id: int) -> dict:
         "order_state": items[1],
         "email": items[2],
         "name": items[3],
-        "phone": items[4],
-        "country": items[5],
-        "state": items[6],
-        "city": items[7],
-        "street": items[8],
-        "postal_code": items[9],
-        "date": items[10],
+        "country": items[4],
+        "state": items[5],
+        "city": items[6],
+        "street": items[7],
+        "postal_code": items[8],
+        "date": items[9],
     }
     return {"message": "ok", "data": details}
 

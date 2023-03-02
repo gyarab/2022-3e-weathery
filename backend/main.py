@@ -199,7 +199,7 @@ async def webhook(req: Request):
     if event["type"] == "charge.succeeded":
         data = event["data"]["object"]
         customer_data = {
-            "id": int(str(randint(10000, 99999)) + event["created"]),
+            "id": int(str(randint(10000, 99999)) + str(event["created"])),
             "email": data["billing_details"]["email"],
             "name": data["billing_details"]["name"],
             "address": data["billing_details"]["address"],
