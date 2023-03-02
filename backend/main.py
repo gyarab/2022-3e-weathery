@@ -207,7 +207,7 @@ async def webhook(req: Request):
             "date": datetime.fromtimestamp(event["created"]).strftime(
                 "%d-%m-%Y %H:%M:%S"
             ),
-            "stripe_json": json.loads(str(event)),
+            "stripe_json": json.dumps(event),
         }
         create_order(con, customer_data)
         emails.send_order_confirmation(
