@@ -238,7 +238,7 @@ def get_order_details(connection, id: int) -> dict:
         "select id, order_state, email, name, country, state, city, street, postal_code, date from orders where id = %s",
         (id,),
     )
-    if cur.fetchall() < 1:
+    if len(cur.fetchall()) < 1:
         return {"message": "order does not exist"}
     items = cur.fetchall()[0]
     details = {
