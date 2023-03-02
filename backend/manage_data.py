@@ -275,7 +275,7 @@ def get_email(connection, id) -> str:
 def user_exists(connection, name: str) -> bool:
     cur = connection.cursor()
     cur.execute("select name from super_users where name = %s", (name,))
-    if cur.fetchall() > 0:
+    if len(cur.fetchall()) > 0:
         return True
     return False
 
