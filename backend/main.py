@@ -196,15 +196,14 @@ async def webhook(req: Request):
     except ValueError:
         return 400
 
-    if event["type"] == "payment_intent.succeeded":
+    if event["type"] == "charge.succeeded":
         data = event["data"]["object"]
         customer_data = {
-            "id": int(str(randint(10000, 99999)) + data["created"]),
-            "email": data["receipt_email"],
-            "name": data["shipping"]["name"],
-            "phone": data["shipping"]["phone"],
-            "address": data["shipping"]["address"],
-            "date": datetime.fromtimestamp(data["created"]).strftime(
+            "id": int(str(randint(10000, 99999)) + event["created"]),
+            "email": data["billing_details"]["email"],
+            "name": data["billing_details"]["name"],
+            "address": data["billing_details"]["address"],
+            "date": datetime.fromtimestamp(event["created"]).strftime(
                 "%d-%m-%Y %H:%M:%S"
             ),
             "stripe_json": event,
@@ -214,7 +213,6 @@ async def webhook(req: Request):
             customer_data["id"],
             customer_data["email"],
             customer_data["name"],
-            customer_data["phone"],
             customer_data["address"],
         )
     return 200

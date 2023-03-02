@@ -16,7 +16,7 @@ cur.execute(
 cur.execute("CREATE TABLE if not exists stations (id INT not null, gps TEXT not null);")
 cur.execute("CREATE TABLE if not exists serial_numbers (id INT not null unique);")
 cur.execute(
-    "CREATE TABLE IF NOT exists orders (id int primary key, order_state varchar not null , email varchar not null, name varchar not null, phone varchar not null,country varchar not null, state varchar not null, city varchar not null, street varchar not null, postal_code varchar not null, date TIMESTAMP not null, stripe_json text not null)"
+    "CREATE TABLE IF NOT exists orders (id int primary key, order_state varchar not null , email varchar not null, name varchar not null, country varchar not null, state varchar, city varchar not null, street varchar not null, postal_code varchar not null, date TIMESTAMP not null, stripe_json text not null)"
 )
 cur.execute(
     "CREATE TABLE IF NOT exists super_users (name varchar primary key, password varchar)"

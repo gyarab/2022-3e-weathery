@@ -7,7 +7,7 @@ sender_email = env.EMAIL
 password = env.EMAIL_PASSWORD
 
 
-def send_order_confirmation(id: int, email: str, name: str, phone: str, address: dict):
+def send_order_confirmation(id: int, email: str, name: str, address: dict):
     receiver_email = email
 
     message = MIMEMultipart("alternative")
@@ -19,7 +19,7 @@ def send_order_confirmation(id: int, email: str, name: str, phone: str, address:
     Dobrý den {name}, \n
     Děkujeme Vám za objadnávku č.{id}\n
     Objednávku právě zpracováváme a hned jak to bude možné odešleme ji na Vámi zadanou adresu: \n
-    {name}, {phone} \n 
+    {name}, \n 
     {address["city"]} {address["postal_code"]} \n
     {address["line1"]} \n
     Se srdečným pozdravem, \n
@@ -30,7 +30,7 @@ def send_order_confirmation(id: int, email: str, name: str, phone: str, address:
         <h3>Dobrý den {name}</h3>
         <p>Děkujeme Vám za objadnávku č.<a href="https://weathery.svs.gyarab.cz/objednavka/{id}">{id}</a></p>
         <p>Objednávku právě zpracováváme a hned jak to bude možné odešleme ji na Vámi zadanou adresu: <br>
-          <i>{name}, {phone}<br>
+          <i>{name},<br>
           {address["city"]}, {address["line1"]}<br>
           {address["postal_code"]}</i><br>
         </p>
