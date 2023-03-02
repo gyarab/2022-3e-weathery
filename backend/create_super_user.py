@@ -23,7 +23,7 @@ def create_user(connection, name: str, email: str, password: str) -> None:
         (
             name,
             email,
-            password,
+            hash_password(password),
         ),
     )
     connection.commit()
