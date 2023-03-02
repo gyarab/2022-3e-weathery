@@ -224,7 +224,7 @@ def update_order_state(connection, id: int, order_state: str) -> None:
 
 
 def order_exists(connection, id: int) -> bool:
-    cur = connection.execute()
+    cur = connection.cursor()
     cur.execute("select id from orders where id = %s", (id,))
     items = cur.fetchall()
     if len(items) > 0:
