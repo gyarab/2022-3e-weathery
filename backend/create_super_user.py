@@ -32,7 +32,7 @@ def create_user(connection, name: str, email: str, password: str) -> None:
 def user_exists(connection, name: str) -> bool:
     cur = connection.cursor()
     cur.execute("select name from super_users where name = %s", (name,))
-    if cur.fetchall() > 0:
+    if len(cur.fetchall()) > 0:
         return True
     return False
 
@@ -40,7 +40,7 @@ def user_exists(connection, name: str) -> bool:
 def email_exists(connection, email: str) -> bool:
     cur = connection.cursor()
     cur.execute("select email from super_users where email = %s", (email,))
-    if cur.fetchall() > 0:
+    if len(cur.fetchall()) > 0:
         return True
     return False
 
