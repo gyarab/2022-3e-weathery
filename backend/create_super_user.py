@@ -16,12 +16,13 @@ con = psycopg2.connect(
 )
 
 
-def create_user(connection, name: str, password: str) -> None:
+def create_user(connection, name: str, email: str, password: str) -> None:
     cur = connection.cursor()
     cur.execute(
-        "insert into super_users values(%s, %s)",
+        "insert into super_users values(%s, %s, %s)",
         (
             name,
+            email,
             password,
         ),
     )
@@ -31,6 +32,14 @@ def create_user(connection, name: str, password: str) -> None:
 def user_exists(connection, name: str) -> bool:
     cur = connection.cursor()
     cur.execute("select name from super_users where name = %s", (name,))
+    if cur.fetchall() > 0:
+        return True
+    return False
+
+
+def email_exists(connection, email: str) -> bool:
+    cur = connection.cursor()
+    cur.execute("select email from super_users where email = %s", (email,))
     if cur.fetchall() > 0:
         return True
     return False
@@ -50,6 +59,7 @@ def hash_password(plain_text_password):
 def main():
     print("Enter your credentials to create user")
     name = str(input("Enter Username:"))
+    email = str(input("Enter Email:"))
     password = str(getpass.getpass("Enter Password:"))
     re_password = str(getpass.getpass("Re-enter password"))
     if password != re_password:
@@ -58,12 +68,15 @@ def main():
     if user_exists(con, name):
         print("User already exists")
         return
+    if email_exists(con, email):
+        print("Email is already used")
+        return
     if len(name) < 5:
         print("Name must be at least 5 chars")
     if len(password) < 8:
         print("Password must be at least 8 chars")
         return
-    create_user(con, name, password)
+    create_user(con, name, email, password)
 
 
 if __name__ == "__main__":

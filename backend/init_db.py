@@ -19,7 +19,7 @@ cur.execute(
     "CREATE TABLE IF NOT exists orders (id bigint primary key, order_state varchar not null , email varchar not null, name varchar not null, country varchar not null, state varchar, city varchar not null, street varchar not null, postal_code varchar not null, date TIMESTAMP not null, stripe_json json not null)"
 )
 cur.execute(
-    "CREATE TABLE IF NOT exists super_users (name varchar primary key, password varchar)"
+    "CREATE TABLE IF NOT exists super_users (name varchar primary key not null, email varchar not null, password varchar not null)"
 )
 
 con.commit()
