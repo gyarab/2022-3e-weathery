@@ -202,7 +202,7 @@ def create_order(connection, customer_data: dict) -> None:
             customer_data["address"]["country"],
             customer_data["address"]["state"],
             customer_data["address"]["city"],
-            customer_data["address"]["street"],
+            customer_data["address"]["line1"],
             customer_data["address"]["postal_code"],
             customer_data["date"],
             customer_data["stripe_json"],
