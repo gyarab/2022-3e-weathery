@@ -254,13 +254,13 @@ def order_update(req: Request, id: int, state: int):
 @app.post("/login")
 def login(login_item: LoginItem):
     login_data = jsonable_encoder(login_item)
-    if not user_exists(con, login_data["username"]):
+    if not user_exists(con, login_data["name"]):
         return {"message": "login failed"}
     if not verify_password(
-        login_data["password"], get_password(con, login_data["username"])
+        login_data["password"], get_password(con, login_data["name"])
     ):
         return {"message": "wrong password"}
     payload = {
-        "username": login_data["username"],
+        "name": login_data["name"],
     }
     return {"token": jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)}
