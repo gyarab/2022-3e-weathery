@@ -30,6 +30,7 @@ from manage_data import (
     user_exists,
     get_password,
     get_email,
+    get_admin_emails,
 )
 from models import Data, RegisterData, LoginItem
 
@@ -215,6 +216,10 @@ async def webhook(req: Request):
             customer_data["email"],
             customer_data["name"],
             customer_data["address"],
+        )
+        emails.send_new_order_notification(
+            customer_data["id"],
+            ", ".join(get_admin_emails(con)),
         )
     return 200
 

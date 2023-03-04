@@ -273,6 +273,15 @@ def get_email(connection, id) -> str:
     return cur.fetchall()[0][0]
 
 
+def get_admin_emails(connection) -> list:
+    cur = connection.cursor()
+    cur.execute("select email from super_users")
+    emails = []
+    for x in cur.fetchall():
+        emails.append(x[0])
+    return emails
+
+
 def user_exists(connection, name: str) -> bool:
     cur = connection.cursor()
     cur.execute("select name from super_users where name = %s", (name,))

@@ -7,14 +7,26 @@ sender_email = env.EMAIL
 password = env.EMAIL_PASSWORD
 
 
-def send_order_confirmation(id: int, email: str, name: str, address: dict):
-    receiver_email = email
-
+def send_email(receiver_email: str, subject: str, text: str, html: str):
     message = MIMEMultipart("alternative")
-    message["Subject"] = "Děkujeme za Vaši objednávku"
+    message["Subject"] = subject
     message["From"] = sender_email
     message["To"] = receiver_email
 
+    part1 = MIMEText(text, "plain")
+    part2 = MIMEText(html, "html")
+
+    message.attach(part1)
+    message.attach(part2)
+
+    with smtplib.SMTP("smtp.gmail.com", 587) as server:
+        server.starttls()
+        server.login(sender_email, password)
+        server.sendmail(sender_email, receiver_email, message.as_string())
+
+
+def send_order_confirmation(id: int, email: str, name: str, address: dict):
+    subject = "Děkujeme za Vaši objednávku"
     text = f"""\
     Dobrý den {name}, \n
     Děkujeme Vám za objadnávku č.{id}\n
@@ -39,27 +51,11 @@ def send_order_confirmation(id: int, email: str, name: str, address: dict):
       </body>
     </html>
     """
-
-    part1 = MIMEText(text, "plain")
-    part2 = MIMEText(html, "html")
-
-    message.attach(part1)
-    message.attach(part2)
-
-    with smtplib.SMTP("smtp.gmail.com", 587) as server:
-        server.starttls()
-        server.login(sender_email, password)
-        server.sendmail(sender_email, receiver_email, message.as_string())
+    send_email(email, subject, text, html)
 
 
 def send_state_info(id: int, email: str, state: str):
-    receiver_email = email
-
-    message = MIMEMultipart("alternative")
-    message["Subject"] = "Změna svavu objednávky"
-    message["From"] = sender_email
-    message["To"] = receiver_email
-
+    subject = "Změna svavu objednávky"
     text = f"""\
     Dobrý den, \n
     Chceme Vám oznámít, že stav u objednávky č.{id} se změnil na "{state}"\n
@@ -75,14 +71,23 @@ def send_state_info(id: int, email: str, state: str):
       </body>
     </html>
     """
+    send_email(email, subject, text, html)
 
-    part1 = MIMEText(text, "plain")
-    part2 = MIMEText(html, "html")
 
-    message.attach(part1)
-    message.attach(part2)
-
-    with smtplib.SMTP("smtp.gmail.com", 587) as server:
-        server.starttls()
-        server.login(sender_email, password)
-        server.sendmail(sender_email, receiver_email, message.as_string())
+def send_new_order_notification(id: int, emails: str):
+    subject = "Nová objednávka"
+    text = f"""\
+    Mily admine, \n
+    Prave vam prisla nova objednavka č.{id}, \n
+    Pokuste se co nejdrive tudo objednavku vyridit :).
+    """
+    html = f"""
+    <html>
+        <body>
+            <h3>Mily admine</h3>
+            <p>Prave vam prisla nova objednavka č.<a href="https://weathery.svs.gyarab.cz/objednavka/{id}">{id}</a>,</p>
+            <p>Pokuste se co nejdrive tudo objednavku vyridit :).</p> 
+        </body>
+    </html>
+    """
+    send_email(emails, subject, text, html)
