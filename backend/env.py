@@ -34,6 +34,7 @@ if os.path.isfile(_ENV_FILE):
 DB_PASSWORD: str = env(str, "DB_PASSWORD")
 DB_USER: str = env(str, "DB_USER")
 DB_NAME: str = env(str, "DB_NAME")
+DB_HOST: str = env(str, "DB_HOST")
 STRIPE_SEC: str = env(str, "STRIPE_SEC")
 WEBHOOK_SEC: str = env(str, "WEBHOOK_SEC")
 EMAIL: str = env(str, "EMAIL")

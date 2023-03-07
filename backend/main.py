@@ -43,6 +43,7 @@ MONTH = 2678400
 USER = env.DB_USER
 PASSWORD = env.DB_PASSWORD
 DB_NAME = env.DB_NAME
+DB_HOST = env.DB_HOST
 STRIPE_SEC = env.STRIPE_SEC
 WEBHOOK_SEC = env.WEBHOOK_SEC
 
@@ -60,7 +61,7 @@ app.add_middleware(
 stripe.api_key = STRIPE_SEC
 
 con = psycopg2.connect(
-    database=DB_NAME, user=USER, password=PASSWORD, host="localhost", port=5432
+    database=DB_NAME, user=USER, password=PASSWORD, host=DB_HOST, port=5432
 )
 
 
