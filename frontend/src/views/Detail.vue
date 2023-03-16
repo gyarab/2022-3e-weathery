@@ -67,7 +67,7 @@ export default {
                     toolbar: {
                         show: true,
                     },
-                    background: '#AAC4FF'
+                    background: '#87bfff'
                 },
                 xaxis: {
                     categories: [],
@@ -75,6 +75,12 @@ export default {
                         enabled: false,
                     },
                     labels: {
+                        datetimeFormatter: {
+                            year: 'yyyy',
+                            month: 'MMM \'yy',
+                            day: 'dd MMM',
+                            hour: 'HH:mm'
+                        }
                     }
                 },
                 stroke: {
@@ -107,10 +113,13 @@ export default {
         }).then(response => {
             this.data = response.data.data
 
+            if (response.data.message === "station does not exist"){
+                console.log("station does not exist") //TODO
+            }
+
             for (let i in this.data) {
                 this.data[i].pressure /= 100 // aby jsme to měli v hPa
             }
-
             this.zmenaAktivnihoGrafu(this.aktivniGraf)
             this.zmenaCasovehoRozmezi(this.selected)
         })
@@ -125,7 +134,7 @@ export default {
             this.chartOptions.xaxis.categories = []
             for (let i in this.data) {
                 this.series[0].data.push(Math.round(this.data[i][this.grafy[this.aktivniGraf][0]] * 10) / 10)
-                this.chartOptions.xaxis.categories.push(this.data[i].time)
+                this.chartOptions.xaxis.categories.push(this.data[i].time.slice(0, -9))
             }
             this.series[0].name = this.aktivniGraf
             ApexCharts.exec('1', 'updateOptions', {
@@ -168,7 +177,6 @@ export default {
                 }).then(response => {
                     this.data = response.data.data
                     this.zmenaAktivnihoGrafu(this.aktivniGraf)
-
                 })
             }
         },
@@ -230,7 +238,7 @@ export default {
 
 #change_date_btn {
     display: flex;
-    background-color: var(--tmava);
+    background-color: var(--bila);
     margin-left: 30px;
     width: 80px;
     height: 35px;
@@ -242,7 +250,7 @@ export default {
     padding: 20px;
     border-radius: 5px;
     z-index: 3;
-    background-color: var(--svetla);
+    background-color: var(--tmavsi);
 }
 
 #graf {
@@ -251,7 +259,7 @@ export default {
 
 .tlacitkoPrepinani {
     padding: 20px 20px 20px 0;
-    background-color: var(--svetla);
+    background-color: var(--stredni);
     border-radius: 5px 0 0 5px;
     left: 20px;
     position: relative;
@@ -263,7 +271,7 @@ export default {
 .aktivniTlacitko {
     width: 100px;
     border-right: none;
-    background-color: var(--tmava);
+    background-color: var(--tmavsi);
     z-index: 4;
     margin-left: 0;
 }

@@ -13,10 +13,13 @@
     --vyska-popupu-mapa: 200px;
     --vyska-menu: 60px;
     --velikost-pisma-menu: 20px;
-    --bila: #EEF1FF;
-    --svetla: #D2DAFF;
-    --tmava: #AAC4FF;
-    --fialova: #B1B2FF;
+    --bila: #eef4fc;
+    --svetla: #ADD3FF;
+    --stredni: #72ACFD;
+    --tmavsi: #5C8DFF;
+    --tmava: #3b28cc;
+
+    /* https://coolors.co/eef4fc-87bfff-3f8efc-2667ff-3b28cc */
 }
 
 body {
@@ -26,7 +29,7 @@ body {
 }
 
 #menu {
-    background-color: var(--fialova);
+    background-color: var(--stredni);
     height: var(--vyska-menu);
 }
 

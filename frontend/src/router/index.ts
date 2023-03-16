@@ -3,6 +3,7 @@ import HomeView from "../views/HomeView.vue";
 import AboutView from "../views/AboutView.vue";
 import MapaView from "../views/MapaView.vue";
 import Detail from "@/views/Detail.vue";
+import OrderView from "@/views/OrderView.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,11 +33,22 @@ const router = createRouter({
             }
         },
         {
+            path: '/objednavka/:id',
+            name: 'Order',
+            component: OrderView,
+            meta: {
+                title: 'Order'
+            }
+        },
+        {
             path: '/:souradnice',
             name: 'detail',
             component: Detail,
             meta: {
                 title: 'Detail'
+            },
+            beforeEnter: (to) => {
+                return to.params.souradnice.length === 21 && to.params.souradnice.includes('-')  //chekuje trochu format souradnic
             }
         }
     ],
