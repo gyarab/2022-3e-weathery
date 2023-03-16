@@ -25,8 +25,12 @@ export default {
     },
     computed: {
         datum() {
-            let list = this.data.date.replace('T', '-').split('-')
-            return `${list[2]}.${list[1]}. ${list[0]}`
+            try {
+                let list = this.data.date.replace('T', '-').split('-')
+                return `${list[2]}.${list[1]}. ${list[0]}`
+            }
+            catch (e) {} //jeste jsme nedostali data
+
         }
     }
 }
