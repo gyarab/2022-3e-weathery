@@ -287,7 +287,7 @@ def get_min_temp(connection) -> dict:
     result = {}
     items = cur.fetchall()
     for i in items:
-        result[i[1][:4]] = i[0]
+        result[str(i[1])[:4]] = i[0]
     return result
 
 
@@ -299,7 +299,7 @@ def get_avg_temp(connection) -> dict:
     result = {}
     items = cur.fetchall()
     for i in items:
-        result[i[1][:4]] = i[0]
+        result[str(i[1])[:4]] = i[0]
     return result
 
 
@@ -311,7 +311,7 @@ def get_max_temp(connection) -> dict:
     result = {}
     items = cur.fetchall()
     for i in items:
-        result[i[1][:4]] = i[0]
+        result[str(i[1])[:4]] = i[0]
     return result
 
 
@@ -323,7 +323,7 @@ def get_min_rain(connection) -> dict:
     result = {}
     items = cur.fetchall()
     for i in items:
-        result[i[1][:4]] = i[0]
+        result[str(i[1])[:4]] = i[0]
     return result
 
 
@@ -335,7 +335,7 @@ def get_avg_rain(connection) -> dict:
     result = {}
     items = cur.fetchall()
     for i in items:
-        result[i[1][:4]] = i[0]
+        result[str(i[1])[:4]] = i[0]
     return result
 
 
@@ -347,7 +347,7 @@ def get_max_rain(connection) -> dict:
     result = {}
     items = cur.fetchall()
     for i in items:
-        result[i[1][:4]] = i[0]
+        result[str(i[1])[:4]] = i[0]
     return result
 
 
