@@ -31,6 +31,7 @@ from manage_data import (
     get_password,
     get_email,
     get_admin_emails,
+    get_home_page_data,
 )
 from models import Data, RegisterData, LoginItem
 
@@ -223,6 +224,11 @@ async def webhook(req: Request):
             ", ".join(get_admin_emails(con)),
         )
     return 200
+
+
+@app.get("/home")
+def home():
+    return get_home_page_data(con)
 
 
 @app.get("/order/{id}")

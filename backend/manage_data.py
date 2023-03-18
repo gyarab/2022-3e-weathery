@@ -267,6 +267,90 @@ def get_all_orders(connection) -> dict:
     return {"message": "ok", "orders": orders}
 
 
+def get_home_page_data(connection) -> dict:
+    result = {
+        "min-temp": get_min_temp(connection),
+        "max-temp": get_max_temp(connection),
+        "avg-temp": get_avg_temp(connection),
+        "min-rain": get_min_rain(connection),
+        "max-rain": get_max_rain(connection),
+        "avg-rain": get_avg_rain(connection),
+    }
+    return result
+
+
+def get_min_temp(connection) -> dict:
+    cur = connection.cursor()
+    cur.execute(
+        "select min(temperature), date_trunc('YEAR', time ) as trunc from data group by trunc order by trunc;"
+    )
+    result = {}
+    items = cur.fetchall()
+    for i in items:
+        result[str(i[1])[:4]] = i[0]
+    return result
+
+
+def get_avg_temp(connection) -> dict:
+    cur = connection.cursor()
+    cur.execute(
+        "select avg(temperature), date_trunc('YEAR', time ) as trunc from data group by trunc order by trunc;"
+    )
+    result = {}
+    items = cur.fetchall()
+    for i in items:
+        result[str(i[1])[:4]] = i[0]
+    return result
+
+
+def get_max_temp(connection) -> dict:
+    cur = connection.cursor()
+    cur.execute(
+        "select max(temperature), date_trunc('YEAR', time ) as trunc from data group by trunc order by trunc;"
+    )
+    result = {}
+    items = cur.fetchall()
+    for i in items:
+        result[str(i[1])[:4]] = i[0]
+    return result
+
+
+def get_min_rain(connection) -> dict:
+    cur = connection.cursor()
+    cur.execute(
+        "select min(rain), date_trunc('YEAR', time ) as trunc from data group by trunc order by trunc;"
+    )
+    result = {}
+    items = cur.fetchall()
+    for i in items:
+        result[str(i[1])[:4]] = i[0]
+    return result
+
+
+def get_avg_rain(connection) -> dict:
+    cur = connection.cursor()
+    cur.execute(
+        "select avg(rain), date_trunc('YEAR', time ) as trunc from data group by trunc order by trunc;"
+    )
+    result = {}
+    items = cur.fetchall()
+    for i in items:
+        result[str(i[1])[:4]] = i[0]
+    return result
+
+
+def get_max_rain(connection) -> dict:
+    cur = connection.cursor()
+    cur.execute(
+        "select max(rain), date_trunc('YEAR', time ) as trunc from data group by trunc order by trunc;"
+    )
+    result = {}
+    items = cur.fetchall()
+    for i in items:
+        result[str(i[1])[:4]] = i[0]
+    return result
+
+
 def get_email(connection, id) -> str:
     cur = connection.cursor()
     cur.execute("select email from orders where id = %s", (id,))
