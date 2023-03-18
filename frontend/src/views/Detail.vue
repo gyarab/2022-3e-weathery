@@ -5,7 +5,7 @@
             <div id="menicko">
                 <button v-for="jmenoGrafu in Object.keys(grafy)" class="tlacitkoPrepinani" :class="{aktivniTlacitko: aktivniGraf === jmenoGrafu}"
                         @click="zmenaAktivnihoGrafu(jmenoGrafu)">
-                    <img class="graf_ikonky" :src="'src/assets/icony/'+grafy[jmenoGrafu][2]">
+                    <img class="graf_ikonky" :src="'src/assets/icony/'+grafy[jmenoGrafu][2]" alt="icona">
                 </button>
             </div>
 
@@ -25,8 +25,6 @@
                         <input type="date" id="cstm_to" v-model="cstm_date_to" @change="customZmena()">
                     </div>
                 </div>
-
-
             </div>
         </div>
     </div>

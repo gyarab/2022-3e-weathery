@@ -13,3 +13,9 @@ export default {
     <div id="map"></div>
     <Mapa/>
 </template>
+
+<style scoped>
+#map {
+    height: calc(100vh - var(--vyska-menu) - 1px);
+}
+</style>

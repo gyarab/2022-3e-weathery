@@ -3,10 +3,7 @@
 * {
     padding: 0;
     margin: 0;
-}
-
-#map {
-    height: calc(100vh - var(--vyska-menu) - 1px);
+    box-sizing: border-box;
 }
 
 :root {
@@ -14,39 +11,14 @@
     --vyska-menu: 60px;
     --velikost-pisma-menu: 20px;
     --bila: #eef4fc;
-    --svetla: #ADD3FF;
-    --stredni: #72ACFD;
-    --tmavsi: #5C8DFF;
-    --tmava: #3b28cc;
-
-    /* https://coolors.co/eef4fc-87bfff-3f8efc-2667ff-3b28cc */
+    --modra: #395DFC;
+    --ruzova: #FCA2D5;
 }
 
 body {
-    font-family: 'Roboto Mono', monospace;
+    font-family: 'Cardo', serif;
     height: 100%;
     background-color: var(--bila);
-}
-
-#menu {
-    background-color: var(--stredni);
-    height: var(--vyska-menu);
-}
-
-#menu a {
-    font-size: var(--velikost-pisma-menu);
-    display: block;
-    color: black;
-    text-align: center;
-    padding: calc((var(--vyska-menu) - var(--velikost-pisma-menu))/2) 16px;
-    text-decoration: none;
-    float: left;
-    line-height: var(--velikost-pisma-menu);
-}
-
-#mapa {
-    width: 100px;
-    height: 100px;
 }
 
 h1 {

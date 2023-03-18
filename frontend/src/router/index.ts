@@ -4,6 +4,7 @@ import AboutView from "../views/AboutView.vue";
 import MapaView from "../views/MapaView.vue";
 import Detail from "@/views/Detail.vue";
 import OrderView from "@/views/OrderView.vue";
+import NakupView from "@/views/NakupView.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -30,6 +31,14 @@ const router = createRouter({
             component: MapaView,
             meta: {
                 title: 'Mapa'
+            }
+        },
+        {
+            path: '/nakup',
+            name: 'nakup',
+            component: NakupView,
+            meta: {
+                title: 'Nakup'
             }
         },
         {
