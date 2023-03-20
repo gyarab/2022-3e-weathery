@@ -91,7 +91,7 @@ void sendData(ResponseData data) {
   client.setInsecure();
   if (client.connect(server, 443)) {
     String message = getJSON(data);
-    client.println("POST /api/station/update HTTP/1.1");
+    client.println("POST /station/update HTTP/1.1");
     client.print("Host: ");
     client.println(server);
     client.println("Connection: close");
@@ -114,7 +114,7 @@ String getToken(String gps, int id) {
   client.setInsecure();
   if (client.connect(server, 443)) {
     String message = getJSON(gps, id);
-    client.println("POST /api/station/register HTTP/1.1");
+    client.println("POST /station/register HTTP/1.1");
     client.print("Host: ");
     client.println(server);
     client.println("Connection: keep-alive");
