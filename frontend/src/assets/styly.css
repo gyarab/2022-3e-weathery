@@ -13,6 +13,7 @@
     --bila: #eef4fc;
     --modra: #395DFC;
     --ruzova: #FCA2D5;
+    --seda: #E0E0E0;
 }
 
 body {
@@ -33,6 +34,10 @@ h1 {
 
 .leaflet-popup-content h2 {
     font-size: 1.7em;
+    /*background-color: #B094FF;
+    margin: 5px; 
+    někdy jindy
+    */
 }
 
 .leaflet-popup-content h1 {

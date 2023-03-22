@@ -42,13 +42,12 @@ export default {
                                     <body>
                                         <a href="${souradnice.replace('_', '-').replaceAll('.', ',')}" class="nadpis-popup" ><h1>${souradnice.replace("_", "° S ").replaceAll(".", ",")}° E</h1></a> <!-- seru na to more mozna nekdy z toho udelame router-link -->
                                         <hr>
-                                        <h2><img class="icony_popup" src="src/assets/icony/teplo.png" alt="Teplota">${stanice_obsah.temperature}°C</h2>
+                                        <h2><img class="icony_popup" src="src/assets/icony/teplo.svg" alt="Teplota">${stanice_obsah.temperature}°C</h2>
                                         <h2><img class="icony_popup" src="src/assets/icony/tlak.png" alt="Teplota">${Math.round(stanice_obsah.pressure / 10) / 10} hPa</h2>
-                                        <h2><img class="icony_popup" src="src/assets/icony/vlhkost.png" alt="Teplota">${stanice_obsah.humidity}%</h2>
-                                        <h2><img class="icony_popup" src="src/assets/icony/rychlost_vetru.png" alt="Teplota">${stanice_obsah.wind_speed}m/s</h2>
+                                        <h2><img class="icony_popup" src="src/assets/icony/vlhkost.svg" alt="Teplota">${stanice_obsah.humidity}%</h2>
+                                        <h2><img class="icony_popup" src="src/assets/icony/vitr.svg" alt="Teplota">${stanice_obsah.wind_speed}m/s</h2>
                                         <h2><img class="icony_popup" src="src/assets/icony/smer_vetru.png" alt="Teplota">${stanice_obsah.wind_direction}</h2>
-                                        <h2><img class="icony_popup" src="src/assets/icony/dest.png" alt="Teplota">${stanice_obsah.rain} mm/h</h2>
-
+                                        <h2><img class="icony_popup" src="src/assets/icony/dest.svg" alt="Teplota">${stanice_obsah.rain} mm/h</h2>
                                         <style>
                                             .nadpis-popup {
                                                 text-decoration: none;
@@ -65,19 +64,6 @@ export default {
                                                 font-size: 22px;
                                                 text-align: center;
                                                 text-decoration: none;
-                                            }
-                                            #popup-btn {
-                                                height: 25px;
-                                                width: 50px;
-                                                border: solid 1px red;
-                                                border-radius: 10px;
-                                            }
-                                            .popup-content {
-                                                display: flex;
-                                                flex-direction: column;
-                                                align-items: center;
-                                                align-content: space-between;
-                                                justify-content: space-around;
                                             }
                                         </style>
                                     </body>`, {offset: [180, 201], maxWidth: 250})
