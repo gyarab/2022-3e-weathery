@@ -13,7 +13,7 @@
     --bila: #eef4fc;
     --modra: #395DFC;
     --ruzova: #FCA2D5;
-    --seda: #E0E0E0;
+    --seda: #CBC9C9;
 }
 
 body {
@@ -28,21 +28,23 @@ h1 {
 }
 
 .leaflet-popup-content-wrapper, .leaflet-popup-tip {
-    background-color: var(--bila);
+    background-color: #75c8ff;
     font-family: 'Roboto Mono', monospace;
 }
 
 .leaflet-popup-content h2 {
-    font-size: 1.7em;
-    /*background-color: #B094FF;
-    margin: 5px; 
-    někdy jindy
-    */
+    font-size: 2em;
+    background-color: #B094FF;
+    margin: 7px; 
+    border-radius: 15px;
 }
 
 .leaflet-popup-content h1 {
     margin-bottom: 4px;
     text-align: center;
+    background-color: #59a6ff;
+    border-radius: 15px;
+    border: black solid 2px;
 }
 
 .leaflet-popup-content hr {
