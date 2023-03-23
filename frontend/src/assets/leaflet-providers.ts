@@ -10,7 +10,7 @@
     'use strict';
 
     L.TileLayer.Provider = L.TileLayer.extend({
-        initialize: function (arg, options) {
+        initialize: function (arg: string, options: any) {
             let providers = L.TileLayer.Provider.providers;
             let parts = arg.split('.');
             let providerName = parts[0];
@@ -41,12 +41,12 @@
                 };
             }
 
-            let attributionReplacer = function (attr) {
+            let attributionReplacer = function (attr: string) {
                 if (attr.indexOf('{attribution.') === -1) {
                     return attr;
                 }
                 return attr.replace(/\{attribution.(\w*)\}/g,
-                    function (match, attributionName) {
+                    function (match: any, attributionName: string | number) {
                         return attributionReplacer(providers[attributionName].options.attribution);
                     }
                 );
@@ -78,8 +78,8 @@
                 Positron: 'light_all',
             }
         },
-    };
-    L.tileLayer.provider = function (provider, options) {
+    }
+    L.tileLayer.provider = function (provider: any, options: any) {
         return new L.TileLayer.Provider(provider, options);
     };
     return L;

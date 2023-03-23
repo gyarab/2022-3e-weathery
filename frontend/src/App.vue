@@ -8,7 +8,7 @@ import {RouterLink, RouterView} from 'vue-router'
             <RouterLink to="/">Domů</RouterLink>
             <RouterLink to="/mapa">Mapa</RouterLink>
             <RouterLink to="/about">O nás</RouterLink>
-            <h1>WETHERY</h1>
+            <h1>WEATHERY</h1>
             <RouterLink id="kosik" to="/nakup"><img src="src/assets/icony/kosik.svg" alt="kosik"></RouterLink>
         </nav>
 

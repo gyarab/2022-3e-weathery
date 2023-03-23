@@ -23,7 +23,7 @@ export default {
     },
     mounted() {
         // tady info: https://github.com/leaflet-extras/leaflet-providers
-        L.tileLayer.provider('CartoDB.Positron').addTo(this.map);
+        L.tileLayer.provider('CartoDB.Voyager').addTo(this.map);
 
         axios
             .get("/stations")
@@ -70,8 +70,6 @@ export default {
                             } else {
                                 //jsme vpíči to vymyslí firu
                             }
-                            // ulozim si to pocasi co mi prijde a potom to nasazim do toho bindPOPUPu
-                            //https://weathery.ecko.ga/, https://weathery.ecko.ga/docs#/default/now_api_now__gps__get
                         })
                 }
             })
