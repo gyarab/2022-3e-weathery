@@ -28,7 +28,7 @@ h1 {
 }
 
 .leaflet-popup-content-wrapper, .leaflet-popup-tip {
-    background-color: #75c8ff;
+    background-color: var(--bila);
     font-family: 'Roboto Mono', monospace;
 }
 
@@ -42,9 +42,8 @@ h1 {
 .leaflet-popup-content h1 {
     margin-bottom: 4px;
     text-align: center;
-    background-color: #59a6ff;
+    background-color: #ABDEFF;
     border-radius: 15px;
-    border: black solid 2px;
 }
 
 .leaflet-popup-content hr {

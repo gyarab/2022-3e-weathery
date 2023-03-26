@@ -42,13 +42,18 @@ export default {
                                     <body>
                                         <a href="${souradnice.replace('_', '-').replaceAll('.', ',')}" class="nadpis-popup" ><h1>${souradnice.replace("_", "° S ").replaceAll(".", ",")}° E</h1></a> <!-- seru na to more mozna nekdy z toho udelame router-link -->
                                         <hr>
-                                        <h2 style="background-color:#FF6D6D"><img class="icony_popup" src="src/assets/icony/teplo.svg" alt="Teplota">${stanice_obsah.temperature}°C</h2>
-                                        <h2 style="background-color:#9664FC"><img class="icony_popup" src="src/assets/icony/tlak.png" alt="Teplota">${Math.round(stanice_obsah.pressure / 10) / 10} hPa</h2>
-                                        <h2 style="background-color:#A2A2A2"><img class="icony_popup" src="src/assets/icony/vlhkost.svg" alt="Teplota">${stanice_obsah.humidity}%</h2>
-                                        <h2 style="background-color:#3EE7FF"><img class="icony_popup" src="src/assets/icony/vitr.svg" alt="Teplota">${stanice_obsah.wind_speed}m/s</h2>
-                                        <h2 style="background-color:#4FFF49"><img class="icony_popup" src="src/assets/icony/smer_vetru.png" alt="Teplota">${stanice_obsah.wind_direction}</h2>
-                                        <h2 style="background-color:#6D84FF"><img class="icony_popup" src="src/assets/icony/dest.svg" alt="Teplota">${stanice_obsah.rain} mm/h</h2>
+                                        <h2 style="background-color:#FFA4A4"><img class="icony_popup" src="src/assets/icony/teplo.svg" alt="Teplota">${stanice_obsah.temperature}°C</h2>
+                                        <h2 style="background-color:#C1A2FF"><img class="icony_popup" src="src/assets/icony/tlak.png" alt="Teplota">${Math.round(stanice_obsah.pressure / 10) / 10} hPa</h2>
+                                        <h2 style="background-color:#D0D0D0"><img class="icony_popup" src="src/assets/icony/vlhkost.svg" alt="Teplota">${stanice_obsah.humidity}%</h2>
+                                        <h2 style="background-color:#81EFFF"><img class="icony_popup" src="src/assets/icony/vitr.svg" alt="Teplota">${stanice_obsah.wind_speed}m/s</h2>
+                                        <h2 style="background-color:#87FF83"><img class="icony_popup" src="src/assets/icony/smer_vetru.png" alt="Teplota">${stanice_obsah.wind_direction}</h2>
+                                        <h2 style="background-color:#9FAEFF"><img class="icony_popup" src="src/assets/icony/dest.svg" alt="Teplota">${stanice_obsah.rain} mm/h</h2>
+                                        <a href="${souradnice.replace('_', '-').replaceAll('.', ',')}" id="popup-btn"><p>ZLOBA</p></a>
                                         <style>
+                                            #popup-btn {
+                                                text-decoration: none;
+                                                background-color: #ABDEFF;
+                                            }
                                             .nadpis-popup {
                                                 text-decoration: none;
                                                 color: #333 !important;
