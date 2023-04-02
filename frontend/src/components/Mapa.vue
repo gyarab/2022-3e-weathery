@@ -12,13 +12,12 @@ export default {
     data() {
         return {
             icon: L.icon({
-                iconUrl: 'src/assets/icony/target2.png',
-                iconSize: [40, 40], // size of the icon
+                iconUrl: 'src/assets/icony/target.png',
+                iconSize: [30, 30], // size of the icon
                 iconAnchor: [20, 35], // point of the icon which will correspond to marker's location
-                popupAnchor: [8, -32] // point from which the popup should open relative to the iconAnchor
+                popupAnchor: [8, -5] // point from which the popup should open relative to the iconAnchor
             }),
             map: L.map('map').setView([50.0835494, 14.4341414], 11), // Praha
-
         }
     },
     mounted() {
@@ -40,35 +39,43 @@ export default {
                                 let marker = L.marker([souradnice_split[0], souradnice_split[1]], {icon: this.icon}).addTo(this.map);
                                 marker.bindPopup(`
                                     <body>
-                                        <a href="${souradnice.replace('_', '-').replaceAll('.', ',')}" class="nadpis-popup" ><h1>${souradnice.replace("_", "° S ").replaceAll(".", ",")}° E</h1></a> <!-- seru na to more mozna nekdy z toho udelame router-link -->
+                                        <h1 href="${souradnice.replace('_', '-').replaceAll('.', ',')}" class="nadpis-popup" >${souradnice.replace("_", "° S ").replaceAll(".", ",")}° E</h1> <!-- seru na to more mozna nekdy z toho udelame router-link -->
                                         <hr>
-                                        <h2 style="background-color:#FFA4A4"><img class="icony_popup" src="src/assets/icony/teplo.svg" alt="Teplota">${stanice_obsah.temperature}°C</h2>
-                                        <h2 style="background-color:#C1A2FF"><img class="icony_popup" src="src/assets/icony/tlak.png" alt="Teplota">${Math.round(stanice_obsah.pressure / 10) / 10} hPa</h2>
-                                        <h2 style="background-color:#D0D0D0"><img class="icony_popup" src="src/assets/icony/vlhkost.svg" alt="Teplota">${stanice_obsah.humidity}%</h2>
-                                        <h2 style="background-color:#81EFFF"><img class="icony_popup" src="src/assets/icony/vitr.svg" alt="Teplota">${stanice_obsah.wind_speed}m/s</h2>
-                                        <h2 style="background-color:#87FF83"><img class="icony_popup" src="src/assets/icony/smer_vetru.png" alt="Teplota">${stanice_obsah.wind_direction}</h2>
-                                        <h2 style="background-color:#9FAEFF"><img class="icony_popup" src="src/assets/icony/dest.svg" alt="Teplota">${stanice_obsah.rain} mm/h</h2>
-                                        <a href="${souradnice.replace('_', '-').replaceAll('.', ',')}" id="popup-btn"><p>ZLOBA</p></a>
+                                        <div id="container">
+                                            <img class="icony_popup zmensitMin" src="src/assets/icony/teplota.svg" alt="teplota"><h2>${stanice_obsah.temperature}°C</h2>
+                                            <img class="icony_popup zmensitVic" src="src/assets/icony/tlak.svg" alt="tlak"><h2>${Math.round(stanice_obsah.pressure / 10) / 10} hPa</h2>
+                                            <img class="icony_popup zmensitVic" src="src/assets/icony/vlhkost.svg" alt="vlhkost"><h2>${stanice_obsah.humidity}%</h2>
+                                            <img class="icony_popup zmensitMin" src="src/assets/icony/vitr.svg" alt="vitr"><h2>${stanice_obsah.wind_speed}m/s</h2>
+                                            <img class="icony_popup zmensit" src="src/assets/icony/smer.svg" alt="smer"><h2>${stanice_obsah.wind_direction}</h2>
+                                            <img class="icony_popup zmensit" src="src/assets/icony/dest.svg" alt="dest"><h2>${stanice_obsah.rain} mm/h</h2>
+                                        </div>
+                                        <span id="flex"><a href="${souradnice.replace('_', '-').replaceAll('.', ',')}" id="popup-btn">Zobrazit více</a></span>
                                         <style>
                                             #popup-btn {
                                                 text-decoration: none;
-                                                background-color: #ABDEFF;
+                                                text-align: center;
+                                                font-size: 1.2em;
+                                            }
+                                            #flex {
+                                                margin-top: 20px;
+                                                margin-bottom: 10px;
+                                                display: flex;
+                                                align-items: center;
+                                                justify-content: center;
                                             }
                                             .nadpis-popup {
                                                 text-decoration: none;
-                                                color: #333 !important;
-                                            }
-                                            h1 {
                                                 font-weight: bold;
+                                                color: #333 !important;
                                                 font-size: 2em;
                                             }
-                                            .default-time-selector {
-                                                height: 25px;
+                                            img {
+                                                user-select: none;
                                             }
-                                            .nadpis-second-popup {
-                                                font-size: 22px;
-                                                text-align: center;
-                                                text-decoration: none;
+                                            #container {
+                                                display: grid;
+                                                grid-template-columns: 40px auto;
+                                                column-gap: 10px;
                                             }
                                         </style>
                                     </body>`, {offset: [180, 201], maxWidth: 250})

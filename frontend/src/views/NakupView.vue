@@ -1,5 +1,5 @@
 <template>
-    <h2>Tadyto jeste nejak popisem fotečky atd</h2>
+    <h1>Tadyto jeste nejak popisem fotečky atd</h1>
     <a href="https://buy.stripe.com/test_aEU4hqeOt0Freje288">Koupit</a>
 </template>
 

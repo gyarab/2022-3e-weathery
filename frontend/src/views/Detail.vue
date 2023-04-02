@@ -38,11 +38,11 @@ export default {
     data() {
         return {
             grafy: {
-                Teplota: ['temperature', '#ff0000', 'teplo.png'],
-                Vlhkost: ['humidity', '#000dff', 'vlhkost.png'],
-                Tlak: ['pressure', '#595959', 'tlak.png'],
-                WindSpeed: ['windspeed', '#00FFEC', 'rychlost_vetru.png'],
-                Rain: ['rain', '#0093FF', 'dest.png']
+                Teplota: ['temperature', '#ff0000', 'teplota.svg'],
+                Vlhkost: ['humidity', '#000dff', 'vlhkost.svg'],
+                Tlak: ['pressure', '#595959', 'tlak.svg'],
+                WindSpeed: ['windspeed', '#00FFEC', 'vitr.svg'],
+                Rain: ['rain', '#0093FF', 'dest.svg']
             },
             casoveRozmezi: 30, // dní - default
             aktivniGraf: "Teplota",

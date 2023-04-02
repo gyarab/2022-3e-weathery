@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cardo&family=Inter&family=STIX+Two+Text&family=Sofia+Sans+Semi+Condensed:wght@1&display=swap');
 
 * {
     padding: 0;
@@ -14,10 +14,11 @@
     --modra: #395DFC;
     --ruzova: #FCA2D5;
     --seda: #CBC9C9;
+    --a: #8ea0ff;
 }
 
 body {
-    font-family: 'Cardo', serif;
+    font-family: Cardo, serif;
     height: 100%;
     background-color: var(--bila);
 }
@@ -27,22 +28,21 @@ h1 {
     font-size: 3em;
 }
 
+/*        leaflet       */
 .leaflet-popup-content-wrapper, .leaflet-popup-tip {
     background-color: var(--bila);
-    font-family: 'Roboto Mono', monospace;
+    font-family: Inter, sans-serif;
 }
 
 .leaflet-popup-content h2 {
-    font-size: 2em;
-    background-color: #B094FF;
-    margin: 7px; 
+    font-size: 1.4em;
+    margin: 7px;
     border-radius: 15px;
 }
 
 .leaflet-popup-content h1 {
     margin-bottom: 4px;
     text-align: center;
-    background-color: #ABDEFF;
     border-radius: 15px;
 }
 
@@ -62,9 +62,10 @@ h1 {
 }
 
 .icony_popup {
-    height: 35px;
+    height: 40px;
+    width: 40px;
     vertical-align: middle;
-    margin-right: 20px;
+    place-self: center;
 }
 
 .leaflet-popup-content {
@@ -73,4 +74,20 @@ h1 {
 
 .leaflet-control-attribution a svg {
     display: none !important; /*more zadna ukrainska vlajka nebude*/
+}
+
+/*nekoukej se*/
+.zmensit {
+    height: 30px;
+    width: 30px;
+}
+
+.zmensitMin {
+    height: 35px;
+    width: 35px;
+}
+
+.zmensitVic {
+    height: 25px;
+    width: 25px;
 }

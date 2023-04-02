@@ -30,14 +30,16 @@ import {RouterLink, RouterView} from 'vue-router'
 h1 {
     font-size: 35px;
     text-align: center;
-    color: var(--modra);
-    vertical-align: middle;
     line-height: var(--vyska-menu);
     width: 300px;
     position: absolute;
     right: calc(50% - 150px);
     z-index: 10;
+    letter-spacing: 2px;
+    font-family: 'STIX Two Text', serif;
     mix-blend-mode: difference;
+    color: var(--modra);
+    /*#095e30*/
 }
 
 #menu {
@@ -47,7 +49,7 @@ h1 {
 }
 
 #menu a {
-    font-family: Sofia Sans Semi Condensed, sans-serif;
+    font-family: Inter, sans-serif;
     font-size: var(--velikost-pisma-menu);
     color: black;
     text-align: center;

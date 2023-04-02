@@ -16,7 +16,7 @@
             <h1>Průměrné srážky: {{ procento('avg-rain') }}</h1>
             <h1>jeste dalsi dam neboj</h1>
         </div>
-        <div ref="scroll" id="scroll" @click="scrolluj({deltaY: 1})">
+        <div ref="scroll" id="scroll" @click="scrolluj({deltaY: 'tlacitko'})">
             <p>SCROLL</p>
             <img src="src/assets/icony/scroll.svg" alt="sipka dolu">
         </div>
@@ -42,7 +42,6 @@ export default {
             this.data = response.data
             this.rok_od = Object.keys(this.data['avg-rain'])[0]
             this.rok_do = Object.keys(this.data['avg-rain'])[1]
-            console.log(this.data)
         })
 
         document.body.style.height = "100vh" //zruší actual scrollování
@@ -58,7 +57,9 @@ export default {
             let rychlost = 15
             let min = 0
             let max = 180
-            if (e.deltaY > 0) {
+            if (e.deltaY === 'tlacitko') {
+                this.scroll = max
+            } else if (e.deltaY > 0) {
                 this.scroll += rychlost
             } else {
                 this.scroll -= rychlost
@@ -97,6 +98,9 @@ export default {
         procento(udaj) {
             let a = this.data[udaj][this.rok_od]
             let b = this.data[udaj][this.rok_do]
+            if (100 - (a / b) * 100 > 0) {
+                return `+${(100 - (a / b) * 100).toFixed(3)} %`
+            }
             return `${ (100 - (a / b) * 100).toFixed(3) } %`
         }
     }
@@ -117,7 +121,7 @@ export default {
 #scroll {
     position: absolute;
     bottom: 10%;
-    font-family: Sofia Sans Semi Condensed, sans-serif;
+    font-family: Inter, sans-serif;
     font-size: 14px;
     display: flex;
     flex-wrap: wrap;
@@ -162,7 +166,7 @@ export default {
     top: 10%;
     left: 10%;
     width: 32%;
-    z-index: 1;
+    z-index: -10;
 }
 
 #blob2 {
