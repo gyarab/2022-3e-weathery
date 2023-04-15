@@ -1,33 +1,108 @@
 <template>
-    <div id="detail">
+    <div id="menicko">
+        <button v-for="jmenoGrafu in Object.keys(grafy)" class="tlacitkoPrepinani">
+            <img class="graf_ikonky" :src="'src/assets/icony/'+grafy[jmenoGrafu][2]" alt="icona">
+        </button>
+    </div>
+    <h2 id="souradnice_stanice">{{ souradnice[0] }}° S, {{ souradnice[1] }}° E</h2>
 
-        <div id="content">
-            <div id="menicko">
-                <button v-for="jmenoGrafu in Object.keys(grafy)" class="tlacitkoPrepinani" :class="{aktivniTlacitko: aktivniGraf === jmenoGrafu}"
-                        @click="zmenaAktivnihoGrafu(jmenoGrafu)">
-                    <img class="graf_ikonky" :src="'src/assets/icony/'+grafy[jmenoGrafu][2]" alt="icona">
-                </button>
+
+        <div id="detail">
+            <div id="content">
+                <div id="grafContainer">
+                    <apexchart id="graf" width="800" height="450px" :type="chart_type" :options="chartOptions" :series="series"></apexchart>
+                    <div id="popisek">
+                        <select id="change_date_btn" v-model="input_selected" @click="zmenaCasovehoRozmezi(input_selected)">
+                            <option value="day">Den</option>
+                            <option value="week">Týden</option>
+                            <option value="month">Měsíc</option>
+                            <option value="year">Rok</option>
+                            <option value="custom">Vlastní</option>
+                        </select>
+                        <div v-if="custom_selected" id="dateContainer">
+                            <input type="date" id="cstm_from" v-model="cstm_date_from" @change="customZmena()">
+                            <input type="date" id="cstm_to" v-model="cstm_date_to" @change="customZmena()">
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div id="grafContainer">
-                <apexchart id="graf" width="800" height="450px" :type="chart_type" :options="chartOptions" :series="series"></apexchart>
-                <div id="popisek">
-                    <h2>{{ souradnice[0] }}° S, {{ souradnice[1] }}° E</h2>
-                    <select id="change_date_btn" v-model="input_selected" @click="zmenaCasovehoRozmezi(input_selected)">
-                        <option value="day">Den</option>
-                        <option value="week">Týden</option>
-                        <option value="month">Měsíc</option>
-                        <option value="year">Rok</option>
-                        <option value="custom">Vlastní</option>
-                    </select>
-                    <div v-if="custom_selected" id="dateContainer">
-                        <input type="date" id="cstm_from" v-model="cstm_date_from" @change="customZmena()">
-                        <input type="date" id="cstm_to" v-model="cstm_date_to" @change="customZmena()">
+            <div id="content">
+                <div id="grafContainer">
+                    <apexchart id="graf" width="800" height="450px" :type="chart_type" :options="chartOptions" :series="series"></apexchart>
+                    <div id="popisek">
+                        <select id="change_date_btn" v-model="input_selected" @click="zmenaCasovehoRozmezi(input_selected)">
+                            <option value="day">Den</option>
+                            <option value="week">Týden</option>
+                            <option value="month">Měsíc</option>
+                            <option value="year">Rok</option>
+                            <option value="custom">Vlastní</option>
+                        </select>
+                        <div v-if="custom_selected" id="dateContainer">
+                            <input type="date" id="cstm_from" v-model="cstm_date_from" @change="customZmena()">
+                            <input type="date" id="cstm_to" v-model="cstm_date_to" @change="customZmena()">
+                        </div>
+                    </div>
+                </div>
+            </div>    
+
+            <div id="content">
+                <div id="grafContainer">
+                    <apexchart id="graf" width="800" height="450px" :type="chart_type" :options="chartOptions" :series="series"></apexchart>
+                    <div id="popisek">
+                        <select id="change_date_btn" v-model="input_selected" @click="zmenaCasovehoRozmezi(input_selected)">
+                            <option value="day">Den</option>
+                            <option value="week">Týden</option>
+                            <option value="month">Měsíc</option>
+                            <option value="year">Rok</option>
+                            <option value="custom">Vlastní</option>
+                        </select>
+                        <div v-if="custom_selected" id="dateContainer">
+                            <input type="date" id="cstm_from" v-model="cstm_date_from" @change="customZmena()">
+                            <input type="date" id="cstm_to" v-model="cstm_date_to" @change="customZmena()">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="content">
+                <div id="grafContainer">
+                    <apexchart id="graf" width="800" height="450px" :type="chart_type" :options="chartOptions" :series="series"></apexchart>
+                    <div id="popisek">
+                        <select id="change_date_btn" v-model="input_selected" @click="zmenaCasovehoRozmezi(input_selected)">
+                            <option value="day">Den</option>
+                            <option value="week">Týden</option>
+                            <option value="month">Měsíc</option>
+                            <option value="year">Rok</option>
+                            <option value="custom">Vlastní</option>
+                        </select>
+                        <div v-if="custom_selected" id="dateContainer">
+                            <input type="date" id="cstm_from" v-model="cstm_date_from" @change="customZmena()">
+                            <input type="date" id="cstm_to" v-model="cstm_date_to" @change="customZmena()">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="content">
+                <div id="grafContainer">
+                    <apexchart id="graf" width="800" height="450px" :type="chart_type" :options="chartOptions" :series="series"></apexchart>
+                    <div id="popisek">
+                        <select id="change_date_btn" v-model="input_selected" @click="zmenaCasovehoRozmezi(input_selected)">
+                            <option value="day">Den</option>
+                            <option value="week">Týden</option>
+                            <option value="month">Měsíc</option>
+                            <option value="year">Rok</option>
+                            <option value="custom">Vlastní</option>
+                        </select>
+                        <div v-if="custom_selected" id="dateContainer">
+                            <input type="date" id="cstm_from" v-model="cstm_date_from" @change="customZmena()">
+                            <input type="date" id="cstm_to" v-model="cstm_date_to" @change="customZmena()">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 </template>
 
 <script>
@@ -118,7 +193,7 @@ export default {
             for (let i in this.data) {
                 this.data[i].pressure /= 100 // aby jsme to měli v hPa
             }
-            this.zmenaAktivnihoGrafu(this.aktivniGraf)
+            this.zmenaAktivnihoGrafu()
             this.zmenaCasovehoRozmezi(this.selected)
         })
 
@@ -126,25 +201,21 @@ export default {
     }
     ,
     methods: {
-        zmenaAktivnihoGrafu(noveAktivni) {
-            this.aktivniGraf = noveAktivni
-            this.series[0].data = []
-            this.chartOptions.xaxis.categories = []
-            for (let i in this.data) {
-                this.series[0].data.push(Math.round(this.data[i][this.grafy[this.aktivniGraf][0]] * 10) / 10)
-                this.chartOptions.xaxis.categories.push(this.data[i].time.slice(0, -9))
-            }
-            this.series[0].name = this.aktivniGraf
-            ApexCharts.exec('1', 'updateOptions', {
-                colors: [this.grafy[this.aktivniGraf][1]],
-                xaxis: {
-                    categories: this.chartOptions.xaxis.categories
+        zmenaAktivnihoGrafu() {
+            for (let f in this.grafy) {
+                this.series[0].data = []
+                this.chartOptions.xaxis.categories = []
+                for (let i in this.data) {
+                    this.series[0].data.push(Math.round(this.data[i][this.grafy[this.aktivniGraf][0]] * 10) / 10)
+                    this.chartOptions.xaxis.categories.push(this.data[i].time.slice(0, -9))
                 }
-            })
-
-            if (noveAktivni === 'WindSpeed') { //chci dát na osu y hodnoty z widspeedu a podle barev linky rozlišovat směr větru
-                //this.chart_type = 'line'
-                // TODO
+                this.series[0].name = this.aktivniGraf
+                ApexCharts.exec('1', 'updateOptions', {
+                    colors: [this.grafy[this.aktivniGraf][1]],
+                    xaxis: {
+                        categories: this.chartOptions.xaxis.categories
+                    }
+                })
             }
         },
         zmenaCasovehoRozmezi(selected) {
@@ -221,6 +292,12 @@ export default {
     flex-direction: column;
 }
 
+#souradnice_stanice {
+    display: flex;
+    justify-content: center;
+    font-size: 30px;
+}
+
 #content {
     display: flex;
     margin-top: 5px;
@@ -229,9 +306,10 @@ export default {
 
 #menicko {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 5px;
-    align-items: end;
+    align-items: center;
+    justify-content: center;
 }
 
 #change_date_btn {
