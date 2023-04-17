@@ -1,14 +1,19 @@
-\documentclass[a4paper,12pt]{extarticle}
-\usepackage[utf8]{inputenc}
-\usepackage[a4paper, total={5.5in, 10in}]{geometry}
-\usepackage[french, czech]{babel}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{graphicx}
+\documentclass[a4paper,11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[czech]{babel}
+\usepackage{amsmath}
 \usepackage{csquotes}
 
+% package na vklad obrázků
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{stfloats} % opravuje obrázky přes celou stránku
+\graphicspath{ {./images/} } % definování složky s obrázky
 
-\graphicspath{ {./images/} }
+% zvyšování hloubky obsahu
+\setcounter{tocdepth}{4}
+\setcounter{secnumdepth}{4}
 
 % citace
 \usepackage[
@@ -16,11 +21,9 @@
     autocite=superscript,
     sorting=none
     ]{biblatex} 
-    
 % \usepackage{biblatex}
 \addbibresource{literature.bib}
 
-% zajištujě závorky okolo citací
 \DeclareCiteCommand{\supercite}[\mkbibsuperscript]
   {\iffieldundef{prenote}
      {}
@@ -34,6 +37,9 @@
   {\supercitedelim}
   {\bibclosebracket}
   
+% definování listings pro vklad kódu
+% \usepackage{listings}
+% \lstset{language=js}
 
 % abstrakt s větším písmem (https://tex.stackexchange.com/a/366170)
 \makeatletter
@@ -49,19 +55,20 @@
     {\if@twocolumn\else\endquotation\fi}
 \makeatother
 
+\selectlanguage{czech} % nastavení jazyka
+\include{hyphenation} % upřesnění slabik v různých cizích slovech
+
 \begin{document}
 
-\selectlanguage{czech}
-
-% Import kapitol
-\include{titlepage}
+\include{titulnistrany}  % povinné strany
 \input{chapters/uvod}
 
+\input{chapters/hardware}
+\input{chapters/backend}
+\input{chapters/frontend}
+
 \newpage
-\onecolumn
+\printbibliography
 \listoffigures
 
-\printbibliography
-
 \end{document}
-
