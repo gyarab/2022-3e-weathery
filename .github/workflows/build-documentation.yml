@@ -43,7 +43,7 @@ jobs:
         biber-version: 2.17
 
     - name: Compile documentation
-      run: "tectonic docs/main.tex && mkdir -p build && cp docs/main.pdf build/main.pdf"
+      run: "tectonic documentation/main.tex && mkdir -p build && cp documentation/main.pdf build/main.pdf"
 
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v1

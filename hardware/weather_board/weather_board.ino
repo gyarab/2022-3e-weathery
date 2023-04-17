@@ -4,8 +4,8 @@
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BMP280.h>
 #include <Adafruit_AM2320.h>
-#include <SoftwareSerial.h>
-#include <TinyGPS++.h>
+//#include <SoftwareSerial.h>
+//#include <TinyGPS++.h>
 #include "env.h"
 
 #define BMP280_ADRESS (0x76)
@@ -13,8 +13,8 @@
 #define TX 6
 #define RX 13
 
-TinyGPSPlus gps;
-SoftwareSerial swSerial(RX, TX);
+//TinyGPSPlus gps;
+//SoftwareSerial swSerial(RX, TX);
 Adafruit_AM2320 am2320 = Adafruit_AM2320();
 Adafruit_BMP280 bmp;
 AS5600 as5600;
@@ -58,7 +58,7 @@ void setup() {
   as5600.setDirection(AS5600_CLOCK_WISE);
   am2320.begin();
   bmp.begin(BMP280_ADRESS);
-  swSerial.begin(9600);
+  //swSerial.begin(9600);
 
 
   Serial.begin(9600);
@@ -91,6 +91,7 @@ void sendData(ResponseData data) {
   client.setInsecure();
   if (client.connect(server, 443)) {
     String message = getJSON(data);
+    Serial.println(message);
     client.println("POST /station/update HTTP/1.1");
     client.print("Host: ");
     client.println(server);
@@ -141,7 +142,7 @@ String getToken(String gps, int id) {
   return "";
 }
 
-void getGPS() {
+/*void getGPS() {
   while (swSerial.available() > 0) {
     gps.encode(swSerial.read());
     yield();
@@ -155,7 +156,7 @@ void getGPS() {
     float lng = gps.location.lng();
     GPS = String(lat) + "_" + String(lng);
   }
-}
+}*/
 
 float getTemperature() {
   return am2320.readTemperature();
@@ -189,12 +190,13 @@ float getWindSpeed() {
 
 String getWindDirection() {
   int angle = as5600.readAngle();
+  Serial.println(angle);
   if (angle > 256 && angle <= 768) {
     return "NE";
   } else if (angle > 768 && angle <= 1280) {
     return "E";
   } else if (angle > 1280 && angle <= 1792) {
-    return "SE";
+    return "N";
   } else if (angle > 1792 && angle <= 2304) {
     return "S";
   } else if (angle > 2304 && angle <= 2816) {
@@ -218,7 +220,7 @@ float getRain() {
 void loop() {
   if (GPS == "-0.0_-0.0") {
     GPS = FIXED_GPS;
-    getGPS();
+    //getGPS();
     token = getToken(GPS, id);
   } else {
     ResponseData data;
@@ -230,7 +232,6 @@ void loop() {
     data.windDirection = getWindDirection();
     data.rain = getRain();
     sendData(data);
-    free(data);
     delay(1000);
   }
 }
