@@ -15,7 +15,7 @@ export default {
                 iconUrl: 'src/assets/icony/target.png',
                 iconSize: [30, 30], // size of the icon
                 iconAnchor: [20, 35], // point of the icon which will correspond to marker's location
-                popupAnchor: [8, -5] // point from which the popup should open relative to the iconAnchor
+                popupAnchor: [-5, -7] // point from which the popup should open relative to the iconAnchor
             }),
             map: L.map('map').setView([50.0835494, 14.4341414], 11), // Praha
         }
@@ -39,7 +39,7 @@ export default {
                                 let marker = L.marker([souradnice_split[0], souradnice_split[1]], {icon: this.icon}).addTo(this.map);
                                 marker.bindPopup(`
                                     <body>
-                                        <h1 href="${souradnice.replace('_', '-').replaceAll('.', ',')}" class="nadpis-popup" >${souradnice.replace("_", "° S ").replaceAll(".", ",")}° E</h1> <!-- seru na to more mozna nekdy z toho udelame router-link -->
+                                        <h1 class="nadpis-popup" >${souradnice.replace("_", "° N ").replaceAll(".", ",")}° E</h1> <!-- seru na to more mozna nekdy z toho udelame router-link -->
                                         <hr>
                                         <div id="container">
                                             <img class="icony_popup zmensitMin" src="src/assets/icony/teplota.svg" alt="teplota"><h2>${stanice_obsah.temperature}°C</h2>

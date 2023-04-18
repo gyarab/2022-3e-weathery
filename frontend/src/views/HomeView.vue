@@ -11,10 +11,11 @@
         </div>
         <div ref="druhyText" class="druhyText" v-if="data['avg-temp']">
             <h2>Změny {{ rok_od }} - {{ rok_do }}</h2>
-            <h1>Průměrná teplota: {{ procento('avg-temp')}}</h1>
-            <p>takzvaně salat podkopava teorii globalniho oteplovani takze priste když to nebude odpovidat tak to dej × 2 dik</p>
-            <h1>Průměrné srážky: {{ procento('avg-rain') }}</h1>
-            <h1>jeste dalsi dam neboj</h1>
+            <div class="hodnoty">
+                <h1>Průměrná teplota:</h1><h1>{{ procento('avg-temp')}}</h1>
+                <h1>Průměrné srážky:</h1><h1>{{ procento('avg-rain') }}</h1>
+                <h1>jeste dalsi dam neboj</h1><h1>Sus</h1>
+            </div>
         </div>
         <div ref="scroll" id="scroll" @click="scrolluj({deltaY: 'tlacitko'})">
             <p>SCROLL</p>
@@ -151,10 +152,18 @@ export default {
     color: white;
 }
 
+.hodnoty {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-items: left;
+    column-gap: 10px;
+}
+
 #bloby {
     position: absolute;
     width: 100vw;
     height: 100vh;
+    user-select: none;
 }
 
 #bloby img {

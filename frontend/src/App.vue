@@ -21,6 +21,7 @@ import {RouterLink, RouterView} from 'vue-router'
 <style scoped>
 #kosik {
     margin-left: auto;
+    user-select: none;
 }
 
 #kosik img {

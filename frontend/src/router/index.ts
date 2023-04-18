@@ -5,6 +5,7 @@ import MapaView from "../views/MapaView.vue";
 import Detail from "@/views/Detail.vue";
 import OrderView from "@/views/OrderView.vue";
 import NakupView from "@/views/NakupView.vue";
+import AdminView from "@/views/AdminView.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,6 +40,14 @@ const router = createRouter({
             component: NakupView,
             meta: {
                 title: 'Nakup'
+            }
+        },
+        {
+            path: '/admin',
+            name: 'admin',
+            component: AdminView,
+            meta: {
+                title: 'Admin'
             }
         },
         {
