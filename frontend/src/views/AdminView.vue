@@ -21,6 +21,7 @@
                     </td>
                 </tr>
             </table>
+            <div id="sideBar">Ještě nic</div>
         </div>
     </div>
 </template>
@@ -94,6 +95,23 @@ export default {
     justify-content: center;
 }
 
+.admin h1 {
+    grid-area: nadpis;
+}
+
+#layout {
+    display: grid;
+    grid-template:
+        'nadpis nadpis nadpis'
+        'tabulka tabulka bar'
+    ;
+    justify-items: center;
+}
+
+#sideBar {
+    grid-area: bar;
+}
+
 #tabulkaObjednavky {
     width: 100%;
     background-color: white;
@@ -102,6 +120,7 @@ export default {
     border-color: var(--modra);
     border-style: solid;
     font-family: Inter, sans-serif;
+    grid-area: tabulka;
 }
 
 #tabulkaObjednavky th, #tabulkaObjednavky td {

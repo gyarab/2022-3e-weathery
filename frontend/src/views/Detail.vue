@@ -1,100 +1,40 @@
 <template>
-    <div id="menicko">
-        <button v-for="jmenoGrafu in Object.keys(grafy)" class="tlacitkoPrepinani">
-            <img class="graf_ikonky" :src="'src/assets/icony/'+grafy[jmenoGrafu][2]" alt="icona">
-        </button>
-    </div>
-    <h2 id="souradnice_stanice">{{ souradnice[0] }}° S, {{ souradnice[1] }}° E</h2>
-        <div id="detail">
-            <div id="content">
-                <div id="grafContainer">
-                    <apexchart id="graf" width="800" height="450px" :type="chart_type" :options="chartOptions" :series="series"></apexchart>
-                    <div id="popisek">
-                        <select id="change_date_btn" v-model="input_selected" @click="zmenaCasovehoRozmezi(input_selected)">
-                            <option value="day">Den</option>
-                            <option value="week">Týden</option>
-                            <option value="month">Měsíc</option>
-                            <option value="year">Rok</option>
-                            <option value="custom">Vlastní</option>
-                        </select>
-                        <div v-if="custom_selected" id="dateContainer">
-                            <input type="date" id="cstm_from" v-model="cstm_date_from" @change="customZmena()">
-                            <input type="date" id="cstm_to" v-model="cstm_date_to" @change="customZmena()">
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+    <div id="detail">
+        <h2 id="souradnice_stanice">{{ souradnice[0] }}° S, {{ souradnice[1] }}° E</h2>
+        <div id="content">
+            <Graf :typ="'line'" :data="configGrafu"></Graf>
         </div>
+    </div>
 </template>
 
 <script>
 import axios from "axios";
+import Graf from "@/components/Graf.vue";
 
 export default {
     name: "Detail",
+    components: {Graf},
     data() {
         return {
             grafy: {
                 Teplota: ['temperature', '#ff0000', 'teplota.svg'],
                 Vlhkost: ['humidity', '#000dff', 'vlhkost.svg'],
                 Tlak: ['pressure', '#595959', 'tlak.svg'],
-                WindSpeed: ['windspeed', '#00FFEC', 'vitr.svg'],
+                WindSpeed: ['wind_speed', '#00FFEC', 'vitr.svg'],
                 Rain: ['rain', '#0093FF', 'dest.svg']
             },
-            casoveRozmezi: 30, // dní - default
-            aktivniGraf: "Teplota",
+            data: {},
             souradnice: this.$route.params.souradnice.replaceAll(',', '.').split('-'),
-            data: null,
-            custom_selected: false,
-            cstm_date_from: null,
-            cstm_date_to: null,
-            input_selected: 'month',
-            chart_type: 'area',
-            chartOptions: {
-                bar: {
-                    borderRadius: 30
-                },
-                chart: {
-                    id: 1,
-                    zoom: {
-                        enabled: false
-                    },
-                    toolbar: {
-                        show: true,
-                    },
-                    background: '#87bfff'
-                },
-                xaxis: {
-                    categories: [],
-                    tooltip: {
-                        enabled: false,
-                    },
-                    labels: {
-                        datetimeFormatter: {
-                            year: 'yyyy',
-                            month: 'MMM \'yy',
-                            day: 'dd MMM',
-                            hour: 'HH:mm'
-                        }
-                    }
-                },
-                stroke: {
-                    curve: 'smooth'
-                },
-                colors: [''],
-                dataLabels: {
-                    enabled: true,
-                    enabledOnSeries: ['series-1']
-                },
-
+            configGrafu: {
+                labels: ['Isaac', 'Morah', 'Sam', 'Jess', 'Suka'],
+                datasets: [{
+                    label: 'Score between 5 pupils',
+                    cubicInterpolationMode: 'monotone',
+                    data: [10, 4.8, 17.7, 20, 14],
+                }]
             },
-            series: [
-                {
-                    name: 'Teplota',
-                    data: [],
-                },
-            ],
-
+            casoveRozmezi: 7
         }
     },
     mounted() {
@@ -108,38 +48,21 @@ export default {
         }).then(response => {
             this.data = response.data.data
 
-            if (response.data.message === "station does not exist"){
+            if (response.data.message === "station does not exist") {
                 console.log("station does not exist") //TODO
             }
 
             for (let i in this.data) {
                 this.data[i].pressure /= 100 // aby jsme to měli v hPa
             }
-            this.zmenaAktivnihoGrafu()
             this.zmenaCasovehoRozmezi(this.selected)
+            console.log(response)
         })
 
         // zobrazení grafu pomocí https://apexcharts.com/
     }
     ,
     methods: {
-        zmenaAktivnihoGrafu() {
-            for (let f in this.grafy) {
-                this.series[0].data = []
-                this.chartOptions.xaxis.categories = []
-                for (let i in this.data) {
-                    this.series[0].data.push(Math.round(this.data[i][this.grafy[this.aktivniGraf][0]] * 10) / 10)
-                    this.chartOptions.xaxis.categories.push(this.data[i].time.slice(0, -9))
-                }
-                this.series[0].name = this.aktivniGraf
-                ApexCharts.exec('1', 'updateOptions', {
-                    colors: [this.grafy[this.aktivniGraf][1]],
-                    xaxis: {
-                        categories: this.chartOptions.xaxis.categories
-                    }
-                })
-            }
-        },
         zmenaCasovehoRozmezi(selected) {
             let now = new Date() // dnešek
             if (selected === "day") {
@@ -167,7 +90,6 @@ export default {
                     }
                 }).then(response => {
                     this.data = response.data.data
-                    this.zmenaAktivnihoGrafu(this.aktivniGraf)
                 })
             }
         },
