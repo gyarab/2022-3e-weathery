@@ -196,7 +196,7 @@ def create_order(connection, customer_data: dict) -> None:
         "INSERT into orders(id, order_state, email, name, country, state, city, street, postal_code, date, stripe_json) VALUES (%s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s);",
         (
             customer_data["id"],
-            "pending",
+            "paid",
             customer_data["email"],
             customer_data["name"],
             customer_data["address"]["country"],

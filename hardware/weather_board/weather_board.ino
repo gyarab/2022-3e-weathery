@@ -50,7 +50,7 @@ void ICACHE_RAM_ATTR rainSwitch() {
 
 void setup() {
   pinMode(RAIN_PIN, INPUT);
-  attachInterrupt(digitalPinToInterrupt(RAIN_PIN), rainSwitch, FALLING);
+  attachInterrupt(digitalPinToInterrupt(RAIN_PIN), rainSwitch, RISING);
   pinMode(WIND_SPEED_PIN, INPUT);
   pinMode(2, OUTPUT);
   windSpeedState = digitalRead(WIND_SPEED_PIN);
