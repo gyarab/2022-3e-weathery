@@ -1,20 +1,21 @@
 <template>
     <div id="detail">
         <h2 id="souradnice_stanice">{{ souradnice[0] }}° N, {{ souradnice[1] }}° E</h2>
-        <div id="casoveObdobi">
-            <h3>Časový interval</h3>
-            <select class="prepinaniCasu" v-model="casoveRozmezi">
+        <div id="casovyInterval">
+            <h3>Časový interval:</h3>
+            <select class="prepinaniCasu" v-model="casoveRozmezi" @change="zmenaCasovehoRozmezi">
+                <option value="1">Den</option>
                 <option value="7">Týden</option>
                 <option value="14">2 týdny</option>
                 <option value="30">Měsíc</option>
                 <option value="182">Půl roku</option>
                 <option value="365">Rok</option>
                 <option value="730">2 roky</option>
-                <option value="730">- Vlastní -</option>
+                <option value="0">- Vlastní -</option>
             </select>
         </div>
         <div id="content">
-            <Graf v-if="labels.length" v-for="graf in grafy" :graf="graf" :labels="labels" :jmeno="'JMENO'"></Graf>
+            <Graf v-if="labels.length" v-for="(graf, index) in grafy" :graf="graf" :labels="labels" :jmeno="'JMENO'" :key="forceRefresh + index"></Graf>
         </div>
     </div>
 </template>
@@ -39,32 +40,18 @@ export default {
             souradnice: this.$route.params.souradnice.replaceAll(',', '.').split('-'),
             casoveRozmezi: 7,
             labels: [],
+            forceRefresh: 0
         }
     },
     async mounted() {
-        let now = new Date() // dnešek
-        now.setDate(now.getDate() - this.casoveRozmezi) // týden zpátky
-        await this.requestData(now, 'now')
-
-        for (let i in this.data) {
-            this.data[i].pressure /= 100 // aby jsme to měli v hPa
-        }
-
-        for (let graf in this.grafy) { // nasazim hodnoty do this.grafy[1]
-            let data = []
-            for (let cas of this.data) {
-                let udaj = cas[this.grafy[graf][0]]
-                data.push(udaj)
-            }
-            this.grafy[graf][1] = data
-        }
-
-        for (let cas in this.data) {
-            this.labels.push(this.data[cas].time)
-        }
+        let datum = new Date() // dnešek
+        datum.setDate(datum.getDate() - parseInt(this.casoveRozmezi)) // týden zpátky
+        await this.requestData(datum, 'now')
+        this.formatDat()
     },
     methods: {
         async requestData(datum_od, datum_do) {
+            console.log(datum_od, datum_do)
             await axios.get("/stats/" + this.souradnice[0] + "_" + this.souradnice[1], {
                 params: {
                     date_from: `${datum_od.getDate()}-${datum_od.getMonth() + 1}-${datum_od.getFullYear()}`,
@@ -76,37 +63,36 @@ export default {
                     this.$router.push('/')
                 } else {
                     this.data = response.data.data
+                    console.log(this.data)
                 }
             })
         },
-        zmenaCasovehoRozmezi(selected) {
-            let now = new Date() // dnešek
-            if (selected === "day") {
-                this.casoveRozmezi = 0.9
-                this.custom_selected = false
-            } else if (selected === "week") {
-                this.casoveRozmezi = 7
-                this.custom_selected = false
-            } else if (selected === "month") {
-                this.casoveRozmezi = 30
-                this.custom_selected = false
-            } else if (selected === "year") {
-                this.casoveRozmezi = 365
-                this.custom_selected = false
-            } else if (selected === "custom") {
-                this.custom_selected = true
+        formatDat() {
+            for (let i in this.data) {
+                this.data[i].pressure /= 100 // aby jsme to měli v hPa
+                console.log(this.data[i])
             }
 
-            if (selected !== "custom") {
-                now.setDate(now.getDate() - this.casoveRozmezi + 1)
-                axios.get("/stats/" + this.souradnice[0] + "_" + this.souradnice[1], {
-                    params: {
-                        date_from: `${now.getDate()}-${now.getMonth() + 1}-${now.getFullYear()}`,
-                        date_to: 'now',
-                    }
-                }).then(response => {
-                    this.data = response.data.data
-                })
+            for (let graf in this.grafy) { // nasazim hodnoty do this.grafy[1]
+                let data = []
+                for (let cas of this.data) {
+                    let udaj = cas[this.grafy[graf][0]]
+                    data.push(udaj)
+                }
+                this.grafy[graf][1] = data
+            }
+            this.labels = [] // upravim osu x jakoby (novy datumy)
+            for (let cas in this.data) {
+                this.labels.push(this.data[cas].time)
+            }
+        },
+        async zmenaCasovehoRozmezi() {
+            if (this.casoveRozmezi !== '0') {
+                let datum = new Date() // dnešek
+                datum.setDate(datum.getDate() - parseInt(this.casoveRozmezi))
+                await this.requestData(datum, 'now')
+                this.formatDat()
+                this.forceRefresh += 1
             }
         },
         customZmena() {
@@ -156,22 +142,36 @@ export default {
     font-size: 30px;
 }
 
+#casovyInterval {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    align-items: center;
+}
+
 #content {
     display: grid;
     grid-template-columns: auto auto;
     margin-top: 5px;
     align-self: center;
     width: 100%;
-    justify-items: center;
+    justify-items: stretch;
     grid-gap: 40px;
 }
 
 .prepinaniCasu {
-    width: 80px;
-    height: 50px;
-    background-color: white;
+    width: auto ;
+    height: 30px;
+    background-color: var(--bila);
     border: none;
     outline: none;
+    font-family: Inter, sans-serif;
+    font-weight: bold;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+.prepinaniCasu::after {
 }
 
 #change_date_btn {

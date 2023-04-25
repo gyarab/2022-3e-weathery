@@ -29,7 +29,7 @@
 import axios from "axios";
 
 export default {
-    name: "HomeView.vue",
+    name: "HomeView",
     data() {
         return {
             scroll: 0,

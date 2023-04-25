@@ -21,6 +21,10 @@ body {
     background-color: var(--bila);
 }
 
+body::-webkit-scrollbar {
+    display: none;
+}
+
 h1 {
     font-weight: 1;
     font-size: 3em;

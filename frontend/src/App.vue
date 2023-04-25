@@ -21,7 +21,6 @@ import {RouterLink, RouterView} from 'vue-router'
 <style scoped>
 #kosik {
     margin-left: auto;
-    user-select: none;
 }
 
 #kosik img {
@@ -47,6 +46,7 @@ h1 {
     height: var(--vyska-menu);
     padding: 0 15px;
     display: flex;
+    user-select: none;
 }
 
 #menu a {

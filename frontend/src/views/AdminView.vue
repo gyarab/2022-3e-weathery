@@ -77,11 +77,13 @@ export default {
         },
         zmenaStavu(id, stav) {
             console.log(id)
-            axios.post('/update/' + id, {
+            axios.post('/update/' + id, null, {
                 headers: {
                     'Authorization': `token ${this.token}`
                 },
-                state: 1 ? stav === 'sent' : 0
+                params: {
+                    state: stav === 'sent' ? 1 : 0
+                }
             })
         }
     }
@@ -110,6 +112,7 @@ export default {
 
 #sideBar {
     grid-area: bar;
+    background-color: #FCA2D5;
 }
 
 #tabulkaObjednavky {
