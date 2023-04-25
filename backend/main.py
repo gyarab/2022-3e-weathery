@@ -154,7 +154,7 @@ def stats(gps: str, date_from: str, date_to: str = "now", freq: int = 0):
     if freq > 0 and freq < 8:
         return get_between_dates(con, gps, freq, date_from, date_to)
     else:
-        if unix_delta <= DAY:
+        if unix_delta <= 3 * DAY:
             return get_between_dates(con, gps, 3, date_from, date_to)
         elif unix_delta <= 3 * MONTH:
             return get_between_dates(con, gps, 4, date_from, date_to)
@@ -245,7 +245,7 @@ def orders(req: Request):
     return get_all_orders(con)
 
 
-@app.get("/update/{id}")
+@app.post("/update/{id}")
 def order_update(req: Request, id: int, state: int):
     if not authorized(req):
         return {"message": "you are not authorized"}
