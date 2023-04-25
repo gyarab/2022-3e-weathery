@@ -1,9 +1,20 @@
 <template>
-
     <div id="detail">
-        <h2 id="souradnice_stanice">{{ souradnice[0] }}° S, {{ souradnice[1] }}° E</h2>
+        <h2 id="souradnice_stanice">{{ souradnice[0] }}° N, {{ souradnice[1] }}° E</h2>
+        <div id="casoveObdobi">
+            <h3>Časový interval</h3>
+            <select class="prepinaniCasu" v-model="casoveRozmezi">
+                <option value="7">Týden</option>
+                <option value="14">2 týdny</option>
+                <option value="30">Měsíc</option>
+                <option value="182">Půl roku</option>
+                <option value="365">Rok</option>
+                <option value="730">2 roky</option>
+                <option value="730">- Vlastní -</option>
+            </select>
+        </div>
         <div id="content">
-            <Graf :typ="'line'" :data="configGrafu"></Graf>
+            <Graf v-if="labels.length" v-for="graf in grafy" :graf="graf" :labels="labels" :jmeno="'JMENO'"></Graf>
         </div>
     </div>
 </template>
@@ -18,51 +29,56 @@ export default {
     data() {
         return {
             grafy: {
-                Teplota: ['temperature', '#ff0000', 'teplota.svg'],
-                Vlhkost: ['humidity', '#000dff', 'vlhkost.svg'],
-                Tlak: ['pressure', '#595959', 'tlak.svg'],
-                WindSpeed: ['wind_speed', '#00FFEC', 'vitr.svg'],
-                Rain: ['rain', '#0093FF', 'dest.svg']
+                Teplota: ['temperature', [], 'line', '#ff0000'],
+                Vlhkost: ['humidity', [], 'line', '#000dff'],
+                Tlak: ['pressure', [], 'line', '#595959'],
+                WindSpeed: ['wind_speed', [], 'line', '#00FFEC'],
+                Rain: ['rain', [], 'line', '#0093FF']
             },
             data: {},
             souradnice: this.$route.params.souradnice.replaceAll(',', '.').split('-'),
-            configGrafu: {
-                labels: ['Isaac', 'Morah', 'Sam', 'Jess', 'Suka'],
-                datasets: [{
-                    label: 'Score between 5 pupils',
-                    cubicInterpolationMode: 'monotone',
-                    data: [10, 4.8, 17.7, 20, 14],
-                }]
-            },
-            casoveRozmezi: 7
+            casoveRozmezi: 7,
+            labels: [],
         }
     },
-    mounted() {
+    async mounted() {
         let now = new Date() // dnešek
         now.setDate(now.getDate() - this.casoveRozmezi) // týden zpátky
-        axios.get("/stats/" + this.souradnice[0] + "_" + this.souradnice[1], {
-            params: {
-                date_from: `${now.getDate()}-${now.getMonth() + 1}-${now.getFullYear()}`,
-                date_to: 'now'
-            }
-        }).then(response => {
-            this.data = response.data.data
+        await this.requestData(now, 'now')
 
-            if (response.data.message === "station does not exist") {
-                console.log("station does not exist") //TODO
-            }
+        for (let i in this.data) {
+            this.data[i].pressure /= 100 // aby jsme to měli v hPa
+        }
 
-            for (let i in this.data) {
-                this.data[i].pressure /= 100 // aby jsme to měli v hPa
+        for (let graf in this.grafy) { // nasazim hodnoty do this.grafy[1]
+            let data = []
+            for (let cas of this.data) {
+                let udaj = cas[this.grafy[graf][0]]
+                data.push(udaj)
             }
-            this.zmenaCasovehoRozmezi(this.selected)
-            console.log(response)
-        })
+            this.grafy[graf][1] = data
+        }
 
-        // zobrazení grafu pomocí https://apexcharts.com/
-    }
-    ,
+        for (let cas in this.data) {
+            this.labels.push(this.data[cas].time)
+        }
+    },
     methods: {
+        async requestData(datum_od, datum_do) {
+            await axios.get("/stats/" + this.souradnice[0] + "_" + this.souradnice[1], {
+                params: {
+                    date_from: `${datum_od.getDate()}-${datum_od.getMonth() + 1}-${datum_od.getFullYear()}`,
+                    date_to: datum_do
+                }
+            }).then(response => {
+                if (response.data.message === "station does not exist") {
+                    console.log("station does not exist") //TODO
+                    this.$router.push('/')
+                } else {
+                    this.data = response.data.data
+                }
+            })
+        },
         zmenaCasovehoRozmezi(selected) {
             let now = new Date() // dnešek
             if (selected === "day") {
@@ -120,10 +136,8 @@ export default {
                     }
                 }).then(response => {
                     this.data = response.data.data
-                    this.zmenaAktivnihoGrafu(this.aktivniGraf)
                 })
             }
-
         }
     }
 }
@@ -143,17 +157,21 @@ export default {
 }
 
 #content {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto auto;
     margin-top: 5px;
     align-self: center;
+    width: 100%;
+    justify-items: center;
+    grid-gap: 40px;
 }
 
-#menicko {
-    display: flex;
-    flex-direction: row;
-    gap: 5px;
-    align-items: center;
-    justify-content: center;
+.prepinaniCasu {
+    width: 80px;
+    height: 50px;
+    background-color: white;
+    border: none;
+    outline: none;
 }
 
 #change_date_btn {
@@ -164,49 +182,5 @@ export default {
     height: 35px;
     border-radius: 5px;
     border: none;
-}
-
-#grafContainer {
-    padding: 20px;
-    border-radius: 5px;
-    z-index: 3;
-    background-color: var(--tmavsi);
-}
-
-#graf {
-    border-radius: 5px;
-}
-
-.tlacitkoPrepinani {
-    padding: 20px 20px 20px 0;
-    background-color: var(--stredni);
-    border-radius: 5px 0 0 5px;
-    left: 20px;
-    position: relative;
-    width: 80px;
-    border: none;
-    margin-left: 34px;
-}
-
-.aktivniTlacitko {
-    width: 100px;
-    border-right: none;
-    background-color: var(--tmavsi);
-    z-index: 4;
-    margin-left: 0;
-}
-
-.graf_ikonky {
-    width: 30px;
-    height: 30px;
-}
-
-#popisek {
-    display: flex;
-    justify-content: space-between;
-}
-
-#apexcharts1 {
-    border-radius: 5px;
 }
 </style>

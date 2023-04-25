@@ -33,7 +33,7 @@ import axios from "axios";
 
 export default {
     name: "AdminView",
-    components: {Login, Detail},
+    components: {Login},
     data() {
         return {
             prihlasen: false,
