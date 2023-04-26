@@ -1,7 +1,7 @@
 from random import randint
 import env
 import emails
-from datetime import datetime
+from datetime import datetime, timedelta
 import jwt
 import json
 import stripe
@@ -132,10 +132,14 @@ def now(gps: str):
 
 
 @app.get("/stats/{gps}")
-def stats(gps: str, date_from: str, date_to: str = "now", freq: int = 0):
+def stats(gps: str, date_from: str = "day_ago", date_to: str = "now", freq: int = 0):
     if not station_exists(con, gps):
         return {"message": "station does not exist"}
     format = "%d-%m-%Y %H:%M:%S"
+    if date_from == "day_ago":
+        date_from = str(
+            datetime.strftime(datetime.now() - timedelta(hours=24), "%d-%m-%Y %H:%M:%S")
+        )
     if date_to == "now":
         date_to = str(datetime.strftime(datetime.now(), "%d-%m-%Y %H:%M:%S"))
     if not valid_date(date_from):
