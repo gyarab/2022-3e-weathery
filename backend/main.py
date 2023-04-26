@@ -137,7 +137,7 @@ def stats(gps: str, date_from: str, date_to: str = "now", freq: int = 0):
         return {"message": "station does not exist"}
     format = "%d-%m-%Y %H:%M:%S"
     if date_to == "now":
-        date_to = str(datetime.strftime(datetime.now(), "%d-%m-%Y")) + " 23:59:59"
+        date_to = str(datetime.strftime(datetime.now(), "%d-%m-%Y %H:%M:%S"))
     if not valid_date(date_from):
         return {"message": "date is not valid"}
     if not valid_date(date_to):
