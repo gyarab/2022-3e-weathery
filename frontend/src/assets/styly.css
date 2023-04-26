@@ -22,7 +22,7 @@ body {
 }
 
 body::-webkit-scrollbar {
-    display: none;
+    /*TODO*/
 }
 
 h1 {

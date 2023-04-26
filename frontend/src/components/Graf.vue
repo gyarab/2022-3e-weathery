@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div class="grafDiv">
+        <h3>{{jmeno}}</h3>
         <canvas class="graf" ref="graf"></canvas>
     </div>
 </template>
@@ -20,6 +21,7 @@ export default {
         Chart.defaults.elements.line.cubicInterpolationMode = 'monotone';
         Chart.defaults.plugins.legend.display = false
 
+        let jmeno = this.jmeno
         const grafik = new Chart(this.$refs.graf, {
             type: this.graf[2],
             data: {
@@ -29,14 +31,30 @@ export default {
                 labels: this.labels
             },
             options: {
+                elements: {
+                    point: {
+                        radius: 5,
+                        hitRadius: 30,
+                        hoverRadius: 7
+                    }
+                },
                 plugins: {
-                    title: {
-                        display: true,
-                        text: this.jmeno
+                    tooltip: {
+                        // backgroundColor: '#000'
+                        callbacks: {
+                            label: function (context) {
+                                let hodnota = context.dataset.label || '' + Math.round(context.parsed.y * 100) / 100
+                                if (jmeno === 'Teplota') return hodnota + ' °C';
+                                else if (jmeno === 'Vlhkost') return hodnota + ' %'
+                                else if (jmeno === 'Tlak') return hodnota + ' hPa'
+                                else if (jmeno === 'Vítr') return hodnota + ' m/s'
+                                else if (jmeno === 'Déšť') return hodnota + ' mm/h'
+                            }
+                        }
                     }
                 }
             }
-        });
+        })
     }
 }
 </script>
@@ -46,4 +64,9 @@ export default {
     width: 100% !important;
     height: 100% !important;
 }
+.grafDiv {
+    width: 40em;
+    text-align: center;
+}
+
 </style>

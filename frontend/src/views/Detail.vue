@@ -14,8 +14,12 @@
                 <option value="0">- Vlastní -</option>
             </select>
         </div>
+        <div v-if="casoveRozmezi === '0'" id="customInterval">
+            <input type="date"> -
+            <input type="date">
+        </div>
         <div id="content">
-            <Graf v-if="labels.length" v-for="(graf, index) in grafy" :graf="graf" :labels="labels" :jmeno="'JMENO'" :key="forceRefresh + index"></Graf>
+            <Graf v-if="labels.length" v-for="(graf, index) in grafy" :graf="graf" :labels="labels" :jmeno="Object.keys(grafy).find(key => grafy[key] === graf)" :key="forceRefresh + index"></Graf>
         </div>
     </div>
 </template>
@@ -33,12 +37,12 @@ export default {
                 Teplota: ['temperature', [], 'line', '#ff0000'],
                 Vlhkost: ['humidity', [], 'line', '#000dff'],
                 Tlak: ['pressure', [], 'line', '#595959'],
-                WindSpeed: ['wind_speed', [], 'line', '#00FFEC'],
-                Rain: ['rain', [], 'line', '#0093FF']
+                Vítr: ['wind_speed', [], 'line', '#00FFEC'],
+                Déšť: ['rain', [], 'line', '#0093FF']
             },
             data: {},
             souradnice: this.$route.params.souradnice.replaceAll(',', '.').split('-'),
-            casoveRozmezi: 7,
+            casoveRozmezi: 14,
             labels: [],
             forceRefresh: 0
         }
@@ -51,10 +55,9 @@ export default {
     },
     methods: {
         async requestData(datum_od, datum_do) {
-            console.log(datum_od, datum_do)
             await axios.get("/stats/" + this.souradnice[0] + "_" + this.souradnice[1], {
                 params: {
-                    date_from: `${datum_od.getDate()}-${datum_od.getMonth() + 1}-${datum_od.getFullYear()}`,
+                    date_from: datum_od === 'day_ago' ? 'day_ago': `${datum_od.getDate()}-${datum_od.getMonth() + 1}-${datum_od.getFullYear()}`,
                     date_to: datum_do
                 }
             }).then(response => {
@@ -63,14 +66,12 @@ export default {
                     this.$router.push('/')
                 } else {
                     this.data = response.data.data
-                    console.log(this.data)
                 }
             })
         },
         formatDat() {
             for (let i in this.data) {
                 this.data[i].pressure /= 100 // aby jsme to měli v hPa
-                console.log(this.data[i])
             }
 
             for (let graf in this.grafy) { // nasazim hodnoty do this.grafy[1]
@@ -81,16 +82,36 @@ export default {
                 }
                 this.grafy[graf][1] = data
             }
-            this.labels = [] // upravim osu x jakoby (novy datumy)
-            for (let cas in this.data) {
-                this.labels.push(this.data[cas].time)
+            if (this.casoveRozmezi === '1') {
+                this.labels = [] // upravim osu x jakoby (novy datumy)
+                for (let cas in this.data) {
+                    this.labels.push(this.data[cas].time.slice(11, 14) + '00')
+                    console.log(this.labels[cas])
+
+                    if (this.labels[cas] === '22:00') this.labels[cas] = '00:00'
+                    else if (this.labels[cas] === '23:00') this.labels[cas] = '01:00'
+                    else {
+                        this.labels[cas] = parseInt(this.labels[cas].slice(0, 3)) + 2 + ':00'
+                        if (this.labels[cas].length === 4) this.labels[cas] = '0' + this.labels[cas]
+                    }
+                }
+            } else {
+                this.labels = [] // upravim osu x jakoby (novy datumy)
+                for (let cas in this.data) {
+                    this.labels.push(this.data[cas].time.slice(0, 10).replaceAll('-', '. '))
+                }
             }
+
         },
         async zmenaCasovehoRozmezi() {
             if (this.casoveRozmezi !== '0') {
                 let datum = new Date() // dnešek
                 datum.setDate(datum.getDate() - parseInt(this.casoveRozmezi))
-                await this.requestData(datum, 'now')
+                if (this.casoveRozmezi === '1') {
+                    await this.requestData('day_ago', 'now')
+                } else {
+                    await this.requestData(datum, 'now')
+                }
                 this.formatDat()
                 this.forceRefresh += 1
             }
@@ -134,6 +155,8 @@ export default {
     padding: 20px;
     display: flex;
     flex-direction: column;
+    font-family: Inter, sans-serif;
+    align-items: center;
 }
 
 #souradnice_stanice {
@@ -150,13 +173,12 @@ export default {
 }
 
 #content {
-    display: grid;
-    grid-template-columns: auto auto;
-    margin-top: 5px;
-    align-self: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5em;
     width: 100%;
-    justify-items: stretch;
-    grid-gap: 40px;
+    margin-top: 3em;
 }
 
 .prepinaniCasu {
@@ -174,13 +196,22 @@ export default {
 .prepinaniCasu::after {
 }
 
-#change_date_btn {
-    display: flex;
-    background-color: var(--bila);
-    margin-left: 30px;
-    width: 80px;
-    height: 35px;
+#customInterval {
+
+}
+
+input[type="date"] {
+    padding: 3px;
+    font-size: 14px;
+    outline: none;
     border-radius: 5px;
     border: none;
+    font-family: inherit;
+}
+
+::-webkit-calendar-picker-indicator {
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 3px;
 }
 </style>
