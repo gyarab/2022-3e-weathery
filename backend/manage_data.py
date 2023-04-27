@@ -58,7 +58,7 @@ def get_between_dates(
     }
 
     increment = increment_map[avg_type]
-    while d_from <= d_to:
+    while d_from + increment <= d_to:
         data["data"].append(
             execute_between_dates(connection, gps, d_from, d_from + increment)
         )
