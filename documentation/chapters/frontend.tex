@@ -12,7 +12,13 @@ Pro vykreslení mapy s body jsme zvolili knihovnu leaflet, která je podrobně p
 
 \subsection{Grafy}
 %\cite{grafy_chartsjs}
-Pro nejpřehlednější vykreslení dat jsme zvolili vykreslování pomocí grafů. Na stránce je vakresleno pět grafů podle jejich typu(teplota, déšť, rychlost větr, směr větru, tlak).
+Pro nejpřehlednější vykreslení dat jsme zvolili vykreslování pomocí grafů. Na stránce je vakresleno pět grafů podle jejich typu(teplota, déšť, rychlost větr, směr větru, tlak). %\ref ukazka_grafu
+%\begin{figure}[h] %screenshot grafu 
+%    \centering
+%    \includegraphics[width=0.25\textwidth]{images/nazev_souboru}
+%    \caption{Ukázka grafu}
+%    \label{ukazka_grafu}
+%\end{figure}
 Na ose x jsou zobrazeny časové údaje a ose y hodnoty pro daný čas. Použité grafy jsou z opensource knihovny charts.js, která umožňuje přehledně a jednoduše grafy nastylizovat a upravovat dle potřeb.
 
 Uživatel má možnost měnit časový úsek vykreslení dat pomocí tlačítka pod souřadnicemi stanice. na výběr má z předdefinovaných hodnot (např. den, týden, rok), ale pomocí vyběru "vlastní" si může nastavit své vlastní časové rozmezí.
@@ -31,4 +37,11 @@ Knihovna leaflet je populární a rozsáhle používána pro mobilní aplikace. 
 Pro nastavení mapy jsme zvolili světlé pozadí s málokontrastním vykreslením vodních ploch, obytných oblastí, silnic, přírodních míst a hranic států. Uživatel má možnost libovolně mapu oddalovat a přibližovat, přičemž je výchozím bodem mapy Praha, na kterou je mapa po spuštění zaměřená.
 
 \subsection{Design}
-Je to hezké, chalupníčku shut up, serem ti na bootstrap.
+Design znamená vizuální podoba stránky.
+Naším cílem bylo vytvořit intuitivní prostředí pro uživatele, ve kterém se dokáže rychle a jednoduše pohybovat.
+
+Prvním setkáním s designem stránky je domovská stránka, která obsahuje funkci detekujíci kolečko myši.
+Právě tímto pohybem se stránka odhaluje a postupně mění. V průběhu animace se uživatel dozví informace o dlouhodobějších změnách počasí a srovnání počasí napříč roky.
+
+%About us 
+%nákup - screen stripu, obrázek 
