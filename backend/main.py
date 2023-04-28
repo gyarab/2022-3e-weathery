@@ -162,8 +162,10 @@ def stats(gps: str, date_from: str = "day_ago", date_to: str = "now", freq: int 
             return get_between_dates(con, gps, 3, date_from, date_to)
         elif unix_delta <= 3 * MONTH:
             return get_between_dates(con, gps, 4, date_from, date_to)
-        else:
+        elif unix_delta <= 12 * MONTH:
             return get_between_dates(con, gps, 5, date_from, date_to)
+        else:
+            return get_between_dates(con, gps, 6, date_from, date_to)
 
 
 @app.post("/station/update")
