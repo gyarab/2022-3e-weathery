@@ -1,6 +1,101 @@
 \section{Backend}
-Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.
+Backend našeho projektu slouží primárně k shromažďování a následnému zpracovávání dat. Naše API dále umožňuje bezplatný přístup k těmto datům.
+Backend byl vyvinut v Pythonu pomocí knihovny FastApi. Pro ukládání dat byla použita databáze PostgreSQL.
+
+Backend se dá pomyslně rozdělit do tří částí, kde každá část má na starost: 
+\begin{itemize}
+  \item zpřístupnění dat pro Frontend/Developery (pomocí API) 
+  \item zajištění komunikace mezi stanicí a databází 
+  \item spravování objednávek stanice, prostřednictvím webové stránky (více popsáno c kapitole \ref{frontend})  
+\end{itemize}
+
+O zpřístupnění naměřených dat se starají veřejné endpointy, které může kdokoli bezplatně použít, ať už pomocí naší webové stránky, či pomocí našeho API. 
+V případě použití těchto endpointů, není potřeba žádná authentifikace a uživateli vrátí vyžádaná data ve formátu JSON. Mezi tyto veřejné endpointy patří:
+\begin{itemize}
+  \item GET /stations
+  \item GET /now/{gps} 
+  \item GET /stats/{gps}
+\end{itemize}
+
+První endpoint (/stations) jednoduše vrádí GPS souřadnice všech stanice, které jsou v ten moment zapojené.
+\begin{lstlisting}[language=json,firstnumber=1, caption=Příklad požadavku /stations]
+{
+  "message": "ok",
+  "stations": [
+    {
+      "gps": "50.0993194\_14.3596525"
+    },
+    {
+      "gps": "49.7454400\_14.0578025"
+    }
+  ]
+}
+\end{lstlisting}
+Druhý endpoint (/now/{gps}) bere jako parametr GPS souřadnice stanice a podle nich z databáze vytáhne poslední naměřené data dané stanice.
+\begin{lstlisting}[language=json,firstnumber=1, caption=Příklad požadavku /now/{gps} ]
+{
+  "message": "ok",
+  "time": "24-12-2022 4:20:00",
+  "temperature": -3,
+  "humidity": 43,
+  "pressure": 100000,
+  "wind\_speed": 13,
+  "wind\_direction": "N",
+  "rain": 4
+}
+\end{lstlisting}
+Poslední endpoint (/stats/{gps}) má za úkol vracet dlouhodobá zprůměrovaná data v časovém rozmezí, které je určeno pomocí query parametrů,
+to znamená "date\_from", "date\_to" a nepovinný parametry "freq", který pevně udává frekvenci průměrování dat. Data se průměrují vzhledem k velikosti časového intervalu.
+Data v časovém rozmezí, které je menší než jeden den se průměrují po hodině.
+Data v časovém rozmezí, které je větší než jeden den se průměrují po dnech. Data v rozmezí, které je větší než 3 měsíce se průměrují po týdnech.
+Nebo se data průměrují podle hodnoty parametru query "freq". V případě, že se freq rovná:
+\begin{itemize}
+  \item 1 -> data se průměrují po 5 minutách
+  \item 2 -> data se průměrují po 30 minutách
+  \item 3 -> data se průměrují po hodině 
+  \item 4 -> data se průměrují po dnech 
+  \item 5 -> data se průměrují po týdnech 
+  \item 6 -> data se průměrují po dvou týdnech 
+  \item 7 -> data se průměrují po čtyřech týdnech 
+\end{itemize}
+\begin{lstlisting}[language=json,firstnumber=1, caption=Příklad požadavku /stats/{gps}?date\_from=1-12-2022&date\_to=3-12-2022&freq=4 ]
+{
+  "message": "ok",
+  "data": [
+    {
+      "time": "1-12-2022 00:00:00",
+      "temperature": -3.6,
+      "humidity": 41,
+      "pressure": 100200,
+      "wind\_speed": 13,
+      "wind\_direction": "N",
+      "rain": 4,
+      "avrage\_of": 288
+    },
+    {
+      "time": "2-12-2022 00:00:00",
+      "temperature": -2.2,
+      "humidity": 49,
+      "pressure": 100100,
+      "wind\_speed": 4,
+      "wind\_direction": "S",
+      "rain": 0,
+      "avrage\_of": 288
+    },
+    {
+      "time": "3-12-2022 00:00:00",
+      "temperature": -1.7,
+      "humidity": 74,
+      "pressure": 100800,
+      "wind\_speed": 9,
+      "wind\_direction": "E",
+      "rain": 9,
+      "avrage\_of": 288
+    }
+  ]
+}
+\end{lstlisting}
 \subsection{Databáze}
-Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.
-\subsection{Platby}
+
+\subsection{Platební brána}
 Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.
