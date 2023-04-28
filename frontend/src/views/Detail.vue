@@ -14,12 +14,14 @@
                 <option value="0">- Vlastní -</option>
             </select>
         </div>
-        <div v-if="casoveRozmezi === '0'" id="customInterval">
-            <input type="date"> -
-            <input type="date">
-        </div>
+        <Transition>
+            <div v-if="casoveRozmezi === '0'" id="customInterval">
+                <input type="date" v-model="select_datum_od" @change="customZmena"> -
+                <input type="date" v-model="select_datum_do" @change="customZmena">
+            </div>
+        </Transition>
         <div id="content">
-            <Graf v-if="labels.length" v-for="(graf, index) in grafy" :graf="graf" :labels="labels" :jmeno="Object.keys(grafy).find(key => grafy[key] === graf)" :key="forceRefresh + index"></Graf>
+            <Graf v-if="labels.length" v-for="(graf, index) in grafy" :graf="graf" :barva="graf[3]" :labels="labels" :jmeno="Object.keys(grafy).find(key => grafy[key] === graf)" :key="forceRefresh + index"></Graf>
         </div>
     </div>
 </template>
@@ -35,16 +37,18 @@ export default {
         return {
             grafy: {
                 Teplota: ['temperature', [], 'line', '#ff0000'],
+                Déšť: ['rain', [], 'line', '#0093FF'],
                 Vlhkost: ['humidity', [], 'line', '#000dff'],
                 Tlak: ['pressure', [], 'line', '#595959'],
                 Vítr: ['wind_speed', [], 'line', '#00FFEC'],
-                Déšť: ['rain', [], 'line', '#0093FF']
             },
             data: {},
             souradnice: this.$route.params.souradnice.replaceAll(',', '.').split('-'),
             casoveRozmezi: 14,
             labels: [],
-            forceRefresh: 0
+            forceRefresh: 0,
+            select_datum_od: null,
+            select_datum_do: null
         }
     },
     async mounted() {
@@ -54,11 +58,12 @@ export default {
         this.formatDat()
     },
     methods: {
-        async requestData(datum_od, datum_do) {
+        async requestData(datum_od, datum_do, frekvence = null) {
             await axios.get("/stats/" + this.souradnice[0] + "_" + this.souradnice[1], {
                 params: {
                     date_from: datum_od === 'day_ago' ? 'day_ago': `${datum_od.getDate()}-${datum_od.getMonth() + 1}-${datum_od.getFullYear()}`,
-                    date_to: datum_do
+                    date_to: datum_do === 'now' ? 'now' : `${datum_do.getDate()}-${datum_do.getMonth() + 1}-${datum_do.getFullYear()}`,
+                    ...(frekvence !== null && {freq: frekvence}),
                 }
             }).then(response => {
                 if (response.data.message === "station does not exist") {
@@ -66,6 +71,7 @@ export default {
                     this.$router.push('/')
                 } else {
                     this.data = response.data.data
+                    console.log(response)
                 }
             })
         },
@@ -86,7 +92,6 @@ export default {
                 this.labels = [] // upravim osu x jakoby (novy datumy)
                 for (let cas in this.data) {
                     this.labels.push(this.data[cas].time.slice(11, 14) + '00')
-                    console.log(this.labels[cas])
 
                     if (this.labels[cas] === '22:00') this.labels[cas] = '00:00'
                     else if (this.labels[cas] === '23:00') this.labels[cas] = '01:00'
@@ -101,7 +106,6 @@ export default {
                     this.labels.push(this.data[cas].time.slice(0, 10).replaceAll('-', '. '))
                 }
             }
-
         },
         async zmenaCasovehoRozmezi() {
             if (this.casoveRozmezi !== '0') {
@@ -116,12 +120,14 @@ export default {
                 this.forceRefresh += 1
             }
         },
-        customZmena() {
-            if ((this.cstm_date_from && this.cstm_date_to) !== null) {
-                let a = this.cstm_date_from.split('-')
-                let b = this.cstm_date_to.split('-')
+        async customZmena() {
+            if ((this.select_datum_od && this.select_datum_do) !== null) {
+                console.log('jedem')
+                let a = this.select_datum_od.split('-')
+                let b = this.select_datum_do.split('-')
                 let a_date = new Date(`${a[1]}/${a[2]}/${a[0]}`) //měsíc, den, rok, aby fungovala metoda getTime()
                 let b_date = new Date(`${b[1]}/${b[2]}/${b[0]}`)
+                b_date.setDate(b_date.getDate() + 1) // aby jsme to měli z obou stran včetně
                 let date_diff = ((b_date.getTime() - a_date.getTime()) / 86400000) //rozdíl dat ve dnech
                 let freq = null
                 if (date_diff <= 1) { //3 - hodiny, 4 - dny, 5 - týdny, 6 - 14 dní, 7 - měsíce
@@ -135,17 +141,11 @@ export default {
                 } else {
                     freq = 7
                 }
-                axios.get("/stats/" + this.souradnice[0] + "_" + this.souradnice[1], {
-                    params: {
-                        date_from: `${a[2]}-${a[1]}-${a[0]}`,
-                        date_to: `${b[2]}-${b[1]}-${b[0]}`,
-                        freq: freq
-                    }
-                }).then(response => {
-                    this.data = response.data.data
-                })
+                await this.requestData(a_date, b_date, freq)
+                this.formatDat()
+                this.forceRefresh += 1
             }
-        }
+        },
     }
 }
 </script>
@@ -189,15 +189,23 @@ export default {
     outline: none;
     font-family: Inter, sans-serif;
     font-weight: bold;
-    font-size: 1em;
+    font-size: 1.1em;
     cursor: pointer;
 }
 
-.prepinaniCasu::after {
+.prepinaniCasu option {
+    border: none;
 }
 
-#customInterval {
+.v-enter-active,
+.v-leave-active {
+    transition: all 0.3s ease;
+}
 
+.v-enter-from,
+.v-leave-to {
+    transform: translateY(-20px);
+    opacity: 0;
 }
 
 input[type="date"] {

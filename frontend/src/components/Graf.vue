@@ -14,7 +14,8 @@ export default {
     props: {
         graf: Array,
         labels: Array,
-        jmeno: String
+        jmeno: String,
+        barva: String
     },
     mounted() {
         // globální settings
@@ -27,6 +28,8 @@ export default {
             data: {
                 datasets: [{
                     data: this.graf[1],
+                    backgroundColor: this.barva + '70',
+                    borderColor: this.barva
                 }],
                 labels: this.labels
             },
@@ -34,7 +37,7 @@ export default {
                 elements: {
                     point: {
                         radius: 5,
-                        hitRadius: 30,
+                        hitRadius: 15,
                         hoverRadius: 7
                     }
                 },
@@ -51,7 +54,8 @@ export default {
                                 else if (jmeno === 'Déšť') return hodnota + ' mm/h'
                             }
                         }
-                    }
+                    },
+
                 }
             }
         })
@@ -67,6 +71,11 @@ export default {
 .grafDiv {
     width: 40em;
     text-align: center;
+    height: 100%;
+}
+
+.grafDiv h3 {
+    margin-bottom: 10px;
 }
 
 </style>
