@@ -51,7 +51,7 @@ export default {
                                 else if (jmeno === 'Vlhkost') return hodnota + ' %'
                                 else if (jmeno === 'Tlak') return hodnota + ' hPa'
                                 else if (jmeno === 'Vítr') return hodnota + ' m/s'
-                                else if (jmeno === 'Déšť') return hodnota + ' mm/h'
+                                else if (jmeno === 'Srážky') return hodnota + ' mm/h'
                             }
                         }
                     },

@@ -59,5 +59,12 @@ h1 {
     line-height: var(--vyska-menu);
     padding: 0 15px;
     z-index: 10;
+    transition-duration: 0.2s;
+}
+
+#menu a:hover {
+    font-size: 1.31em;
+    padding: 0 11px;
+    transition-duration: 0.2s;
 }
 </style>

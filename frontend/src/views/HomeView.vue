@@ -52,6 +52,8 @@ export default {
     },
     unmounted() {
         window.removeEventListener('wheel', this.scrolluj);
+        document.body.style.height = "100vh" //zruší actual scrollování
+        document.body.style.overflow = "unset"
     },
     methods: {
         scrolluj(e) {

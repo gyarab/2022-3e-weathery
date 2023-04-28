@@ -37,7 +37,7 @@ export default {
         return {
             grafy: {
                 Teplota: ['temperature', [], 'line', '#ff0000'],
-                Déšť: ['rain', [], 'line', '#0093FF'],
+                Srážky: ['rain', [], 'line', '#0093FF'],
                 Vlhkost: ['humidity', [], 'line', '#000dff'],
                 Tlak: ['pressure', [], 'line', '#595959'],
                 Vítr: ['wind_speed', [], 'line', '#00FFEC'],
@@ -163,6 +163,7 @@ export default {
     display: flex;
     justify-content: center;
     font-size: 30px;
+    margin-bottom: 10px;
 }
 
 #casovyInterval {
