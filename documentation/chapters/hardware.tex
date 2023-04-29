@@ -19,7 +19,7 @@ Po zapnutí se stanice připojí k internetu zapomocí Wifi a zaregistruje na ba
 JSON Web Tokenem, uloží si ho a při každém opeslání dat na server ho použije k prokázání totožnosti.
 
 \subsection{Měření teploty a vlhkosti}
-Pro měření teploty a vlhkosti byl použit Digitální teploměr Adafruit AM2320 Sensor\cite{teplomer}. V případě nebylo zapotřebí vymýšlet jak cokoli měřit,
+Pro měření teploty a vlhkosti byl použit Digitální teploměr Adafruit AM2320 Senzor\cite{teplomer}. V případě nebylo zapotřebí vymýšlet jak cokoli měřit,
 protože senzor je připojen přes I2C interface, ze kterého program pouze čte již změřené hodnoty.
 \begin{figure}[h] 
     \centering
@@ -28,7 +28,7 @@ protože senzor je připojen přes I2C interface, ze kterého program pouze čte
 \end{figure}
 
 \subsection{Měření tlaku}
-Měření tlaku je zhruba stejně přímočaré jako měření teploty, což znamená, že se o měření stará sensor\cite{tlakoměr},
+Měření tlaku je zhruba stejně přímočaré jako měření teploty, což znamená, že se o měření stará senzor\cite{tlakoměr},
 který zapojen přes I2C interface, ze kterého program čte hodnotu klaku v jednotce Pa.
 
 \begin{figure}[h] 
@@ -37,11 +37,11 @@ který zapojen přes I2C interface, ze kterého program čte hodnotu klaku v jed
     \caption{Tlakoměr}
 \end{figure}
 \subsection{Rychlost větru}
-V případě měření rycholsti větru už nestačilo jen koupit sensor, ale bylo potřeba vymyslet jak převést momentum otáčející se osy s lopatkama na realnou rychlost.
+V případě měření rycholsti větru už nestačilo jen koupit senzor, ale bylo potřeba vymyslet jak převést momentum otáčející se osy s lopatkama na realnou rychlost.
 Tento problém je vyřešen následujícím způsobem. Na ose je nazen disk kruhovitého tvaru, který má v sobě dírky, skrz které optický senzor vysílá paprsek. Pokud se paprsek přeruší,
 znamená to, že se mechanismus otočil o jednu dírku. Program tedy počítá kolikrát se paprsek přeruší a zpočítá skutečnou rychlost větru pomocí následující rovnice.
 \begin{equation}
-v = n * d / ČasMěření 
+v = n * d / CasMereni 
 \end{equation}
 Kde $v$ = rychlost větru, $n$ = počet přerušení, $d$ = vzdálenost uražená větrem na jedno přerušení.
 
