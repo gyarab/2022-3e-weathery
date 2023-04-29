@@ -93,7 +93,7 @@ Následně se provede SQL dotaz do databáze, který vytáhne zprůměrované ho
 }
 \end{lstlisting}
 
-\subsection{Komunikace se stanicí}
+\subsection{Komunikace se stanicí} \label{komunikace}
 Pro komunikaci stanice se serverem stanice využíva dva endpointy:
 \begin{itemize}
   \item POST /station/register
@@ -132,7 +132,7 @@ Endpoitn (/order/{id}) vrací informace konkrétní objednávky.
 Poslední endpoint (/update/{id}) slouží opět jen pro adminy a slouží k upravování stavu objednávky.
 
 \subsection{Databáze}
-Backend používa již zmiňovanou databázi PostgreSQL, ve které je pět tabulek\ref{model_databaze}.
+Backend používa již zmiňovanou databázi PostgreSQL, ve které je pět tabulek zobrazené na obrázku \ref{model_databaze}.
 \begin{figure}[h] 
     \centering
     \includegraphics[width=0.8\textwidth]{images/database_diagram.png}
