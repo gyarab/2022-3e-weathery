@@ -1,12 +1,13 @@
 \section{Backend}
-Backend našeho projektu slouží primárně k shromažďování a následnému zpracovávání dat. Naše API dále umožňuje bezplatný přístup k těmto datům.
-Backend byl vyvinut v Pythonu pomocí knihovny FastApi. Pro ukládání dat byla použita databáze PostgreSQL.
+Backend, neboli serverová část aplikace, našeho projektu slouží primárně k shromažďování a následnému zpracovávání dat. Naše API dále umožňuje bezplatný přístup k těmto datům.
+Backend byl vyvinut v Pythonu pomocí knihovny FastApi a pro ukládání dat byla použita databáze PostgreSQL.
+Pro odesílání e-mailů byla použita knihovna smtplib a pro komunikaci s platební branou byla použita knihovna stripe. 
 
-Backend se dá pomyslně rozdělit do tří částí, kde každá část má na starost: 
+Backend může být abstrahována do tří klíčových částí, z nichž každá má specifické úkoly: 
 \begin{itemize}
   \item zpřístupnění dat pro Frontend/Developery (pomocí API) 
   \item zajištění komunikace mezi stanicí a databází 
-  \item spravování objednávek stanice, prostřednictvím webové stránky (více popsáno c kapitole \ref{frontend})  
+  \item spravování objednávek, objadnané prostřednictvím webové stránky (více popsáno v kapitole \ref{frontend})  
 \end{itemize}
 
 O zpřístupnění naměřených dat se starají veřejné endpointy, které může kdokoli bezplatně použít, ať už pomocí naší webové stránky, či pomocí našeho API. 
@@ -23,10 +24,10 @@ První endpoint (/stations) jednoduše vrádí GPS souřadnice všech stanice, k
   "message": "ok",
   "stations": [
     {
-      "gps": "50.0993194\_14.3596525"
+      "gps": "50.0993194_14.3596525"
     },
     {
-      "gps": "49.7454400\_14.0578025"
+      "gps": "49.7454400_14.0578025"
     }
   ]
 }
@@ -39,16 +40,17 @@ Druhý endpoint (/now/{gps}) bere jako parametr GPS souřadnice stanice a podle 
   "temperature": -3,
   "humidity": 43,
   "pressure": 100000,
-  "wind\_speed": 13,
-  "wind\_direction": "N",
+  "wind_speed": 13,
+  "wind_direction": "N",
   "rain": 4
 }
 \end{lstlisting}
 Poslední endpoint (/stats/{gps}) má za úkol vracet dlouhodobá zprůměrovaná data v časovém rozmezí, které je určeno pomocí query parametrů,
 to znamená "date\_from", "date\_to" a nepovinný parametry "freq", který pevně udává frekvenci průměrování dat. Data se průměrují vzhledem k velikosti časového intervalu.
 Data v časovém rozmezí, které je menší než jeden den se průměrují po hodině.
-Data v časovém rozmezí, které je větší než jeden den se průměrují po dnech. Data v rozmezí, které je větší než 3 měsíce se průměrují po týdnech.
-Nebo se data průměrují podle hodnoty parametru query "freq". V případě, že se freq rovná:
+Data v časovém rozmezí, které je větší než jeden den se průměrují po dnech. Data v rozmezí, které je menší než rok se průměrují po týdnech
+a pokud je časové rozmezí větší než rok průměr se dělá z dvou týdnů. Pokud je potřeba průměrovat bezohledu na velikost časového rozmezí,
+stačí nastavit hodnotu parametru query "freq" a data se budou průměrovat vzhledem k hodnotě "freq" následovně:
 \begin{itemize}
   \item 1 -> data se průměrují po 5 minutách
   \item 2 -> data se průměrují po 30 minutách
@@ -58,7 +60,9 @@ Nebo se data průměrují podle hodnoty parametru query "freq". V případě, ž
   \item 6 -> data se průměrují po dvou týdnech 
   \item 7 -> data se průměrují po čtyřech týdnech 
 \end{itemize}
-\begin{lstlisting}[language=json,firstnumber=1, caption=Příklad požadavku /stats/{gps}?date\_from=1-12-2022&date\_to=3-12-2022&freq=4 ]
+O samotné průměrování hodnot se stará samotná databáze pomocí funkce AVG. Celý časový interval se nejprve rozdělí po časových úseků, které se buď automaticky, nebo podle již zmiňované hodnoty "freq".
+Následně se provede SQL dotaz do databáze, který vytáhne zprůměrované hodnoty pro každý časový úsek. Nakonec funkce vrátí tyto hodnoty ve formátu JSON.
+\begin{lstlisting}[language=json,firstnumber=1, caption=Příklad požadavku /stats/{gps}]
 {
   "message": "ok",
   "data": [
@@ -67,35 +71,26 @@ Nebo se data průměrují podle hodnoty parametru query "freq". V případě, ž
       "temperature": -3.6,
       "humidity": 41,
       "pressure": 100200,
-      "wind\_speed": 13,
-      "wind\_direction": "N",
+      "wind_speed": 13,
+      "wind_direction": "N",
       "rain": 4,
-      "avrage\_of": 288
+      "avrage_of": 288
     },
     {
       "time": "2-12-2022 00:00:00",
       "temperature": -2.2,
       "humidity": 49,
       "pressure": 100100,
-      "wind\_speed": 4,
-      "wind\_direction": "S",
+      "wind_speed": 4,
+      "wind_direction": "S",
       "rain": 0,
-      "avrage\_of": 288
-    },
-    {
-      "time": "3-12-2022 00:00:00",
-      "temperature": -1.7,
-      "humidity": 74,
-      "pressure": 100800,
-      "wind\_speed": 9,
-      "wind\_direction": "E",
-      "rain": 9,
-      "avrage\_of": 288
+      "avrage_of": 288
     }
   ]
 }
 \end{lstlisting}
 \subsection{Databáze}
 
-\subsection{Platební brána}
-Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.
+\subsection{Spravování objednávek}
+Webhook je způsob, jakým se automaticky přenášejí data mezi webovými aplikacemi.
+Pokud se v jedné aplikaci stane určitá událost, webhook ji zachytí a přenese do druhé aplikace. To umožňuje snadnou integraci a automatizaci aplikací.
