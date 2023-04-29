@@ -19,8 +19,8 @@ Po zapnutí se stanice připojí k internetu zapomocí Wifi a zaregistruje na ba
 JSON Web Tokenem, uloží si ho a při každém opeslání dat na server ho použije k prokázání totožnosti.
 
 \subsection{Měření teploty a vlhkosti}
-Pro měření teploty a vlhkosti byl použit Digitální teploměr Adafruit AM2320 Senzor\cite{teplomer}. V případě nebylo zapotřebí vymýšlet jak cokoli měřit,
-protože senzor je připojen přes I2C interface, ze kterého program pouze čte již změřené hodnoty.
+Pro měření teploty a vlhkosti byl použit Digitální teploměr Adafruit AM2320 Senzor\cite{teplomer}. V tomto případě nebylo zapotřebí vymýšlet jak cokoliv měřit,
+protože senzor je připojen přes I2C interface, ze kterého program přímo čte již naměřené hodnoty.
 \begin{figure}[h] 
     \centering
     \includegraphics[width=0.25\textwidth]{images/Adafruit-AM2320.jpg}
@@ -29,7 +29,7 @@ protože senzor je připojen přes I2C interface, ze kterého program pouze čte
 
 \subsection{Měření tlaku}
 Měření tlaku je zhruba stejně přímočaré jako měření teploty, což znamená, že se o měření stará senzor\cite{tlakoměr},
-který zapojen přes I2C interface, ze kterého program čte hodnotu klaku v jednotce Pa.
+který je zapojen přes I2C interface, ze kterého program čte hodnotu tlaku v jednotce Pa.
 
 \begin{figure}[h] 
     \centering
@@ -37,8 +37,8 @@ který zapojen přes I2C interface, ze kterého program čte hodnotu klaku v jed
     \caption{Tlakoměr}
 \end{figure}
 \subsection{Rychlost větru}
-V případě měření rycholsti větru už nestačilo jen koupit senzor, ale bylo potřeba vymyslet jak převést momentum otáčející se osy s lopatkama na realnou rychlost.
-Tento problém je vyřešen následujícím způsobem. Na ose je nazen disk kruhovitého tvaru, který má v sobě dírky, skrz které optický senzor vysílá paprsek. Pokud se paprsek přeruší,
+V případě měření rycholsti větru už nestačilo jen koupit senzor, ale bylo potřeba vymyslet jak převést momentum otáčející se osy s lopatkama na reálnou rychlost.
+Tento problém je vyřešen následujícím způsobem. Na ose je nasazen disk kruhovitého tvaru, který má v sobě dírky, skrz které optický senzor vysílá paprsek. Pokud se paprsek přeruší,
 znamená to, že se mechanismus otočil o jednu dírku. Program tedy počítá kolikrát se paprsek přeruší a zpočítá skutečnou rychlost větru pomocí následující rovnice.
 \begin{equation}
 v = n * d / CasMereni 
@@ -52,8 +52,8 @@ Kde $v$ = rychlost větru, $n$ = počet přerušení, $d$ = vzdálenost uražen�
 \end{figure}
 
 \subsection{Směr větru}
-Měření směru větru je realizováno pomocí magnetického rotačního senzoru, který dokáže měřit odchylku magnetického pole. To bylo využita na měření odchylky větru tak, že na ose, na které je přidělaná střelka, kterou vítr otáčí, je zespod přidělán
-malý magnet a senzro tedy měří jeho odchylku.
+Měření směru větru je realizováno pomocí magnetického rotačního senzoru, který dokáže měřit odchylku magnetického pole. To bylo využito na měření odchylky větru tak, že na ose, na které je přidělaná střelka, kterou vítr otáčí, je zespod přidělán
+malý magnet a senzor tedy měří jeho odchylku.
 
 \begin{figure}[h] 
     \centering
@@ -62,10 +62,10 @@ malý magnet a senzro tedy měří jeho odchylku.
 \end{figure}
 
 \subsection{Měření deště}
-Při vytváření součástky na měření deště vzniklo hned několik nápadů jak déšť měřit. Nejprve vznikl nápad, že by skrz trychtýř sbírající vodu prokapávala voda a optický senzor by počítal kapky a tím měřit déšt.
-Tento způsob by však nefungoval, protože optický senzor nedokázal rozpoznat padající kapku.
+Při vytváření součástky na měření deště vzniklo hned několik nápadů jak déšť měřit. Nejprve vznikl nápad, že by skrz trychtýř sbírající vodu prokapávala voda a optický senzor by počítal kapky a tím by měřil déšt.
+Tento způsob by však nefungoval, protože optický senzor by nedokázal rozpoznat padající kapku.
 
-Po delším hledání na internetu jsem však našel řešení\cite{mereni_deste}, které vy tento problém vyřešilo a nebyl by potřeba žádný optický senzor. Toto řešení spočívá v tom, že voda kape to malé kolébky, která se v jeden moment překlopí a voda kape do truhé strany.
+Po delším hledání na internetu jsem však našel řešení\cite{mereni_deste}, které by tento problém vyřešilo a nebyl by potřeba žádný optický senzor. Toto řešení spočívá v tom, že voda kape do malé kolébky, která se v jeden moment překlopí a voda kape do druhé strany.
 Tímto překlopením kolébka zaktivuje senzor rozpoznání magnetického pole, protože na kolébce je přidělán malý magnet.
 
 \begin{figure}[h] 
@@ -75,8 +75,8 @@ Tímto překlopením kolébka zaktivuje senzor rozpoznání magnetického pole, 
 \end{figure}
 
 \subsection{Měření GPS}
-Z důvodu, že stanice potřebuje mít informace o své poloze, ve stanice je GPS modul, který získává aktuální GPS souřadnice. Tento senzor má být zapojen na RX/TX piny, ale z důvodu, že na naší arduino desce už
-nezbývali volné RX/TX piny, GPS modul musel být zapojen na jiné dva piny a data se z pinů čtou softwarově pomocí knihovny SoftwareSerial. S tímto řešením také ale nastaly první problémy, protože program začal náhodně padat a dlouhou jsem nemohl přijít proč.
+Z důvodu, že stanice potřebuje mít informace o své poloze, je ve stanici GPS modul, který získává aktuální GPS souřadnice. Tento senzor má být zapojen na RX/TX piny, ale z důvodu, že na naší arduino desce už
+nezbývali volné RX/TX piny, GPS modul musel být zapojen na jiné dva piny a data se z pinů čtou softwarově pomocí knihovny SoftwareSerial. S tímto řešením také ale nastaly první problémy, protože program začal náhodně padat a dlouhou jsem nemohl přijít na příčinu.
 Po delším zkoumání jsem přišel na to, že knihovna SoftwareSerial zapisuje data do paměti bezohledu na to, zda je paměť volná, a tudíž začala přepisovat data programu, což způsobilo padání programu.
 Tento problém je dosud nevyřešen, protože už nebyl čas na vytvoření vlastní knihovny, která by tento problém řešila. Další možným řešením by bylo použít jinou desku, která by měla více RX/TX pinů, avšak toto řešení už také nebylo možné.
 
