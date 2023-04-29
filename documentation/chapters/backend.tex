@@ -10,6 +10,7 @@ Backend může být abstrahována do tří klíčových částí, z nichž každ
   \item spravování objednávek, objadnané prostřednictvím webové stránky (více popsáno v kapitole \ref{frontend})  
 \end{itemize}
 
+\subsection{Zpřístupnění dat}
 O zpřístupnění naměřených dat se starají veřejné endpointy, které může kdokoli bezplatně použít, ať už pomocí naší webové stránky, či pomocí našeho API. 
 V případě použití těchto endpointů, není potřeba žádná authentifikace a uživateli vrátí vyžádaná data ve formátu JSON. Mezi tyto veřejné endpointy patří:
 \begin{itemize}
@@ -19,6 +20,7 @@ V případě použití těchto endpointů, není potřeba žádná authentifikac
 \end{itemize}
 
 První endpoint (/stations) jednoduše vrádí GPS souřadnice všech stanice, které jsou v ten moment zapojené.
+Za tímto endpointem se schovává vpodstatě jeden SQL dotaz, který z databáze vytáhne všechny aktivní stanice a nakonec funkce vrátí JSON.
 \begin{lstlisting}[language=json,firstnumber=1, caption=Příklad požadavku /stations]
 {
   "message": "ok",
@@ -33,6 +35,7 @@ První endpoint (/stations) jednoduše vrádí GPS souřadnice všech stanice, k
 }
 \end{lstlisting}
 Druhý endpoint (/now/{gps}) bere jako parametr GPS souřadnice stanice a podle nich z databáze vytáhne poslední naměřené data dané stanice.
+Za tímto endpointem se opět schovává vpodstatě jen jeden SQL dotaz, který z databáze vytáhne poslední naměřené hodnoty konkrétní stanice a nakonec funkce vrátí JSON.
 \begin{lstlisting}[language=json,firstnumber=1, caption=Příklad požadavku /now/{gps} ]
 {
   "message": "ok",
@@ -89,8 +92,50 @@ Následně se provede SQL dotaz do databáze, který vytáhne zprůměrované ho
   ]
 }
 \end{lstlisting}
-\subsection{Databáze}
 
-\subsection{Spravování objednávek}
-Webhook je způsob, jakým se automaticky přenášejí data mezi webovými aplikacemi.
-Pokud se v jedné aplikaci stane určitá událost, webhook ji zachytí a přenese do druhé aplikace. To umožňuje snadnou integraci a automatizaci aplikací.
+\subsection{Komunikace se stanicí}
+Pro komunikaci stanice se serverem stanice využíva dva endpointy:
+\begin{itemize}
+  \item POST /station/register
+  \item POST /station/update
+\end{itemize}
+V případě prvního endpointu (/station/register) jde primárně o authorizaci stanice, aby data na server nemohl posílat kde kdo. Tento POST požadavek očekává v parametru 
+seriové číslo stanice a jeho GPS souřadnice. Backend nejprve ověří, zda seriové číslo odpovídá registrovaným stanicím a pokud ano, tak vytvoří JSON Web Token (dále jen JWT),
+kterým se stanice dále prokazuje pří dalších interakcích se serverem. Dále si stanici uloží do databáze do seznamu aktivních stanic.
+
+Druhéh endpoint (/station/update) slouží k přidání naměřených dat stanicí do databáze. V tomto případě server očekává v hlavičce požadavku již zmiňovaný JWT,
+podle kterého server pozná o jakou jde stanici a naměřená data, které stanice odeslala ve formátu JSON, zapíše do databáze.
+
+\subsection{Správa objednávek}
+Celý náš objednávkový systém slouží k tomu, aby si kdokoli mohl zakoupit naší stanici, čím zajistí, že bude mít možnost měřit počasí kdekoliv bude potřebovat. 
+Při vytváření objednávkového systému bylo potřeby nejprve vybrat nějakou platební bránu, která by nám umožnila přijímat platby od zákazníků. V našem případě jsme vybrali platební bránu Stripe.
+
+Pro spravování objednávek backend používá 5 endpointů
+\begin{itemize}
+  \item POST /payment-webhook
+  \item POST /login
+  \item GET /orders
+  \item GET /order/{id}
+  \item POST /update/{id}
+\end{itemize}
+První endpoint (/payment-webhook) funguje jako webhook\footnote{Webhook je způsob, jakým se automaticky přenášejí data mezi webovými aplikacemi.
+Pokud se v jedné aplikaci stane určitá událost, webhook ji zachytí a přenese do druhé aplikace.},
+který se zavolá v moment, kdy platební brána vyhodnotí, že objednávka byla zaplacena. V moment kdy se zavolá náš webhook, do databáze se přidá nová objednávka. 
+V ten moment se také odešle zákazníkovi e-mail o tom, že objednávka byla přijata. Zárověň příjde e-mail i adminům s upozorněním, že byla vytvořena nová objednávka.
+
+Endpoint (/login) slouží k authorizaci adminů. Admin se pomocí webové stránky může přihlásit a spravovat jednotlivé objednávky.
+
+Endpoitn (/orders) je endpoint, který vrací ID všech objednávek. Tento endpoint je omezen pouze pro adminy.
+
+Endpoitn (/order/{id}) vrací informace konkrétní objednávky.
+
+Poslední endpoint (/update/{id}) slouží opět jen pro adminy a slouží k upravování stavu objednávky.
+
+\subsection{Databáze}
+Backend používa již zmiňovanou databázi PostgreSQL, ve které je pět tabulek\ref{model_databaze}.
+\begin{figure}[h] 
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/database_diagram.png}
+    \caption{Model databáze}
+    \label{model_databaze}
+\end{figure}
