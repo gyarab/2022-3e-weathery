@@ -14,7 +14,6 @@
             <div class="hodnoty">
                 <h1>Průměrná teplota:</h1><h1>{{ procento('avg-temp')}}</h1>
                 <h1>Průměrné srážky:</h1><h1>{{ procento('avg-rain') }}</h1>
-                <h1>jeste dalsi dam neboj</h1><h1>Sus</h1>
             </div>
         </div>
         <div ref="scroll" id="scroll" @click="scrolluj({deltaY: 'tlacitko'})">
@@ -43,6 +42,7 @@ export default {
             this.data = response.data
             this.rok_od = Object.keys(this.data['avg-rain'])[0]
             this.rok_do = Object.keys(this.data['avg-rain'])[1]
+            console.log(this.data)
         })
 
         document.body.style.height = "100vh" //zruší actual scrollování
@@ -91,10 +91,18 @@ export default {
 
             this.$refs.b4.style.transform = `rotate(${this.scroll / max * 120}deg)`
             this.$refs.b4.style.width = `${25 - this.scroll / 10}%`
-            this.$refs.b4.style.marginLeft = `${this.scroll / 1.2}vh`
+            this.$refs.b4.style.marginLeft = `${this.scroll}vh`
 
             this.$refs.prvniText.style.opacity = `${100 - (this.scroll / (max/2) * 100)}%`
             this.$refs.druhyText.style.opacity = `${(this.scroll - max / 2)  / (max / 2) * 100}%`
+
+            if (this.scroll < 90) {
+                this.$refs.prvniText.style.display = 'block'
+                this.$refs.druhyText.style.display = 'none'
+            } else if (this.scroll > 90) {
+                this.$refs.prvniText.style.display = 'none'
+                this.$refs.druhyText.style.display = 'block'
+            }
 
             this.$refs.scroll.style.opacity = `${100 - (this.scroll / (max / 3) * 100)}%`
         },
@@ -156,6 +164,7 @@ export default {
     text-align: center;
     transition-duration: 0.5s;
     color: white;
+    display: none;
 }
 
 .hodnoty {
