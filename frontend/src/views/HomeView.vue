@@ -9,7 +9,7 @@
         <div ref="prvniText" class="prvniText">
             <h1>Dlouhodobá data sledující změnu klimatu</h1>
         </div>
-        <div ref="druhyText" class="druhyText" v-if="data['avg-temp']">
+        <div ref="druhyText" class="druhyText">
             <h2>Změny {{ rok_od }} - {{ rok_do }}</h2>
             <div class="hodnoty">
                 <h1>Průměrná teplota:</h1><h1>{{ procento('avg-temp')}}</h1>
@@ -52,7 +52,7 @@ export default {
     },
     unmounted() {
         window.removeEventListener('wheel', this.scrolluj);
-        document.body.style.height = "100vh" //zruší actual scrollování
+        document.body.style.height = "100vh" //vrati actual scrollování
         document.body.style.overflow = "unset"
     },
     methods: {
@@ -77,7 +77,7 @@ export default {
             this.$refs.b1.style.transform = `rotate(${this.scroll / max * 180}deg)`
             this.$refs.b1.style.width = `${32 + this.scroll}%`
             this.$refs.b1.style.marginTop = `-${this.scroll / 3.9}vh`
-            this.$refs.b1.style.marginLeft = `-${this.scroll / 2}vh`
+            this.$refs.b1.style.marginLeft = `-${this.scroll / 1.5}vh`
 
             this.$refs.b2.style.transform = `rotate(${this.scroll / max * 120}deg)`
             this.$refs.b2.style.width = `${40 - this.scroll / 10}%`
@@ -99,12 +99,16 @@ export default {
             this.$refs.scroll.style.opacity = `${100 - (this.scroll / (max / 3) * 100)}%`
         },
         procento(udaj) {
-            let a = this.data[udaj][this.rok_od]
-            let b = this.data[udaj][this.rok_do]
-            if (100 - (a / b) * 100 > 0) {
-                return `+${(100 - (a / b) * 100).toFixed(3)} %`
+            try {
+                let a = this.data[udaj][this.rok_od]
+                let b = this.data[udaj][this.rok_do]
+                if (100 - (a / b) * 100 > 0) {
+                    return `+${(100 - (a / b) * 100).toFixed(3)} %`
+                }
+                return `${(100 - (a / b) * 100).toFixed(3)} %`
+            } catch (e) {
+                return 'Načítání...'
             }
-            return `${ (100 - (a / b) * 100).toFixed(3) } %`
         }
     }
 }

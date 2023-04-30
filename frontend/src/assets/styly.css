@@ -16,7 +16,7 @@
 }
 
 body {
-    font-family: Cardo, serif;
+    font-family: Inter, sans-serif;
     height: 100%;
     background-color: var(--bila);
 }
@@ -53,6 +53,7 @@ h1 {
     padding: 0 30px;
     cursor: pointer;
     transition-duration: 0.2s;
+    font-family: Inter, sans-serif;
 }
 
 .btn:hover {

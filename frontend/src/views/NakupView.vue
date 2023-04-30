@@ -2,21 +2,54 @@
     <div class="nakup">
         <h1>Weathery stanice v1</h1>
 
-        <p>Domácí meterologická stanice se schopnostmi profesionálního stroje?
-            To je naše Weathery stanice která dokáže měřit aktuální teplotu, srážky, rychlost a směr větru, tlak a vlhkost vzduchu.
-            Všechna tyto data poté posílá na náš server kde se po registraci budou na příslušných souřadniciích zobrazovat naměřená data.
-        </p>
-        <img class="obrazek" src="@/assets/stanice0.jpg" alt="Fotka stanice 1">
-        <p>Sem ještě něco pane Salát</p>
-        <img class="obrazek" src="@/assets/stanice1.jpg" alt="Fotka stanice 2">
-        <p>Sem ještě něco pane Salát</p>
-        <button class="btn" onclick="window.location.href = 'https://buy.stripe.com/test_aEU4hqeOt0Freje288'">Koupit</button>
+        <div id="container">
+            <div id="fotky">
+                <img v-if="cisloFotky[0] === 1" class="obrazek" src="@/assets/stanice0.jpg" alt="Fotka stanice 1">
+                <img v-else-if="cisloFotky[0] === 2" class="obrazek" src="@/assets/stanice1.jpg" alt="Fotka stanice 2">
+
+                <img class="sipka" id="sipka1" src="@/assets/sipka.svg" alt="Šipka" style="transform: scaleX(-1);" @click="fotoMinus">
+                <img class="sipka" id="sipka2" src="@/assets/sipka.svg" alt="Šipka" @click="fotoPlus">
+            </div>
+
+            <div id="text">
+                <h2>Domácí meterologická stanice se schopnostmi profesionálního stroje?</h2>
+                <p>
+                    To je naše Weathery stanice která dokáže měřit aktuální teplotu, srážky, rychlost a směr větru, tlak a vlhkost vzduchu.
+                    Všechna tyto data poté posílá na náš server kde se po registraci budou na příslušných souřadniciích zobrazovat naměřená data.
+                </p>
+                <div id="koupit">
+                    <h2 style="vertical-align: middle;">2 499,99 Kč</h2>
+                    <button class="btn" onclick="window.location.href = 'https://buy.stripe.com/test_aEU4hqeOt0Freje288'">Koupit</button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
 export default {
-    name: "NakupView"
+    name: "NakupView",
+    data() {
+        return {
+            cisloFotky: [1,2]
+        }
+    },
+    methods: {
+        fotoPlus() {
+            if (this.cisloFotky[0] === this.cisloFotky[1]) {
+                this.cisloFotky[0] = 1
+            } else {
+                this.cisloFotky[0] += 1
+            }
+        },
+        fotoMinus() {
+            if (this.cisloFotky[0] === 1) {
+                this.cisloFotky[0] = this.cisloFotky[1]
+            } else {
+                this.cisloFotky[0] -= 1
+            }
+        }
+    }
 }
 </script>
 
@@ -29,13 +62,53 @@ export default {
     gap: 20px;
 }
 
-.obrazek {
+#container {
+    display: flex;
+    margin: 0 10%;
+    gap: 25px;
+    justify-content: center;
+}
+
+#text {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+#fotky {
     width: 40%;
+    position: relative;
+}
+
+.obrazek {
+    width: 100%;
 }
 
 p {
-    width: 80%;
-    text-align: center;
+    text-align: left;
+}
+
+.sipka {
+    width: 10%;
+    position: absolute;
+    top: 45%;
+}
+
+#sipka1 {
+    left: 0;
+}
+
+#sipka2 {
+    right: 0;
+}
+
+#koupit {
+    display: flex;
+    gap: 40px;
+    align-items: center;
 }
 
 </style>
