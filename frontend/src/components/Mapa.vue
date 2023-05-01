@@ -12,12 +12,12 @@ export default {
     data() {
         return {
             icon: L.icon({
-                iconUrl: 'src/assets/icony/target.png',
-                iconSize: [30, 30], // size of the icon
-                iconAnchor: [20, 35], // point of the icon which will correspond to marker's location
-                popupAnchor: [-5, -7] // point from which the popup should open relative to the iconAnchor
+                iconUrl: 'src/assets/icony/point.svg',
+                iconSize: [40, 50], // size of the icon
+                iconAnchor: [20, 50], // point of the icon which will correspond to marker's location
+                popupAnchor: [8, -11] // point from which the popup should open relative to the iconAnchor
             }),
-            map: L.map('map').setView([50.0835494, 14.4341414], 11), // Praha
+            map: L.map('map').setView([50.0835494, 14.4341414], 12), // Praha
         }
     },
     mounted() {
@@ -79,8 +79,9 @@ export default {
                                             }
                                         </style>
                                     </body>`, {offset: [180, 201], maxWidth: 250})
+
                             } else {
-                                //jsme vpíči to vymyslí firu
+                                console.log('GG')
                             }
                         })
                 }

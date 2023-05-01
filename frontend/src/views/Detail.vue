@@ -71,7 +71,6 @@ export default {
                     this.$router.push('/')
                 } else {
                     this.data = response.data.data
-                    console.log(response)
                 }
             })
         },
@@ -122,7 +121,6 @@ export default {
         },
         async customZmena() {
             if ((this.select_datum_od && this.select_datum_do) !== null) {
-                console.log('jedem')
                 let a = this.select_datum_od.split('-')
                 let b = this.select_datum_do.split('-')
                 let a_date = new Date(`${a[1]}/${a[2]}/${a[0]}`) //měsíc, den, rok, aby fungovala metoda getTime()

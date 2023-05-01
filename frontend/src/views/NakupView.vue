@@ -64,9 +64,10 @@ export default {
 
 #container {
     display: flex;
-    margin: 0 10%;
+    margin: 0 8vw;
     gap: 25px;
     justify-content: center;
+    min-height: 32em;
 }
 
 #text {
@@ -81,6 +82,9 @@ export default {
 #fotky {
     width: 40%;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .obrazek {
