@@ -4,8 +4,8 @@
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BMP280.h>
 #include <Adafruit_AM2320.h>
-//#include <SoftwareSerial.h>
-//#include <TinyGPS++.h>
+#include <SoftwareSerial.h>
+#include <TinyGPS++.h>
 #include "env.h"
 
 #define BMP280_ADRESS (0x76)
@@ -13,8 +13,8 @@
 #define TX 6
 #define RX 13
 
-//TinyGPSPlus gps;
-//SoftwareSerial swSerial(RX, TX);
+TinyGPSPlus gps;
+SoftwareSerial swSerial(RX, TX);
 Adafruit_AM2320 am2320 = Adafruit_AM2320();
 Adafruit_BMP280 bmp;
 AS5600 as5600;
@@ -142,7 +142,7 @@ String getToken(String gps, int id) {
   return "";
 }
 
-/*void getGPS() {
+void getGPS() {
   while (swSerial.available() > 0) {
     gps.encode(swSerial.read());
     yield();
@@ -156,7 +156,7 @@ String getToken(String gps, int id) {
     float lng = gps.location.lng();
     GPS = String(lat) + "_" + String(lng);
   }
-}*/
+}
 
 float getTemperature() {
   return am2320.readTemperature();
@@ -220,7 +220,7 @@ float getRain() {
 void loop() {
   if (GPS == "-0.0_-0.0") {
     GPS = FIXED_GPS;
-    //getGPS();
+    getGPS();
     token = getToken(GPS, id);
   } else {
     ResponseData data;
