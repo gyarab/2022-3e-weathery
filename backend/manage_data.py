@@ -291,8 +291,7 @@ def get_home_page_data(connection) -> dict:
 def get_min(connection, param: str) -> dict:
     cur = connection.cursor()
     cur.execute(
-        "select min(%s), date_trunc('YEAR', time ) as trunc from data group by trunc order by trunc;",
-        (param,),
+        f"select min({param}), date_trunc('YEAR', time ) as trunc from data group by trunc order by trunc;",
     )
     result = {}
     items = cur.fetchall()
@@ -304,8 +303,7 @@ def get_min(connection, param: str) -> dict:
 def get_avg(connection, param: str) -> dict:
     cur = connection.cursor()
     cur.execute(
-        "select avg(%s), date_trunc('YEAR', time ) as trunc from data group by trunc order by trunc;",
-        (param,),
+        f"select avg({param}), date_trunc('YEAR', time ) as trunc from data group by trunc order by trunc;",
     )
     result = {}
     items = cur.fetchall()
@@ -317,8 +315,7 @@ def get_avg(connection, param: str) -> dict:
 def get_max(connection, param: str) -> dict:
     cur = connection.cursor()
     cur.execute(
-        "select max(%s), date_trunc('YEAR', time ) as trunc from data group by trunc order by trunc;",
-        (param,),
+        f"select max({param}), date_trunc('YEAR', time ) as trunc from data group by trunc order by trunc;",
     )
     result = {}
     items = cur.fetchall()
