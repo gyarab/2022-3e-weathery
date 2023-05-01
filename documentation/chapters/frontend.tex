@@ -13,12 +13,7 @@ Pro vykreslení mapy s body jsme zvolili knihovnu leaflet, která je podrobně p
 \subsection{Grafy}
 %\cite{grafy_chartsjs}
 Pro přehledné vykreslení dat jsme zvolili grafy. Na stránce je vykresleno pět grafů podle jejich typu(teplota, déšť, rychlost větru, směr větru, tlak). %\ref ukazka_grafu
-%\begin{figure}[h] %screenshot grafu 
-%    \centering
-%    \includegraphics[width=0.25\textwidth]{images/nazev_souboru}
-%    \caption{Ukázka grafu}
-%    \label{ukazka_grafu}
-%\end{figure}
+
 Na ose x jsou zobrazeny časové údaje a ose y hodnoty pro daný čas. Použité grafy jsou z opensource knihovny charts.js, která umožňuje přehledně a jednoduše grafy nastylizovat a upravovat dle potřeb.
 
 Uživatel má možnost měnit časový úsek vykreslení dat pomocí tlačítka pod souřadnicemi stanice. Na výběr má z předdefinovaných hodnot (např. den, týden, rok), ale pomocí výběru "vlastní" si může nastavit své vlastní časové rozmezí.
@@ -27,12 +22,27 @@ Pro rozpoznání grafů je nad každým grafem jméno, které určuje, co je v d
 Knihovna chart.js nebyla naší první volbou, jelikož jsme v předchozích verzích používali ApexCharts.js, ale knihovna nám nevyhovovala v možnostech vykreslení grafů, nekompletní dokumentací a její intuitivností ve smyslu implementování.
 Z těchto důvodů jsme knihovnu nahradili charts.js, která má o poznání přehlednější dokumentaci a obsahuje více potřebných funkcí.
 
+\begin{figure}[h] %screenshot grafu 
+    \centering
+    \includegraphics[width=0.25\textwidth]{images/graf.png}
+    \caption{Graf s teplotami}
+    \label{ukazka_grafu}
+\end{figure}
+
 \subsection{Mapa stanic}
 Aby si mohl uživatel zobrazit data, musí se dostat na stránku s mapou, ve které je vidět bod. Po kliknutí na bod se dozví poslední naměřené údaje a může se prokliknout pomocí odkazu na podrobnější údaje v podobě grafů.
 
 Pro vykreslení bodů do mapy jsme použili opensource knihovnu leaflet.js, která disponuje velkou škálou možností pro vykreslení bodů, množin a tvarů.
 Avšak vybrání této knihovny také nebylo jednoduché. Prvoplánově jsme zamýšleli použít známé mapy jako jsou google maps nebo apple maps, ale implementace těchto knihoven byla pro naše účely zbytečně složitá. Dále tyto knihovny obsahují zdlouhavě a neintuitivní dokumentace, což je při práci s nimi nepříjemné.
 Knihovna leaflet je populární a rozsáhle používána pro mobilní aplikace. Použití této mapy lze pozorovat například u dopravce české dráhy, sociální sítě Facebook a flickr.
+
+\begin{figure}[h] %screenshot grafu 
+    \centering
+    \includegraphics[width=0.25\textwidth]{images/mapa.png}
+    \caption{Mapa stanic}
+    \label{mapa}
+\end{figure}
+
 
 Pro nastavení mapy jsme zvolili světlé pozadí s málo kontrastním vykreslením vodních ploch, obytných oblastí, silnic, přírodních míst a hranic států. Uživatel má možnost libovolně mapu oddalovat a přibližovat, přičemž výchozím bodem mapy je Praha, na kterou je mapa po spuštění zaměřená.
 
@@ -45,3 +55,10 @@ Právě tímto pohybem se stránka odhaluje a postupně mění. V průběhu anim
 
 %About us 
 Na stránce nákup se uživatel dozví podobu stanice a je obeznámen s registrací a podrobnostmi.
+
+\begin{figure}[h] %screenshot grafu 
+    \centering
+    \includegraphics[width=0.25\textwidth]{images/nakup.png}
+    \caption{Nákup stanice}
+    \label{nakup}
+\end{figure}
