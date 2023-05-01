@@ -36,6 +36,7 @@ Za tímto endpointem se schovává v podstatě jeden SQL dotaz, který z databá
 \end{lstlisting}
 Druhý endpoint (/now/{gps}) bere jako parametr GPS souřadnice stanice a podle nich z databáze vytáhne poslední naměřená data dané stanice.
 Za tímto endpointem se opět schovává v podstatě jen jeden SQL dotaz, který z databáze vytáhne poslední naměřené hodnoty konkrétní stanice a nakonec funkce vrátí JSON.
+\newpage
 \begin{lstlisting}[language=json,firstnumber=1, caption=Příklad požadavku /now/{gps} ]
 {
   "message": "ok",
@@ -48,6 +49,7 @@ Za tímto endpointem se opět schovává v podstatě jen jeden SQL dotaz, který
   "rain": 4
 }
 \end{lstlisting}
+
 Poslední endpoint (/stats/{gps}) má za úkol vracet dlouhodobá zprůměrovaná data v časovém rozmezí, které je určeno pomocí query parametrů,
 to znamená "date\_from", "date\_to" a nepovinný parametry "freq", který pevně udává frekvenci průměrování dat. Data se průměrují vzhledem k velikosti časového intervalu.
 Data v časovém rozmezí, které je menší než tři dny se průměrují po hodině.
@@ -65,6 +67,7 @@ stačí nastavit hodnotu parametru query "freq" a data se budou průměrovat vzh
 \end{itemize}
 O samotném průměrování hodnot se stará samotná databáze pomocí funkce AVG. Celý časový interval se nejprve rozdělí po časových úsecích, které se buď automaticky, nebo podle již zmiňované hodnoty "freq".
 Následně se provede SQL dotaz do databáze, který vytáhne zprůměrované hodnoty pro každý časový úsek. Nakonec funkce vrátí tyto hodnoty ve formátu JSON.
+\newpage
 \begin{lstlisting}[language=json,firstnumber=1, caption=Příklad požadavku /stats/{gps}]
 {
   "message": "ok",
@@ -95,10 +98,12 @@ Následně se provede SQL dotaz do databáze, který vytáhne zprůměrované ho
 
 \subsection{Komunikace se stanicí} \label{komunikace}
 Pro komunikaci stanice se serverem stanice využívá dva endpointy:
+
 \begin{itemize}
   \item POST /station/register
   \item POST /station/update
 \end{itemize}
+
 V případě prvního endpointu (/station/register) jde primárně o autorizace stanice, aby data na server nemohl posílat neautorizovaný uživatel. Tento POST požadavek očekává v parametru 
 sériové číslo stanice a jeho GPS souřadnice. Backend nejprve ověří, zda sériové číslo odpovídá registrovaným stanicím a pokud ano, tak vytvoří JSON Web Token (dále jen JWT),
 kterým se stanice dále prokazuje pří dalších interakcích se serverem. Dále si stanici uloží do databáze do seznamu aktivních stanic.

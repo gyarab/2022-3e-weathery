@@ -21,10 +21,12 @@ Dále stanice měří počasí a po každých pěti minutách stanice pošle dat
      \caption{Stanice}
    \end{minipage}
 \end{figure}
+
+\newpage
+
 \subsection{Propojení se serverem}
 Po zapnutí se stanice připojí k internetu za pomoci WiFi a zaregistruje na backendu (popsáno v kapitole \ref{komunikace}). Jakmile stanice dostane od serveru odpověď s 
 JSON Web Tokenem, uloží si ho a při každém odeslání dat na server ho použije k prokázání totožnosti.
-
 \subsection{Měření teploty a vlhkosti}
 Pro měření teploty a vlhkosti byl použit Digitální teploměr Adafruit AM2320 Senzor\cite{teplomer}. V tomto případě nebylo zapotřebí vymýšlet jak cokoliv měřit,
 protože senzor je připojen přes I2C interface, ze kterého program přímo čte již naměřené hodnoty.
@@ -82,6 +84,7 @@ Tímto překlopením kolébka zaktivuje senzor rozpoznání magnetického pole, 
     \includegraphics[width=0.25\textwidth]{images/magnet_sensor.jpg}
     \caption{Senzor magnetického pole}
 \end{figure}
+
 
 \subsection{Měření GPS}
 Z důvodu, že stanice potřebuje mít informace o své poloze, je ve stanici GPS modul, který získává aktuální GPS souřadnice.
