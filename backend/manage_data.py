@@ -269,20 +269,30 @@ def get_all_orders(connection) -> dict:
 
 def get_home_page_data(connection) -> dict:
     result = {
-        "min-temp": get_min_temp(connection),
-        "max-temp": get_max_temp(connection),
-        "avg-temp": get_avg_temp(connection),
-        "min-rain": get_min_rain(connection),
-        "max-rain": get_max_rain(connection),
-        "avg-rain": get_avg_rain(connection),
+        "min-temp": get_min(connection, "temperature"),
+        "max-temp": get_max(connection, "temperature"),
+        "avg-temp": get_avg(connection, "temperature"),
+        "min-rain": get_min(connection, "rain"),
+        "max-rain": get_max(connection, "rain"),
+        "avg-rain": get_avg(connection, "rain"),
+        "min-hum": get_min(connection, "humidity"),
+        "max-hum": get_max(connection, "humidity"),
+        "avg-hum": get_avg(connection, "humidity"),
+        "min-press": get_min(connection, "pressure"),
+        "max-press": get_max(connection, "pressure"),
+        "avg-press": get_avg(connection, "pressure"),
+        "min-wind": get_min(connection, "wind_speed"),
+        "max-wind": get_max(connection, "wind_speed"),
+        "avg-wind": get_avg(connection, "wind_speed"),
     }
     return result
 
 
-def get_min_temp(connection) -> dict:
+def get_min(connection, param: str) -> dict:
     cur = connection.cursor()
     cur.execute(
-        "select min(temperature), date_trunc('YEAR', time ) as trunc from data group by trunc order by trunc;"
+        "select min(%s), date_trunc('YEAR', time ) as trunc from data group by trunc order by trunc;",
+        (param,),
     )
     result = {}
     items = cur.fetchall()
@@ -291,10 +301,11 @@ def get_min_temp(connection) -> dict:
     return result
 
 
-def get_avg_temp(connection) -> dict:
+def get_avg(connection, param: str) -> dict:
     cur = connection.cursor()
     cur.execute(
-        "select avg(temperature), date_trunc('YEAR', time ) as trunc from data group by trunc order by trunc;"
+        "select avg(%s), date_trunc('YEAR', time ) as trunc from data group by trunc order by trunc;",
+        (param,),
     )
     result = {}
     items = cur.fetchall()
@@ -303,46 +314,11 @@ def get_avg_temp(connection) -> dict:
     return result
 
 
-def get_max_temp(connection) -> dict:
+def get_max(connection, param: str) -> dict:
     cur = connection.cursor()
     cur.execute(
-        "select max(temperature), date_trunc('YEAR', time ) as trunc from data group by trunc order by trunc;"
-    )
-    result = {}
-    items = cur.fetchall()
-    for i in items:
-        result[str(i[1])[:4]] = i[0]
-    return result
-
-
-def get_min_rain(connection) -> dict:
-    cur = connection.cursor()
-    cur.execute(
-        "select min(rain), date_trunc('YEAR', time ) as trunc from data group by trunc order by trunc;"
-    )
-    result = {}
-    items = cur.fetchall()
-    for i in items:
-        result[str(i[1])[:4]] = i[0]
-    return result
-
-
-def get_avg_rain(connection) -> dict:
-    cur = connection.cursor()
-    cur.execute(
-        "select avg(rain), date_trunc('YEAR', time ) as trunc from data group by trunc order by trunc;"
-    )
-    result = {}
-    items = cur.fetchall()
-    for i in items:
-        result[str(i[1])[:4]] = i[0]
-    return result
-
-
-def get_max_rain(connection) -> dict:
-    cur = connection.cursor()
-    cur.execute(
-        "select max(rain), date_trunc('YEAR', time ) as trunc from data group by trunc order by trunc;"
+        "select max(%s), date_trunc('YEAR', time ) as trunc from data group by trunc order by trunc;",
+        (param,),
     )
     result = {}
     items = cur.fetchall()
