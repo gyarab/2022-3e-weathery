@@ -1,5 +1,5 @@
 \section{Frontend} \label{frontend}
-Frontend slouží jako nástroj pro visualizaci aplikace. Patří sem veškeré soubory pro vykreslování stránek, obrázky, mapa a grafy. Uživatel může jednoduše přepínat mezi stránky aplikace, kterými jsou: domovksá stránka, mapa a údaje o vývojářích.
+Frontend slouží jako nástroj pro vizualizaci aplikace. Patří sem veškeré soubory pro vykreslování stránek, obrázky, mapa a grafy. Uživatel může jednoduše přepínat mezi stránky aplikace, kterými jsou: domovská stránka, mapa a údaje o vývojářích.
 
 Frontend aplikace obsahuje soubory vue.js, což je javascriptový framework, který se stará o dynamické a reaktivní zobrazení uživatelského rozhraní. Vue.js je velmi populární a používaná technologie i velkými firmami, která funguje na bázi jednoduchých šablon a komponent.
 Vue.js je nováčkem na trhu, ale disponuje rychlostí a velkými možnostmi oproti ostatním frameworkům.
@@ -12,7 +12,7 @@ Pro vykreslení mapy s body jsme zvolili knihovnu leaflet, která je podrobně p
 
 \subsection{Grafy}
 %\cite{grafy_chartsjs}
-Pro přehledné vykreslení dat jsme zvolili grafy. Na stránce je vakresleno pět grafů podle jejich typu(teplota, déšť, rychlost větr, směr větru, tlak). %\ref ukazka_grafu
+Pro přehledné vykreslení dat jsme zvolili grafy. Na stránce je vykresleno pět grafů podle jejich typu(teplota, déšť, rychlost větru, směr větru, tlak). %\ref ukazka_grafu
 %\begin{figure}[h] %screenshot grafu 
 %    \centering
 %    \includegraphics[width=0.25\textwidth]{images/nazev_souboru}
@@ -21,10 +21,10 @@ Pro přehledné vykreslení dat jsme zvolili grafy. Na stránce je vakresleno p�
 %\end{figure}
 Na ose x jsou zobrazeny časové údaje a ose y hodnoty pro daný čas. Použité grafy jsou z opensource knihovny charts.js, která umožňuje přehledně a jednoduše grafy nastylizovat a upravovat dle potřeb.
 
-Uživatel má možnost měnit časový úsek vykreslení dat pomocí tlačítka pod souřadnicemi stanice. Na výběr má z předdefinovaných hodnot (např. den, týden, rok), ale pomocí vyběru "vlastní" si může nastavit své vlastní časové rozmezí.
+Uživatel má možnost měnit časový úsek vykreslení dat pomocí tlačítka pod souřadnicemi stanice. Na výběr má z předdefinovaných hodnot (např. den, týden, rok), ale pomocí výběru "vlastní" si může nastavit své vlastní časové rozmezí.
 Pro rozpoznání grafů je nad každým grafem jméno, které určuje, co je v daném grafu ukázáno. Grafem je křivka, která plynule propojuje dva sousední body.  
 
-Knihovna chart.js nebyla naší první volbou, jelikož jsme v předchozích verzích používali ApexCharts.js, ale knihovna nám nevyhovovala v možnostech vykreslení grafů, nekompletní dokumentací a její intuitivností va smyslu implementování.
+Knihovna chart.js nebyla naší první volbou, jelikož jsme v předchozích verzích používali ApexCharts.js, ale knihovna nám nevyhovovala v možnostech vykreslení grafů, nekompletní dokumentací a její intuitivností ve smyslu implementování.
 Z těchto důvodů jsme knihovnu nahradili charts.js, která má o poznání přehlednější dokumentaci a obsahuje více potřebných funkcí.
 
 \subsection{Mapa stanic}
@@ -34,13 +34,13 @@ Pro vykreslení bodů do mapy jsme použili opensource knihovnu leaflet.js, kter
 Avšak vybrání této knihovny také nebylo jednoduché. Prvoplánově jsme zamýšleli použít známé mapy jako jsou google maps nebo apple maps, ale implementace těchto knihoven byla pro naše účely zbytečně složitá. Dále tyto knihovny obsahují zdlouhavě a neintuitivní dokumentace, což je při práci s nimi nepříjemné.
 Knihovna leaflet je populární a rozsáhle používána pro mobilní aplikace. Použití této mapy lze pozorovat například u dopravce české dráhy, sociální sítě Facebook a flickr.
 
-Pro nastavení mapy jsme zvolili světlé pozadí s málokontrastním vykreslením vodních ploch, obytných oblastí, silnic, přírodních míst a hranic států. Uživatel má možnost libovolně mapu oddalovat a přibližovat, přičemž výchozím bodem mapy je Praha, na kterou je mapa po spuštění zaměřená.
+Pro nastavení mapy jsme zvolili světlé pozadí s málo kontrastním vykreslením vodních ploch, obytných oblastí, silnic, přírodních míst a hranic států. Uživatel má možnost libovolně mapu oddalovat a přibližovat, přičemž výchozím bodem mapy je Praha, na kterou je mapa po spuštění zaměřená.
 
 \subsection{Design}
 Design znamená vizuální podoba stránky.
 Naším cílem bylo vytvořit intuitivní prostředí pro uživatele, ve kterém se dokáže rychle a jednoduše pohybovat.
 
-Prvním setkáním s designem webu je domovská stránka, která obsahuje funkci detekujíci kolečko myši.
+Prvním setkáním s designem webu je domovská stránka, která obsahuje funkci detekující kolečko myši.
 Právě tímto pohybem se stránka odhaluje a postupně mění. V průběhu animace se uživatel dozví informace o dlouhodobějších změnách počasí a srovnání počasí napříč roky.
 
 %About us 

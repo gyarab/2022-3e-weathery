@@ -7,12 +7,12 @@ Backend může být abstrahován do tří klíčových částí, z nichž každ�
 \begin{itemize}
   \item zpřístupnění dat pro Frontend/Developery (pomocí API) 
   \item zajištění komunikace mezi stanicí a databází 
-  \item spravování objednávek, objadnané prostřednictvím webové stránky (více popsáno v kapitole \ref{frontend})  
+  \item spravování objednávek, objednané prostřednictvím webové stránky (více popsáno v kapitole \ref{frontend})  
 \end{itemize}
 
 \subsection{Zpřístupnění dat}
 O zpřístupnění naměřených dat se starají veřejné endpointy, které může kdokoli bezplatně použít, ať už pomocí naší webové stránky, či pomocí našeho API. 
-V případě použití těchto endpointů, není potřeba žádná authentifikace a uživateli vrátí vyžádaná data ve formátu JSON. Mezi tyto veřejné endpointy patří:
+V případě použití těchto endpointů, není potřeba žádná autorizace a uživateli vrátí vyžádaná data ve formátu JSON. Mezi tyto veřejné endpointy patří:
 \begin{itemize}
   \item GET /stations
   \item GET /now/{gps} 
@@ -94,13 +94,13 @@ Následně se provede SQL dotaz do databáze, který vytáhne zprůměrované ho
 \end{lstlisting}
 
 \subsection{Komunikace se stanicí} \label{komunikace}
-Pro komunikaci stanice se serverem stanice využíva dva endpointy:
+Pro komunikaci stanice se serverem stanice využívá dva endpointy:
 \begin{itemize}
   \item POST /station/register
   \item POST /station/update
 \end{itemize}
-V případě prvního endpointu (/station/register) jde primárně o authorizaci stanice, aby data na server nemohl posílat neauthorizovaný uživatel. Tento POST požadavek očekává v parametru 
-seriové číslo stanice a jeho GPS souřadnice. Backend nejprve ověří, zda seriové číslo odpovídá registrovaným stanicím a pokud ano, tak vytvoří JSON Web Token (dále jen JWT),
+V případě prvního endpointu (/station/register) jde primárně o autorizace stanice, aby data na server nemohl posílat neautorizovaný uživatel. Tento POST požadavek očekává v parametru 
+sériové číslo stanice a jeho GPS souřadnice. Backend nejprve ověří, zda sériové číslo odpovídá registrovaným stanicím a pokud ano, tak vytvoří JSON Web Token (dále jen JWT),
 kterým se stanice dále prokazuje pří dalších interakcích se serverem. Dále si stanici uloží do databáze do seznamu aktivních stanic.
 
 Druhý endpoint (/station/update) slouží k přidání naměřených dat stanicí do databáze. V tomto případě server očekává v hlavičce požadavku již zmiňovaný JWT,
@@ -121,9 +121,9 @@ Pro spravování objednávek backend používá 5 endpointů
 První endpoint (/payment-webhook) funguje jako webhook\footnote{Webhook je způsob, jakým se automaticky přenášejí data mezi webovými aplikacemi.
 Pokud se v jedné aplikaci stane určitá událost, webhook ji zachytí a přenese do druhé aplikace.},
 který se zavolá v moment, kdy platební brána vyhodnotí, že objednávka byla zaplacena. V moment kdy se zavolá webhook, do databáze se přidá nová objednávka. 
-V ten moment se také odešle zákazníkovi e-mail o tom, že objednávka byla přijata. Zárověň příjde e-mail i adminům s upozorněním, že byla vytvořena nová objednávka.
+V ten moment se také odešle zákazníkovi e-mail o tom, že objednávka byla přijata. Zároveň příjde e-mail i adminům s upozorněním, že byla vytvořena nová objednávka.
 
-Endpoint (/login) slouží k authorizaci adminů. Admin se pomocí webové stránky může přihlásit a spravovat jednotlivé objednávky.
+Endpoint (/login) slouží k autorizaci adminů. Admin se pomocí webové stránky může přihlásit a spravovat jednotlivé objednávky.
 
 Endpoitn (/orders) je endpoint, který vrací ID všech objednávek. Tento endpoint je omezen pouze pro adminy.
 
