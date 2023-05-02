@@ -21,4 +21,10 @@ export default {
     flex-direction: column;
     align-items: center;
 }
+
+@media only screen and (max-width: 1200px) {
+    .about h1 {
+        text-align: center;
+    }
+}
 </style>

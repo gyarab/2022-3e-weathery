@@ -67,6 +67,11 @@ export default {
     box-shadow: 0 10px 30px 10px rgba(0, 0, 0, 0.1);
 }
 
+#formular h2 {
+    font-size: 1.3em;
+    margin-bottom: 30px;
+}
+
 .login input {
     width: 100%;
     padding: 5px;

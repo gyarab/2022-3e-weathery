@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
 //import TheWelcome from '../components/TheWelcome.vue'
 import Mapa from '../components/Mapa.vue'
 
@@ -17,5 +17,6 @@ export default {
 <style scoped>
 #map {
     height: calc(100vh - var(--vyska-menu) - 1px);
+    z-index: 1;
 }
 </style>

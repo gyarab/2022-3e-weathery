@@ -12,13 +12,19 @@
         <div ref="druhyText" class="druhyText">
             <h2>Změny {{ rok_od }} - {{ rok_do }}</h2>
             <div class="hodnoty">
-                <h1>Průměrná teplota:</h1><h1>{{ procento('avg-temp')}}</h1>
-                <h1>Průměrné srážky:</h1><h1>{{ procento('avg-rain') }}</h1>
+                <h1>Průměrná teplota:</h1>
+                <h1>{{ procento('avg-temp') }}</h1>
+                <h1>Průměrné srážky:</h1>
+                <h1>{{ procento('avg-rain') }}</h1>
+                <h1>Průměrná vlhkost:</h1>
+                <h1>{{ procento('avg-hum') }}</h1>
+                <h1>Průměrný tlak:</h1>
+                <h1>{{ procento('avg-press') }}</h1>
             </div>
         </div>
         <div ref="scroll" id="scroll" @click="scrolluj({deltaY: 'tlacitko'})">
             <p>SCROLL</p>
-            <img src="src/assets/icony/scroll.svg" alt="sipka dolu">
+            <img src="@/assets/icony/scroll.svg" alt="sipka dolu">
         </div>
 
     </div>
@@ -42,11 +48,13 @@ export default {
             this.data = response.data
             this.rok_od = Object.keys(this.data['avg-rain'])[0]
             this.rok_do = Object.keys(this.data['avg-rain'])[1]
-            console.log(this.data)
         })
 
-        document.body.style.height = "100vh" //zruší actual scrollování
-        document.body.style.overflow = "hidden"
+        if (window.innerWidth >= 1200) {
+            document.body.style.height = "100vh"
+            document.body.style.overflow = "hidden"
+        } //zruší actual scrollování
+
 
         window.addEventListener("wheel", this.scrolluj)
     },
@@ -57,54 +65,58 @@ export default {
     },
     methods: {
         scrolluj(e) {
-            let rychlost = 15
-            let min = 0
-            let max = 180
-            if (e.deltaY === 'tlacitko') {
-                this.scroll = max
-            } else if (e.deltaY > 0) {
-                this.scroll += rychlost
-            } else {
-                this.scroll -= rychlost
+            if (window.innerWidth >= 1200) {
+                let rychlost = 15
+                let min = 0
+                let max = 180
+                if (e.deltaY === 'tlacitko') {
+                    this.scroll = max
+                } else if (e.deltaY > 0) {
+                    this.scroll += rychlost
+                } else {
+                    this.scroll -= rychlost
+                }
+                if (this.scroll < min) { // spodni hranice
+                    this.scroll = min
+                } else if (this.scroll > max) { // horni hranice
+                    this.scroll = max
+                }
+
+                // nesahat pls 362,4h práce
+                this.$refs.b1.style.transform = `rotate(${this.scroll / max * 180}deg)`
+                this.$refs.b1.style.width = `${32 + this.scroll}%`
+                this.$refs.b1.style.marginTop = `-${this.scroll / 3.9}vh`
+                this.$refs.b1.style.marginLeft = `-${this.scroll / 1.5}vh`
+
+                this.$refs.b2.style.transform = `rotate(${this.scroll / max * 120}deg)`
+                this.$refs.b2.style.width = `${40 - this.scroll / 10}%`
+                this.$refs.b2.style.marginTop = `${this.scroll}vh`
+                this.$refs.b2.style.marginLeft = `-${this.scroll / 2}vh`
+
+                this.$refs.b3.style.transform = `rotate(${-this.scroll / max * 60}deg)`
+                this.$refs.b3.style.width = `${30 - this.scroll / 10}%`
+                this.$refs.b3.style.marginTop = `${this.scroll / 2}vh`
+                this.$refs.b3.style.marginLeft = `${this.scroll / 2}vh`
+
+                this.$refs.b4.style.transform = `rotate(${this.scroll / max * 120}deg)`
+                this.$refs.b4.style.width = `${25 - this.scroll / 10}%`
+                this.$refs.b4.style.marginLeft = `${this.scroll}vh`
+
+                this.$refs.prvniText.style.opacity = `${100 - (this.scroll / (max / 2) * 100)}%`
+                this.$refs.druhyText.style.opacity = `${(this.scroll - max / 2) / (max / 2) * 100}%`
+
+                if (this.scroll < 90) {
+                    this.$refs.prvniText.style.display = 'block'
+                    this.$refs.druhyText.style.display = 'none'
+                    this.$refs.scroll.style.display = 'flex'
+                } else if (this.scroll > 90) {
+                    this.$refs.prvniText.style.display = 'none'
+                    this.$refs.druhyText.style.display = 'block'
+                    this.$refs.scroll.style.display = 'none'
+                }
+
+                this.$refs.scroll.style.opacity = `${100 - (this.scroll / (max / 3) * 100)}%`
             }
-            if (this.scroll < min) { // spodni hranice
-                this.scroll = min
-            } else if (this.scroll > max) { // horni hranice
-                this.scroll = max
-            }
-
-            // nesahat pls 362,4h práce
-            this.$refs.b1.style.transform = `rotate(${this.scroll / max * 180}deg)`
-            this.$refs.b1.style.width = `${32 + this.scroll}%`
-            this.$refs.b1.style.marginTop = `-${this.scroll / 3.9}vh`
-            this.$refs.b1.style.marginLeft = `-${this.scroll / 1.5}vh`
-
-            this.$refs.b2.style.transform = `rotate(${this.scroll / max * 120}deg)`
-            this.$refs.b2.style.width = `${40 - this.scroll / 10}%`
-            this.$refs.b2.style.marginTop = `${this.scroll}vh`
-            this.$refs.b2.style.marginLeft = `-${this.scroll / 2}vh`
-
-            this.$refs.b3.style.transform = `rotate(${-this.scroll / max * 60}deg)`
-            this.$refs.b3.style.width = `${30 - this.scroll / 10}%`
-            this.$refs.b3.style.marginTop = `${this.scroll / 2}vh`
-            this.$refs.b3.style.marginLeft = `${this.scroll / 2}vh`
-
-            this.$refs.b4.style.transform = `rotate(${this.scroll / max * 120}deg)`
-            this.$refs.b4.style.width = `${25 - this.scroll / 10}%`
-            this.$refs.b4.style.marginLeft = `${this.scroll}vh`
-
-            this.$refs.prvniText.style.opacity = `${100 - (this.scroll / (max/2) * 100)}%`
-            this.$refs.druhyText.style.opacity = `${(this.scroll - max / 2)  / (max / 2) * 100}%`
-
-            if (this.scroll < 90) {
-                this.$refs.prvniText.style.display = 'block'
-                this.$refs.druhyText.style.display = 'none'
-            } else if (this.scroll > 90) {
-                this.$refs.prvniText.style.display = 'none'
-                this.$refs.druhyText.style.display = 'block'
-            }
-
-            this.$refs.scroll.style.opacity = `${100 - (this.scroll / (max / 3) * 100)}%`
         },
         procento(udaj) {
             try {
@@ -123,12 +135,6 @@ export default {
 </script>
 
 <style scoped>
-@media only screen and (max-width: 1200px) {
-    #bloby {
-        display: none;
-    }
-}
-
 .home {
     display: grid;
     align-items: center;
@@ -177,7 +183,7 @@ export default {
     display: grid;
     grid-template-columns: auto auto;
     justify-items: left;
-    column-gap: 10px;
+    column-gap: 30px;
 }
 
 #bloby {
@@ -215,5 +221,75 @@ export default {
     top: 5%;
     left: 48%;
     width: 25%;
+}
+
+@media only screen and (max-width: 1200px) {
+    #bloby {
+        z-index: -10;
+    }
+
+    #blob1 {
+        top: 10%;
+        left: -30%;
+        width: 100%;
+    }
+
+    #blob4 {
+        top: 50%;
+        left: 30%;
+        width: 80%;
+    }
+
+    #blob3, #blob2 {
+        display: none;
+    }
+
+    #scroll {
+        display: none;
+    }
+
+    h1 {
+        font-size: 1.5em !important;
+    }
+
+    .prvniText, .druhyText {
+        width: 90% !important;
+        display: block;
+        opacity: 100%;
+        color: black;
+        position: absolute;
+    }
+
+    .prvniText {
+        top: 25%;
+        left: 5%;
+        font-size: 5vw;
+    }
+
+    .druhyText {
+        top: 58%;
+        left: 5%;
+        width: 80%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 10px;
+        font-size: 3.5vw;
+
+    }
+
+    .druhyText h2 {
+        font-weight: normal;
+    }
+
+    .home {
+        display: block;
+        z-index: 10;
+    }
+
+    body {
+        overflow: visible !important;
+    }
 }
 </style>

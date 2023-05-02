@@ -2,7 +2,7 @@
 @import "https://unpkg.com/leaflet@1.9.2/dist/leaflet.css";
 </style>
 
-<script lang="ts">
+<script>
 import axios from "axios";
 import L from 'leaflet'
 import '../assets/leaflet-providers'
@@ -95,5 +95,4 @@ export default {
 </script>
 
 <template>
-    <Obsah></Obsah>
 </template>

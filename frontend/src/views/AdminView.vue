@@ -21,13 +21,11 @@
                     </td>
                 </tr>
             </table>
-            <div id="sideBar">Ještě nic</div>
         </div>
     </div>
 </template>
 
 <script>
-import Detail from "@/views/Detail.vue";
 import Login from "@/components/Login.vue";
 import axios from "axios";
 
@@ -108,11 +106,7 @@ export default {
         'tabulka tabulka bar'
     ;
     justify-items: center;
-}
-
-#sideBar {
-    grid-area: bar;
-    background-color: #FCA2D5;
+    gap: 30px;
 }
 
 #tabulkaObjednavky {

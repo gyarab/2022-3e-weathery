@@ -113,6 +113,14 @@ p {
     display: flex;
     gap: 40px;
     align-items: center;
+    align-self: center;
+    margin-right: 10px;
+}
+
+@media only screen and (max-width: 1200px) {
+    .nakup h1 {
+        text-align: center;
+    }
 }
 
 </style>

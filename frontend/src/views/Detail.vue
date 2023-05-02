@@ -221,4 +221,10 @@ input[type="date"] {
     cursor: pointer;
     border-radius: 3px;
 }
+
+@media only screen and (max-width: 1200px) {
+    #souradnice_stanice {
+        text-align: center;
+    }
+}
 </style>

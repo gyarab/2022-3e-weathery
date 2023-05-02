@@ -1,7 +1,3 @@
-<script setup lang="ts">
-import {RouterLink, RouterView} from 'vue-router'
-</script>
-
 <template>
     <header>
         <nav id="menu">
@@ -9,8 +5,17 @@ import {RouterLink, RouterView} from 'vue-router'
             <RouterLink to="/mapa">Mapa</RouterLink>
             <RouterLink to="/about">O nás</RouterLink>
             <h1>WEATHERY</h1>
-            <RouterLink id="kosik" to="/nakup"><img src="src/assets/icony/kosik.svg" alt="kosik"></RouterLink>
+            <RouterLink id="kosik" to="/nakup"><img src="@/assets/icony/kosik.svg" alt="kosik"></RouterLink>
+            <img id="hamburger" src="@/assets/icony/hamburger.svg" alt="hamburger" @click="switchMenu">
+
         </nav>
+
+        <div id="rollin" v-if="rollMenu" ref="rollin">
+            <RouterLink to="/">Domů</RouterLink>
+            <RouterLink to="/mapa">Mapa</RouterLink>
+            <RouterLink to="/about">O nás</RouterLink>
+            <RouterLink id="kosik" to="/nakup"><img src="@/assets/icony/kosik.svg" alt="kosik"></RouterLink>
+        </div>
 
     </header>
 
@@ -18,7 +23,29 @@ import {RouterLink, RouterView} from 'vue-router'
 
 </template>
 
+<script>
+import {RouterLink, RouterView} from 'vue-router'
+
+export default {
+    name: 'App',
+    data() {
+        return {
+            rollMenu: false
+        }
+    },
+    methods: {
+        switchMenu() {
+            this.rollMenu = !this.rollMenu
+        }
+    }
+}
+</script>
+
 <style scoped>
+#hamburger {
+    display: none;
+}
+
 #kosik {
     margin-left: auto;
 }
@@ -66,5 +93,52 @@ h1 {
     font-size: 1.31em;
     padding: 0 11px;
     transition-duration: 0.2s;
+}
+
+@media only screen and (max-width: 1200px) {
+    #menu a {
+        display: none;
+    }
+
+    #menu {
+        justify-content: right;
+    }
+
+    #hamburger {
+        display: block;
+        width: 30px;
+        z-index: 10;
+    }
+
+    #menu h1 {
+        top: 3px;
+    }
+
+    #rollin {
+        display: flex;
+        flex-direction: column;
+        justify-content: left;
+        position: absolute;
+        background-color: var(--bila);
+        width: 100%;
+        z-index: 100;
+    }
+
+    #rollin a {
+        font-family: Inter, sans-serif;
+        font-size: var(--velikost-pisma-menu);
+        color: black;
+        text-align: center;
+        text-decoration: none;
+        vertical-align: middle;
+        line-height: var(--vyska-menu);
+        padding: 0 10px;
+        z-index: 10;
+        transition-duration: 0.2s;
+    }
+
+    #kosik {
+        margin: 0;
+    }
 }
 </style>
