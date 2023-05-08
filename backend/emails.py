@@ -58,7 +58,7 @@ def send_state_info(id: int, email: str, state: str):
     subject = "Změna svavu objednávky"
     text = f"""\
     Dobrý den, \n
-    Chceme Vám oznámít, že stav u objednávky č.{id} se změnil na "{state}"\n
+    Chceme Vám oznámit, že stav u objednávky č.{id} se změnil na "{state}"\n
     Se srdečným pozdravem, \n
     Váš tým Weathery"""
     html = f"""\
