@@ -68,6 +68,7 @@ export default {
     gap: 25px;
     justify-content: center;
     min-height: 32em;
+    flex-wrap: wrap;
 }
 
 #text {
@@ -85,6 +86,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+    min-width: 280px;
 }
 
 .obrazek {
@@ -118,8 +120,17 @@ p {
 }
 
 @media only screen and (max-width: 1200px) {
-    .nakup h1 {
+    .nakup h1, .nakup h2 {
         text-align: center;
+    }
+
+    #text {
+        width: 100%;
+        text-align: center;
+    }
+
+    #text p {
+        text-align: inherit
     }
 }
 

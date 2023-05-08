@@ -62,6 +62,12 @@ h1 {
     filter: brightness(120%);
 }
 
+@media only screen and (max-width: 1200px) {
+    body {
+        overflow-x: hidden;
+    }
+}
+
 /*        leaflet       */
 .leaflet-popup-content-wrapper, .leaflet-popup-tip {
     background-color: var(--bila);
