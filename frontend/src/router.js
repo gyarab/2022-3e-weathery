@@ -1,4 +1,5 @@
-import { createRouter, createWebHistory } from "vue-router";
+import {createRouter, createWebHistory} from 'vue-router'
+
 import HomeView from "@/views/HomeView.vue";
 import AboutView from "@/views/AboutView.vue";
 import MapaView from "@/views/MapaView.vue";
@@ -73,13 +74,13 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  // nadpis stránky
-  if (to.meta.title && to.meta.title != "") {
-    document.title = to.meta.title + " | Weathery";
-  } else if (to.meta.title == "") {
-    document.title = "Weathery";
-  }
-  next();
+    // nadpis stránky
+    if (to.meta.title && to.meta.title !== "") {
+        document.title = to.meta.title + " | Weathery";
+    } else if (to.meta.title === "") {
+        document.title = "Weathery";
+    }
+    next();
 });
 
-export default router;
+export default router

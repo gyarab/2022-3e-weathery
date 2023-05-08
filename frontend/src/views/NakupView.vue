@@ -7,8 +7,8 @@
                 <img v-if="cisloFotky[0] === 1" class="obrazek" src="@/assets/stanice0.jpg" alt="Fotka stanice 1">
                 <img v-else-if="cisloFotky[0] === 2" class="obrazek" src="@/assets/stanice1.jpg" alt="Fotka stanice 2">
 
-                <img class="sipka" id="sipka1" src="@/assets/icony/sipka.svg" alt="Šipka" style="transform: scaleX(-1);" @click="fotoMinus">
-                <img class="sipka" id="sipka2" src="@/assets/icony/sipka.svg" alt="Šipka" @click="fotoPlus">
+                <img class="sipka" id="sipka1" src="/icony/sipka.svg" alt="Šipka" style="transform: scaleX(-1);" @click="fotoMinus">
+                <img class="sipka" id="sipka2" src="/icony/sipka.svg" alt="Šipka" @click="fotoPlus">
             </div>
 
             <div id="text">

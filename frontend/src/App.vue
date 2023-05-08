@@ -5,8 +5,8 @@
             <RouterLink to="/mapa">Mapa</RouterLink>
             <RouterLink to="/about">O nás</RouterLink>
             <h1>WEATHERY</h1>
-            <RouterLink id="kosik" to="/nakup"><img src="@/assets/icony/kosik.svg" alt="kosik"></RouterLink>
-            <img id="hamburger" src="@/assets/icony/hamburger.svg" alt="hamburger" @click="switchMenu">
+            <RouterLink id="kosik" to="/nakup"><img src="/icony/kosik.svg" alt="kosik"></RouterLink>
+            <img id="hamburger" src="/icony/hamburger.svg" alt="hamburger" @click="switchMenu">
 
         </nav>
 
@@ -14,7 +14,7 @@
             <RouterLink to="/">Domů</RouterLink>
             <RouterLink to="/mapa">Mapa</RouterLink>
             <RouterLink to="/about">O nás</RouterLink>
-            <RouterLink id="kosik" to="/nakup"><img src="@/assets/icony/kosik.svg" alt="kosik"></RouterLink>
+            <RouterLink id="kosik" to="/nakup"><img src="/icony/kosik.svg" alt="kosik"></RouterLink>
         </div>
 
     </header>
@@ -24,7 +24,6 @@
 </template>
 
 <script>
-import {RouterLink, RouterView} from 'vue-router'
 
 export default {
     name: 'App',

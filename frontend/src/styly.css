@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Cardo&family=Inter&family=STIX+Two+Text&family=Sofia+Sans+Semi+Condensed:wght@1&display=swap');
+@import url("https://unpkg.com/leaflet@1.9.3/dist/leaflet.css");
 
 * {
     padding: 0;

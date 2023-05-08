@@ -24,7 +24,7 @@
         </div>
         <div ref="scroll" id="scroll" @click="scrolluj({deltaY: 'tlacitko'})">
             <p>SCROLL</p>
-            <img src="@/assets/icony/scroll.svg" alt="sipka dolu">
+            <img src="/icony/scroll.svg" alt="sipka dolu">
         </div>
 
     </div>

@@ -1,18 +1,15 @@
-<style scoped integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14=" crossorigin="">
-@import "https://unpkg.com/leaflet@1.9.2/dist/leaflet.css";
-</style>
-
 <script>
 import axios from "axios";
 import L from 'leaflet'
-import '../assets/leaflet-providers'
+import '@/assets/leaflet-providers.js'
+
 
 export default {
     name: 'Mapa',
     data() {
         return {
             icon: L.icon({
-                iconUrl: 'src/assets/icony/point.svg',
+                iconUrl: '/icony/point.svg',
                 iconSize: [40, 50], // size of the icon
                 iconAnchor: [20, 50], // point of the icon which will correspond to marker's location
                 popupAnchor: [8, -11] // point from which the popup should open relative to the iconAnchor
@@ -35,19 +32,19 @@ export default {
                         .get("/now/" + souradnice)
                         .then(response => {
                             let stanice_obsah = response.data
-                            if (stanice_obsah.message == "ok") {
+                            if (stanice_obsah.message === "ok") {
                                 let marker = L.marker([souradnice_split[0], souradnice_split[1]], {icon: this.icon}).addTo(this.map);
                                 marker.bindPopup(`
                                     <body>
                                         <h1 class="nadpis-popup" >${souradnice.replace("_", "° N ").replaceAll(".", ",")}° E</h1> <!-- seru na to more mozna nekdy z toho udelame router-link -->
                                         <hr>
                                         <div id="container">
-                                            <img class="icony_popup zmensitMin" src="src/assets/icony/teplota.svg" alt="teplota"><h2>${stanice_obsah.temperature}°C</h2>
-                                            <img class="icony_popup zmensitVic" src="src/assets/icony/tlak.svg" alt="tlak"><h2>${Math.round(stanice_obsah.pressure / 10) / 10} hPa</h2>
-                                            <img class="icony_popup zmensitVic" src="src/assets/icony/vlhkost.svg" alt="vlhkost"><h2>${stanice_obsah.humidity}%</h2>
-                                            <img class="icony_popup zmensitMin" src="src/assets/icony/vitr.svg" alt="vitr"><h2>${stanice_obsah.wind_speed}m/s</h2>
-                                            <img class="icony_popup zmensit" src="src/assets/icony/smer.svg" alt="smer"><h2>${stanice_obsah.wind_direction}</h2>
-                                            <img class="icony_popup zmensit" src="src/assets/icony/dest.svg" alt="dest"><h2>${stanice_obsah.rain} mm/h</h2>
+                                            <img class="icony_popup zmensitMin" src="/icony/teplota.svg" alt="teplota"><h2>${stanice_obsah.temperature}°C</h2>
+                                            <img class="icony_popup zmensitVic" src="/icony/tlak.svg" alt="tlak"><h2>${Math.round(stanice_obsah.pressure / 10) / 10} hPa</h2>
+                                            <img class="icony_popup zmensitVic" src="/icony/vlhkost.svg" alt="vlhkost"><h2>${stanice_obsah.humidity}%</h2>
+                                            <img class="icony_popup zmensitMin" src="/icony/vitr.svg" alt="vitr"><h2>${stanice_obsah.wind_speed}m/s</h2>
+                                            <img class="icony_popup zmensit" src="/icony/smer.svg" alt="smer"><h2>${stanice_obsah.wind_direction}</h2>
+                                            <img class="icony_popup zmensit" src="/icony/dest.svg" alt="dest"><h2>${stanice_obsah.rain} mm/h</h2>
                                         </div>
                                         <span id="flex"><a href="${souradnice.replace('_', '-').replaceAll('.', ',')}" id="popup-btn">Zobrazit více</a></span>
                                         <style>
@@ -95,4 +92,5 @@ export default {
 </script>
 
 <template>
+
 </template>
