@@ -8,7 +8,7 @@ Aplikace bude mít tři části
 - frontend - webová aplikace zobrazující počasí (mapka, na které budou vidět všechny stanice a bude se dát zobrazit podrobnější data o dané stanici).
 
 <h4>Instalace</h4>
-<h6>Backend</h6>
+<h6><a href="https://api.weathery.svs.gyarab.cz/">Backend</a></h6>
 
 ```sh
 cd backend
@@ -16,7 +16,7 @@ docker build -t weathery .
 docker run --network slirp4netns:allow_host_loopback=true -e DB_HOST={DB_HOST} -p {PORT}:5000  weathery
 ```
 
-<h6>Frontend</h6>
+<h6><a href="https://weathery.svs.gyarab.cz/">Frontend</a></h6>
 
 
 ```sh
