@@ -11,10 +11,13 @@
         </nav>
 
         <div id="rollin" v-if="rollMenu" ref="rollin">
-            <RouterLink to="/">Domů</RouterLink>
-            <RouterLink to="/mapa">Mapa</RouterLink>
-            <RouterLink to="/about">O nás</RouterLink>
-            <RouterLink id="kosik" to="/nakup"><img src="/icony/kosik.svg" alt="kosik"></RouterLink>
+            <RouterLink to="/" @click="switchMenu">Domů</RouterLink>
+            <hr>
+            <RouterLink to="/mapa" @click="switchMenu">Mapa</RouterLink>
+            <hr>
+            <RouterLink to="/about" @click="switchMenu">O nás</RouterLink>
+            <hr>
+            <RouterLink id="kosik" to="/nakup" @click="switchMenu"><img src="/icony/kosik.svg" alt="kosik"></RouterLink>
         </div>
 
     </header>
@@ -94,6 +97,15 @@ h1 {
     transition-duration: 0.2s;
 }
 
+hr {
+    width: 75%;
+    color: gray;
+    border: none;
+    height: 1px;
+    background-color: gray;
+    align-self: center;
+}
+
 @media only screen and (max-width: 1200px) {
     #menu a {
         display: none;
@@ -121,6 +133,7 @@ h1 {
         background-color: var(--bila);
         width: 100%;
         z-index: 100;
+        border-bottom: 1px solid black;
     }
 
     #rollin a {
